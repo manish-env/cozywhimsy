@@ -8,151 +8,327 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
-        <div class="logo-container">
-            <div class="logo">
-                <span class="logo-cozy">Cozy</span>
-                <span class="logo-whimsy">Whimsy</span>
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="#" class="logo">
+                    <img src="cozzywhimsylogo-removebg.png" alt="Cozywhimsy Logo">
+                </a>
             </div>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">Shop</a></li>
-                <li><a href="#">Collections</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-        <div class="cart-account">
-            <a href="#" class="icon-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-            </a>
-            <a href="#" class="icon-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </a>
+            
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Collections</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <a href="#" class="icon-link">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="#" class="icon-link">
+                    <i class="fas fa-shopping-bag"></i>
+                </a>
+                <a href="#" class="icon-link">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
         </div>
     </header>
 
     <section class="hero">
         <div class="hero-content">
-            <h1>Discover Unique & Cozy Treasures</h1>
+            <h1>Discover Unique & <span class="accent">Cozy</span> Treasures</h1>
             <p>Handpicked items to bring warmth and whimsy to your everyday life</p>
-            <a href="#" class="btn">Shop Now</a>
+            <div class="hero-buttons">
+                <a href="#" class="btn primary-btn">Shop Now</a>
+                <a href="#" class="btn secondary-btn">Explore Collections</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="shape"></div>
         </div>
     </section>
 
     <section class="featured-categories">
-        <h2>Shop by Category</h2>
-        <div class="category-grid">
-            <div class="category-card">
-                <div class="category-img" style="background-color: #f8e1e8;"></div>
-                <h3>Home Decor</h3>
-                <a href="#" class="category-link">Explore</a>
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Shop by Category</h2>
+                <p class="section-subtitle">Find something special for every space and occasion</p>
             </div>
-            <div class="category-card">
-                <div class="category-img" style="background-color: #e1e8f8;"></div>
-                <h3>Accessories</h3>
-                <a href="#" class="category-link">Explore</a>
+            
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-img" style="background-color: #f8e1e8;"></div>
+                    <div class="category-content">
+                        <h3>Home Decor</h3>
+                        <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-img" style="background-color: #e1e8f8;"></div>
+                    <div class="category-content">
+                        <h3>Accessories</h3>
+                        <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-img" style="background-color: #f8f1e1;"></div>
+                    <div class="category-content">
+                        <h3>Apparel</h3>
+                        <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-img" style="background-color: #e1f8e8;"></div>
+                    <div class="category-content">
+                        <h3>Gifts</h3>
+                        <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
             </div>
-            <div class="category-card">
-                <div class="category-img" style="background-color: #f8f1e1;"></div>
-                <h3>Apparel</h3>
-                <a href="#" class="category-link">Explore</a>
+        </div>
+    </section>
+
+    <section class="instagram-showcase">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Follow Our Journey</h2>
+                <p class="section-subtitle">@cozywhimsy on Instagram</p>
             </div>
-            <div class="category-card">
-                <div class="category-img" style="background-color: #e1f8e8;"></div>
-                <h3>Gifts</h3>
-                <a href="#" class="category-link">Explore</a>
+            
+            <div class="instagram-content">
+                <div class="instagram-video">
+                    <div class="video-container">
+                        <!-- Replace with your actual Instagram video embed code -->
+                        <video controls poster="https://via.placeholder.com/800x450">
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-overlay">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="instagram-feed">
+                    <div class="instagram-item">
+                        <img src="https://via.placeholder.com/300x300" alt="Instagram post">
+                        <div class="instagram-overlay">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                    <div class="instagram-item">
+                        <img src="https://via.placeholder.com/300x300" alt="Instagram post">
+                        <div class="instagram-overlay">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                    <div class="instagram-item">
+                        <img src="https://via.placeholder.com/300x300" alt="Instagram post">
+                        <div class="instagram-overlay">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                    <div class="instagram-item">
+                        <img src="https://via.placeholder.com/300x300" alt="Instagram post">
+                        <div class="instagram-overlay">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instagram-cta">
+                <a href="#" class="btn secondary-btn">Follow Us on Instagram</a>
             </div>
         </div>
     </section>
 
     <section class="featured-products">
-        <h2>Featured Products</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <div class="product-img" style="background-color: #f5f5f5;"></div>
-                <h3>Cozy Knit Blanket</h3>
-                <p class="price">$49.99</p>
-                <button class="add-to-cart">Add to Cart</button>
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Our most loved items this season</p>
             </div>
-            <div class="product-card">
-                <div class="product-img" style="background-color: #f5f5f5;"></div>
-                <h3>Whimsical Wall Art</h3>
-                <p class="price">$29.99</p>
-                <button class="add-to-cart">Add to Cart</button>
+            
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-badge">New</div>
+                    <div class="product-img" style="background-color: #f5f5f5;"></div>
+                    <div class="product-content">
+                        <h3>Cozy Knit Blanket</h3>
+                        <p class="price">$49.99</p>
+                        <div class="product-actions">
+                            <button class="add-to-cart">Add to Cart</button>
+                            <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge bestseller">Bestseller</div>
+                    <div class="product-img" style="background-color: #f5f5f5;"></div>
+                    <div class="product-content">
+                        <h3>Whimsical Wall Art</h3>
+                        <p class="price">$29.99</p>
+                        <div class="product-actions">
+                            <button class="add-to-cart">Add to Cart</button>
+                            <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img" style="background-color: #f5f5f5;"></div>
+                    <div class="product-content">
+                        <h3>Handmade Ceramic Mug</h3>
+                        <p class="price">$18.99</p>
+                        <div class="product-actions">
+                            <button class="add-to-cart">Add to Cart</button>
+                            <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img" style="background-color: #f5f5f5;"></div>
+                    <div class="product-content">
+                        <h3>Scented Candle Set</h3>
+                        <p class="price">$34.99</p>
+                        <div class="product-actions">
+                            <button class="add-to-cart">Add to Cart</button>
+                            <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="product-card">
-                <div class="product-img" style="background-color: #f5f5f5;"></div>
-                <h3>Handmade Ceramic Mug</h3>
-                <p class="price">$18.99</p>
-                <button class="add-to-cart">Add to Cart</button>
+            
+            <div class="view-all">
+                <a href="#" class="btn secondary-btn">View All Products</a>
             </div>
-            <div class="product-card">
-                <div class="product-img" style="background-color: #f5f5f5;"></div>
-                <h3>Scented Candle Set</h3>
-                <p class="price">$34.99</p>
-                <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What Our Customers Say</h2>
+                <p class="section-subtitle">Real experiences from our community</p>
+            </div>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-item">
+                    <div class="testimonial-content">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"The quality of every item I've purchased has been exceptional. Cozywhimsy has become my go-to for unique home decor and gifts!"</p>
+                        <div class="testimonial-author">
+                            <h4>Sarah Johnson</h4>
+                            <p>Loyal Customer</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="newsletter">
-        <div class="newsletter-content">
-            <h2>Join Our Cozy Community</h2>
-            <p>Subscribe to receive updates on new arrivals, special offers, and more!</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Your email address" required>
-                <button type="submit" class="btn">Subscribe</button>
-            </form>
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h2 class="section-title">Join Our Cozy Community</h2>
+                    <p>Subscribe to receive updates on new arrivals, special offers, and more!</p>
+                </div>
+                <form class="newsletter-form">
+                    <div class="form-group">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="btn primary-btn">Subscribe</button>
+                    </div>
+                    <p class="form-disclaimer">By subscribing, you agree to our Privacy Policy and consent to receive updates from us.</p>
+                </form>
+            </div>
         </div>
     </section>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <div class="logo">
-                    <span class="logo-cozy">Cozy</span>
-                    <span class="logo-whimsy">Whimsy</span>
-                </div>
-                <p>Bringing warmth and whimsy to your everyday life.</p>
-            </div>
-            <div class="footer-links">
-                <div class="footer-column">
-                    <h4>Shop</h4>
-                    <ul>
-                        <li><a href="#">All Products</a></li>
-                        <li><a href="#">New Arrivals</a></li>
-                        <li><a href="#">Best Sellers</a></li>
-                        <li><a href="#">Sale</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h4>Information</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Shipping & Returns</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h4>Connect</h4>
-                    <ul>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Pinterest</a></li>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Twitter</a></li>
-                    </ul>
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <a href="#" class="logo">
+                            <img src="cozzywhimsylogo-removebg.png" alt="Cozywhimsy Logo">
+                        </a>
+                        <p>Bringing warmth and whimsy to your everyday life through carefully curated products that inspire joy and comfort.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-pinterest"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-column">
+                            <h4>Shop</h4>
+                            <ul>
+                                <li><a href="#">All Products</a></li>
+                                <li><a href="#">New Arrivals</a></li>
+                                <li><a href="#">Best Sellers</a></li>
+                                <li><a href="#">Sale</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Information</h4>
+                            <ul>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Shipping & Returns</a></li>
+                                <li><a href="#">FAQ</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Contact</h4>
+                            <ul class="contact-info">
+                                <li><i class="fas fa-envelope"></i> hello@cozywhimsy.com</li>
+                                <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                                <li><i class="fas fa-map-marker-alt"></i> 123 Cozy Street, Whimsy Town</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Cozywhimsy. All rights reserved.</p>
+            <div class="container">
+                <p>&copy; 2025 Cozywhimsy. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <script>
+        // Mobile navigation toggle
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

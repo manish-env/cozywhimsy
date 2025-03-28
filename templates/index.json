@@ -77,10 +77,40 @@
             "likes": "42",
             "comments": "5"
           }
+        },
+        "instagram_post_bX4YeJ": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/7833626408.jpg",
+            "link": "",
+            "likes": "42",
+            "comments": "5"
+          }
+        },
+        "instagram_post_AFFCMc": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/7570804289.jpg",
+            "link": "",
+            "likes": "42",
+            "comments": "5"
+          }
+        },
+        "instagram_post_R37bzR": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/8387574038.jpg",
+            "link": "",
+            "likes": "42",
+            "comments": "5"
+          }
         }
       },
       "block_order": [
-        "instagram_post_BiPPMq"
+        "instagram_post_BiPPMq",
+        "instagram_post_bX4YeJ",
+        "instagram_post_AFFCMc",
+        "instagram_post_R37bzR"
       ],
       "settings": {
         "title": "Follow Us on Instagram",

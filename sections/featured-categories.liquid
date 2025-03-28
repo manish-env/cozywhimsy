@@ -1,0 +1,124 @@
+<section class="featured-categories">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    </div>
+    
+    <div class="category-grid">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          <div class="category-card" {{ block.shopify_attributes }}>
+            {% if block.settings.collection != blank %}
+              <a href="{{ block.settings.collection.url }}" class="category-img-link">
+                {% if block.settings.image != blank %}
+                  <div class="category-img" style="background-image: url('{{ block.settings.image | img_url: 'master' }}'); background-size: cover; background-position: center;"></div>
+                {% elsif block.settings.collection.image != blank %}
+                  <div class="category-img" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}'); background-size: cover; background-position: center;"></div>
+                {% else %}
+                  <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
+                {% endif %}
+              </a>
+              <div class="category-content">
+                <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
+                <a href="{{ block.settings.collection.url }}" class="category-link">{{ block.settings.button_text }} <i class="fas fa-arrow-right"></i></a>
+              </div>
+            {% else %}
+              <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
+              <div class="category-content">
+                <h3>{{ block.settings.title | default: "Category Name" }}</h3>
+                <a href="#" class="category-link">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% comment %} Display placeholder categories if no blocks are added {% endcomment %}
+        {% for i in (1..4) %}
+          <div class="category-card">
+            <div class="category-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};"></div>
+            <div class="category-content">
+              <h3>Sample Category {{ i }}</h3>
+              <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Categories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Find something special for every space and occasion"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Image"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#f8e1e8"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Explore"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Categories",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

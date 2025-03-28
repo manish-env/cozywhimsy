@@ -1,0 +1,73 @@
+<section class="hero">
+  <div class="hero-content">
+    <h1>{{ section.settings.heading | escape }}</h1>
+    <p>{{ section.settings.subheading | escape }}</p>
+    <div class="hero-buttons">
+      {% if section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="btn primary-btn">{{ section.settings.button_text }}</a>
+      {% endif %}
+      {% if section.settings.secondary_button_link != blank %}
+        <a href="{{ section.settings.secondary_button_link }}" class="btn secondary-btn">{{ section.settings.secondary_button_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="shape"></div>
+    {% if section.settings.image != blank %}
+      <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Discover Unique & Cozy Treasures"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Handpicked items to bring warmth and whimsy to your everyday life"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "Explore Collections"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "category": "Hero"
+    }
+  ]
+}
+{% endschema %}

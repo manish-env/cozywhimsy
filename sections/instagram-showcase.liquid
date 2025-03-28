@@ -1,0 +1,157 @@
+<section class="instagram-showcase">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    </div>
+    
+    <div class="instagram-content">
+      <div class="instagram-video">
+        <div class="video-container">
+          {% if section.settings.video_url != blank %}
+            <video controls {% if section.settings.video_poster != blank %}poster="{{ section.settings.video_poster | img_url: 'master' }}"{% endif %}>
+              <source src="{{ section.settings.video_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% elsif section.settings.embed_code != blank %}
+            <div class="video-embed">
+              {{ section.settings.embed_code }}
+            </div>
+          {% else %}
+            <div class="video-placeholder">
+              <div class="placeholder-content">
+                <i class="fab fa-instagram"></i>
+                <p>Instagram Video</p>
+              </div>
+            </div>
+          {% endif %}
+          <div class="video-overlay">
+            <i class="fab fa-instagram"></i>
+          </div>
+        </div>
+      </div>
+      <div class="instagram-feed">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <div class="instagram-item" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | img_url: 'master' }}" alt="Instagram post">
+              {% else %}
+                <div class="instagram-placeholder">
+                  <i class="fab fa-instagram"></i>
+                </div>
+              {% endif %}
+              <div class="instagram-overlay">
+                <i class="fab fa-instagram"></i>
+              </div>
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="instagram-link" target="_blank" rel="noopener"></a>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% comment %} Display placeholder Instagram posts if no blocks are added {% endcomment %}
+          {% for i in (1..4) %}
+            <div class="instagram-item">
+              <div class="instagram-placeholder">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <div class="instagram-overlay">
+                <i class="fab fa-instagram"></i>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="instagram-cta">
+      <a href="{{ section.settings.instagram_url }}" class="btn secondary-btn" target="_blank">{{ section.settings.button_text }}</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Instagram Showcase",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Follow Our Journey"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "@cozywhimsy on Instagram"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (MP4)"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Poster Image"
+    },
+    {
+      "type": "html",
+      "id": "embed_code",
+      "label": "Instagram Video Embed Code",
+      "info": "Paste the embed code from Instagram"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram Profile URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Follow Us on Instagram"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "instagram_post",
+      "name": "Instagram Post",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Instagram Post URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Showcase",
+      "category": "Social",
+      "blocks": [
+        {
+          "type": "instagram_post"
+        },
+        {
+          "type": "instagram_post"
+        },
+        {
+          "type": "instagram_post"
+        },
+        {
+          "type": "instagram_post"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

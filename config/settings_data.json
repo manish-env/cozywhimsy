@@ -29,7 +29,10 @@
           "button_text": "Shop Now",
           "secondary_button_link": "shopify://products/cute-cat-animal-silicone-baby-night-light",
           "secondary_button_text": "Explore Collections",
-          "image": "shopify://shop_images/5089441490.jpg"
+          "image": "shopify://shop_images/5089441490.jpg",
+          "primary_caption": "New Arrivals",
+          "secondary_image": "shopify://shop_images/7570804289.jpg",
+          "secondary_caption": "Featured Collection"
         }
       },
       "featured-categories": {

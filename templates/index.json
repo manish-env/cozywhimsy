@@ -1,0 +1,85 @@
+{
+  "name": "Home page",
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "heading": "Welcome to Cozywhimsy",
+        "subheading": "Handcrafted items that bring warmth and whimsy to your home",
+        "button_text": "Shop Now",
+        "button_link": "/collections/all"
+      }
+    },
+    "featured_categories": {
+      "type": "featured-categories",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "title": "Home Decor",
+            "button_text": "Shop Now"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "title": "Accessories",
+            "button_text": "Shop Now"
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "title": "Gifts",
+            "button_text": "Shop Now"
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "category_2",
+        "category_3"
+      ],
+      "settings": {
+        "title": "Shop by Category",
+        "subtitle": "Explore our curated collections"
+      }
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {
+        "title": "Featured Products",
+        "subtitle": "Our most popular items"
+      }
+    },
+    "instagram_showcase": {
+      "type": "instagram-showcase",
+      "settings": {
+        "title": "Follow Us on Instagram",
+        "subtitle": "Tag us @cozywhimsy to be featured"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {
+        "title": "What Our Customers Say",
+        "subtitle": "Read reviews from our happy customers"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "title": "Join Our Mailing List",
+        "subtitle": "Subscribe to get updates on new products and special offers"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured_categories",
+    "featured_products",
+    "instagram_showcase",
+    "testimonials",
+    "newsletter"
+  ]
+}

@@ -11,11 +11,37 @@
       {% endif %}
     </div>
   </div>
-  <div class="hero-image">
-    <div class="shape"></div>
-    {% if section.settings.image != blank %}
-      <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
-    {% endif %}
+  <div class="hero-images">
+    <div class="hero-image primary">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
+      {% else %}
+        <div class="placeholder-image"></div>
+      {% endif %}
+      <div class="image-overlay">
+        <div class="overlay-content">
+          <h3>{{ section.settings.primary_caption | default: 'New Arrivals' }}</h3>
+          {% if section.settings.button_link != blank %}
+            <a href="{{ section.settings.button_link }}" class="overlay-btn">{{ section.settings.button_text }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="hero-image secondary">
+      {% if section.settings.secondary_image != blank %}
+        <img src="{{ section.settings.secondary_image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
+      {% else %}
+        <div class="placeholder-image"></div>
+      {% endif %}
+      <div class="image-overlay">
+        <div class="overlay-content">
+          <h3>{{ section.settings.secondary_caption | default: 'Featured Collection' }}</h3>
+          {% if section.settings.secondary_button_link != blank %}
+            <a href="{{ section.settings.secondary_button_link }}" class="overlay-btn">{{ section.settings.secondary_button_text }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -38,12 +64,12 @@
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button link"
+      "label": "Primary button link"
     },
     {
       "type": "text",
       "id": "button_text",
-      "label": "Button text",
+      "label": "Primary button text",
       "default": "Shop Now"
     },
     {
@@ -60,7 +86,24 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Hero image"
+      "label": "Primary hero image"
+    },
+    {
+      "type": "text",
+      "id": "primary_caption",
+      "label": "Primary image caption",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "image_picker",
+      "id": "secondary_image",
+      "label": "Secondary hero image"
+    },
+    {
+      "type": "text",
+      "id": "secondary_caption",
+      "label": "Secondary image caption",
+      "default": "Featured Collection"
     }
   ],
   "presets": [

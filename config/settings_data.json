@@ -27,8 +27,9 @@
           "subheading": "Handpicked items to bring warmth and whimsy to your everyday life",
           "button_link": "",
           "button_text": "Shop Now",
-          "secondary_button_link": "",
-          "secondary_button_text": "Explore Collections"
+          "secondary_button_link": "shopify://products/cute-cat-animal-silicone-baby-night-light",
+          "secondary_button_text": "Explore Collections",
+          "image": "shopify://shop_images/5089441490.jpg"
         }
       },
       "featured-categories": {

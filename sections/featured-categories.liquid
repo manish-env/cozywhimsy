@@ -21,7 +21,7 @@
               </a>
               <div class="category-content">
                 <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
-                <a href="{{ block.settings.collection.url }}" class="category-link">{{ block.settings.button_text }} <i class="fas fa-arrow-right"></i></a>
+                <a href="{{ block.settings.collection.url }}" class="category-link">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
               </div>
             {% else %}
               <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
@@ -78,18 +78,21 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Title"
+          "label": "Custom Title",
+          "info": "Defaults to collection title if left blank"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Custom Image"
+          "label": "Custom Image",
+          "info": "Will use collection image if not specified"
         },
         {
           "type": "color",
           "id": "background_color",
           "label": "Background Color",
-          "default": "#f8e1e8"
+          "default": "#f8e1e8",
+          "info": "Used if no image is available"
         },
         {
           "type": "text",

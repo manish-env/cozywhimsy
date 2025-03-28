@@ -1,0 +1,512 @@
+<section class="featured-product-spotlight accent-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    </div>
+    
+    <div class="spotlight-container">
+      {% assign product = all_products[section.settings.product] %}
+      
+      {% if product != blank %}
+        <div class="spotlight-product">
+          <div class="spotlight-image">
+            {% if product.featured_image != blank %}
+              <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title | escape }}">
+              
+              {% if product.images.size > 1 %}
+                <div class="spotlight-thumbnails">
+                  {% for image in product.images limit: 3 %}
+                    <div class="thumbnail{% if forloop.first %} active{% endif %}" data-image="{{ image | img_url: 'large' }}">
+                      <img src="{{ image | img_url: 'small' }}" alt="{{ product.title | escape }}">
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              
+              {% if product.tags contains 'new' %}
+                <div class="product-badge">New</div>
+              {% elsif product.tags contains 'bestseller' %}
+                <div class="product-badge bestseller">Bestseller</div>
+              {% elsif product.compare_at_price > product.price %}
+                <div class="product-badge sale">Sale</div>
+              {% endif %}
+            {% else %}
+              <div class="placeholder-image"></div>
+            {% endif %}
+          </div>
+          
+          <div class="spotlight-content">
+            <h3>{{ product.title }}</h3>
+            
+            <div class="spotlight-price">
+              {% if product.compare_at_price > product.price %}
+                <span class="sale-price">{{ product.price | money }}</span>
+                <span class="compare-price">{{ product.compare_at_price | money }}</span>
+                <span class="save-amount">Save {{ product.compare_at_price | minus: product.price | money }}</span>
+              {% else %}
+                <span class="regular-price">{{ product.price | money }}</span>
+              {% endif %}
+            </div>
+            
+            <div class="spotlight-description">
+              {{ product.description | strip_html | truncatewords: 30 }}
+              <a href="{{ product.url }}" class="read-more">Read more</a>
+            </div>
+            
+            <div class="spotlight-features">
+              {% if section.settings.feature_1_icon != blank and section.settings.feature_1_text != blank %}
+                <div class="feature">
+                  <div class="feature-icon">{{ section.settings.feature_1_icon }}</div>
+                  <div class="feature-text">{{ section.settings.feature_1_text }}</div>
+                </div>
+              {% endif %}
+              
+              {% if section.settings.feature_2_icon != blank and section.settings.feature_2_text != blank %}
+                <div class="feature">
+                  <div class="feature-icon">{{ section.settings.feature_2_icon }}</div>
+                  <div class="feature-text">{{ section.settings.feature_2_text }}</div>
+                </div>
+              {% endif %}
+              
+              {% if section.settings.feature_3_icon != blank and section.settings.feature_3_text != blank %}
+                <div class="feature">
+                  <div class="feature-icon">{{ section.settings.feature_3_icon }}</div>
+                  <div class="feature-text">{{ section.settings.feature_3_text }}</div>
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="spotlight-actions">
+              <a href="{{ product.url }}" class="btn primary-btn">{{ section.settings.button_text | default: 'View Details' }}</a>
+              
+              {% if product.available and product.variants.size == 1 %}
+                <button class="btn secondary-btn add-to-cart" data-product-id="{{ product.id }}">
+                  {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="spotlight-product placeholder">
+          <div class="spotlight-image">
+            <div class="placeholder-image"></div>
+          </div>
+          
+          <div class="spotlight-content">
+            <h3>Sample Product</h3>
+            <div class="spotlight-price">
+              <span class="regular-price">$29.99</span>
+            </div>
+            <div class="spotlight-description">
+              This is a sample product description. Select a product to display using the section settings.
+            </div>
+            <div class="spotlight-features">
+              <div class="feature">
+                <div class="feature-icon">★</div>
+                <div class="feature-text">Premium Quality</div>
+              </div>
+              <div class="feature">
+                <div class="feature-icon">🚚</div>
+                <div class="feature-text">Fast Shipping</div>
+              </div>
+            </div>
+            <div class="spotlight-actions">
+              <a href="#" class="btn primary-btn">View Details</a>
+              <button class="btn secondary-btn">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+.featured-product-spotlight {
+  padding: 70px 0;
+}
+
+.spotlight-container {
+  margin-top: 40px;
+}
+
+.spotlight-product {
+  display: flex;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+}
+
+.spotlight-image {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--light-gray);
+}
+
+.spotlight-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.spotlight-thumbnails {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.thumbnail.active {
+  border-color: var(--primary-pink);
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--primary-pink);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1;
+}
+
+.product-badge.bestseller {
+  background: var(--primary-purple);
+}
+
+.product-badge.sale {
+  background: #ff4757;
+}
+
+.spotlight-content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.spotlight-content h3 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: var(--dark-text);
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+}
+
+.spotlight-price {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.regular-price {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--dark-text);
+}
+
+.sale-price {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ff4757;
+}
+
+.compare-price {
+  font-size: 18px;
+  color: var(--light-text);
+  text-decoration: line-through;
+}
+
+.save-amount {
+  font-size: 14px;
+  background: #ff4757;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.spotlight-description {
+  margin-bottom: 25px;
+  color: var(--light-text);
+  line-height: 1.6;
+}
+
+.read-more {
+  display: inline-block;
+  margin-left: 5px;
+  color: var(--primary-pink);
+  font-weight: 500;
+}
+
+.spotlight-features {
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--light-pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--primary-pink);
+}
+
+.feature-text {
+  font-size: 14px;
+  color: var(--light-text);
+}
+
+.spotlight-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 15px;
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.placeholder-image:after {
+  content: 'Product Image';
+  color: #999;
+  font-size: 16px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+/* Mobile Styles */
+@media (max-width: 991px) {
+  .spotlight-product {
+    flex-direction: column;
+  }
+  
+  .spotlight-image {
+    min-height: 300px;
+  }
+  
+  .spotlight-content {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .featured-product-spotlight {
+    padding: 50px 0;
+  }
+  
+  .spotlight-image {
+    min-height: 250px;
+  }
+  
+  .spotlight-content h3 {
+    font-size: 24px;
+  }
+  
+  .spotlight-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .spotlight-actions {
+    flex-direction: column;
+  }
+  
+  .spotlight-actions .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thumbnail image switching
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    if (thumbnails.length > 0) {
+      thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+          const mainImage = this.closest('.spotlight-image').querySelector('img:first-child');
+          const imageUrl = this.getAttribute('data-image');
+          
+          // Update main image
+          mainImage.src = imageUrl;
+          
+          // Update active state
+          thumbnails.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    }
+    
+    // Add to cart functionality
+    const addToCartBtn = document.querySelector('.add-to-cart');
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        if (productId) {
+          // This would typically use the Shopify AJAX API
+          console.log('Adding product to cart:', productId);
+          
+          // Example of how to add to cart with Shopify AJAX API
+          /*
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: productId,
+              quantity: 1
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Product added to cart:', data);
+            // Update cart count or show confirmation
+          })
+          .catch(error => {
+            console.error('Error adding product to cart:', error);
+          });
+          */
+        }
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Featured Product Spotlight",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured Product"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover our most popular item"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View Details"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "header",
+      "content": "Product Features"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_icon",
+      "label": "Feature 1 icon",
+      "default": "★",
+      "info": "Use emoji or icon code"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_text",
+      "label": "Feature 1 text",
+      "default": "Premium Quality"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_icon",
+      "label": "Feature 2 icon",
+      "default": "🚚",
+      "info": "Use emoji or icon code"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_text",
+      "label": "Feature 2 text",
+      "default": "Fast Shipping"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_icon",
+      "label": "Feature 3 icon",
+      "default": "↻",
+      "info": "Use emoji or icon code"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_text",
+      "label": "Feature 3 text",
+      "default": "Easy Returns"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Product Spotlight",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

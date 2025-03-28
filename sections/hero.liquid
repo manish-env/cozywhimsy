@@ -1,49 +1,314 @@
 <section class="hero">
-  <div class="hero-content">
-    <h1>{{ section.settings.heading | escape }}</h1>
-    <p>{{ section.settings.subheading | escape }}</p>
-    <div class="hero-buttons">
-      {% if section.settings.button_link != blank %}
-        <a href="{{ section.settings.button_link }}" class="btn primary-btn">{{ section.settings.button_text }}</a>
-      {% endif %}
-      {% if section.settings.secondary_button_link != blank %}
-        <a href="{{ section.settings.secondary_button_link }}" class="btn secondary-btn">{{ section.settings.secondary_button_text }}</a>
-      {% endif %}
-    </div>
-  </div>
-  <div class="hero-images">
-    <div class="hero-image primary">
-      {% if section.settings.image != blank %}
-        <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
-      {% else %}
-        <div class="placeholder-image"></div>
-      {% endif %}
-      <div class="image-overlay">
-        <div class="overlay-content">
-          <h3>{{ section.settings.primary_caption | default: 'New Arrivals' }}</h3>
-          {% if section.settings.button_link != blank %}
-            <a href="{{ section.settings.button_link }}" class="overlay-btn">{{ section.settings.button_text }}</a>
-          {% endif %}
-        </div>
+  <div class="hero-wrapper">
+    <div class="hero-content">
+      <h1>{{ section.settings.heading | escape }}</h1>
+      <p>{{ section.settings.subheading | escape }}</p>
+      <div class="hero-buttons">
+        {% if section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn primary-btn">{{ section.settings.button_text }}</a>
+        {% endif %}
+        {% if section.settings.secondary_button_link != blank %}
+          <a href="{{ section.settings.secondary_button_link }}" class="btn secondary-btn">{{ section.settings.secondary_button_text }}</a>
+        {% endif %}
       </div>
     </div>
-    <div class="hero-image secondary">
-      {% if section.settings.secondary_image != blank %}
-        <img src="{{ section.settings.secondary_image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
-      {% else %}
-        <div class="placeholder-image"></div>
-      {% endif %}
-      <div class="image-overlay">
-        <div class="overlay-content">
-          <h3>{{ section.settings.secondary_caption | default: 'Featured Collection' }}</h3>
-          {% if section.settings.secondary_button_link != blank %}
-            <a href="{{ section.settings.secondary_button_link }}" class="overlay-btn">{{ section.settings.secondary_button_text }}</a>
-          {% endif %}
+    <div class="hero-images">
+      <div class="hero-image primary">
+        {% if section.settings.image != blank %}
+          <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
+        {% else %}
+          <div class="placeholder-image"></div>
+        {% endif %}
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <h3>{{ section.settings.primary_caption | default: 'New Arrivals' }}</h3>
+            {% if section.settings.button_link != blank %}
+              <a href="{{ section.settings.button_link }}" class="overlay-btn">{{ section.settings.button_text }}</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="hero-image secondary">
+        {% if section.settings.secondary_image != blank %}
+          <img src="{{ section.settings.secondary_image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
+        {% else %}
+          <div class="placeholder-image"></div>
+        {% endif %}
+        <div class="image-overlay">
+          <div class="overlay-content">
+            <h3>{{ section.settings.secondary_caption | default: 'Featured Collection' }}</h3>
+            {% if section.settings.secondary_button_link != blank %}
+              <a href="{{ section.settings.secondary_button_link }}" class="overlay-btn">{{ section.settings.secondary_button_text }}</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+.hero {
+  width: 100%;
+  background-color: #fff;
+  padding: 40px 0;
+}
+
+.hero-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.hero-content {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.hero-content h1 {
+  font-size: 42px;
+  margin-bottom: 16px;
+  color: #333;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-content p {
+  font-size: 16px;
+  margin-bottom: 24px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.primary-btn {
+  background-color: #e1306c;
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #d62f68;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(225, 48, 108, 0.3);
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: #333;
+  border: 1px solid #333;
+}
+
+.secondary-btn:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-images {
+  flex: 1.2;
+  display: flex;
+  gap: 20px;
+}
+
+.hero-image {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.hero-image.primary {
+  flex: 3;
+  height: 400px;
+}
+
+.hero-image.secondary {
+  flex: 2;
+  height: 400px;
+}
+
+.hero-image:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: 25px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hero-image:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover .overlay-content {
+  transform: translateY(0);
+}
+
+.overlay-content h3 {
+  color: white;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+}
+
+.overlay-btn {
+  display: inline-block;
+  padding: 8px 20px;
+  background-color: #e1306c;
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.overlay-btn:hover {
+  background-color: #d62f68;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-image:after {
+  content: 'Image';
+  color: #999;
+  font-size: 16px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 991px) {
+  .hero-wrapper {
+    flex-direction: column;
+    padding: 30px 20px;
+  }
+  
+  .hero-content {
+    width: 100%;
+    padding-right: 0;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .hero-buttons {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .hero {
+    padding: 25px 0;
+  }
+  
+  .hero-wrapper {
+    padding: 0 15px;
+  }
+  
+  .hero-content h1 {
+    font-size: 32px;
+  }
+  
+  .hero-content p {
+    font-size: 15px;
+  }
+  
+  .hero-images {
+    flex-direction: column;
+  }
+  
+  .hero-image.primary,
+  .hero-image.secondary {
+    height: 250px;
+    margin-bottom: 15px;
+  }
+  
+  .image-overlay {
+    opacity: 1;
+    padding: 15px;
+  }
+  
+  .overlay-content {
+    transform: translateY(0);
+  }
+  
+  .overlay-content h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  .overlay-btn {
+    padding: 6px 15px;
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .hero-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .hero-image.primary,
+  .hero-image.secondary {
+    height: 200px;
+  }
+}
+</style>
 
 {% schema %}
 {

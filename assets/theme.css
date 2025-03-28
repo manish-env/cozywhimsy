@@ -60,12 +60,78 @@ img {
 }
 
 section {
-    padding: 80px 0;
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+section:nth-child(odd) {
+    background-color: var(--white);
+}
+
+section:nth-child(even) {
+    background-color: var(--light-gray);
+}
+
+/* Section dividers */
+section:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--medium-gray), transparent);
+}
+
+/* Section with accent background */
+section.accent-section {
+    background: var(--light-pink);
+    position: relative;
+}
+
+section.accent-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+}
+
+/* Section with purple accent */
+section.purple-accent {
+    background: var(--light-purple);
+    position: relative;
+}
+
+section.purple-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.4;
 }
 
 .section-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.section-header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient);
+    margin: 15px auto 0;
+    border-radius: 3px;
 }
 
 .section-title {
@@ -74,6 +140,21 @@ section {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
+    font-family: 'Quicksand', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.section-heading,
+section h1,
+section h2,
+section h3,
+section h4,
+.shopify-section h1,
+.shopify-section h2,
+.shopify-section h3,
+.shopify-section h4 {
+    font-family: 'Quicksand', sans-serif;
 }
 
 .section-subtitle {

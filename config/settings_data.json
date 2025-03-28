@@ -1,0 +1,120 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "search_placeholder": "Search for products...",
+          "menu": "main-menu",
+          "sticky_header": true,
+          "header_bg": "#ffffff",
+          "header_text": "#333333"
+        }
+      },
+      "hero": {
+        "type": "hero",
+        "settings": {
+          "heading": "Discover Unique & Cozy Treasures",
+          "subheading": "Handpicked items to bring warmth and whimsy to your everyday life",
+          "button_link": "",
+          "button_text": "Shop Now",
+          "secondary_button_link": "shopify://products/cute-cat-animal-silicone-baby-night-light",
+          "secondary_button_text": "Explore Collections",
+          "image": "shopify://shop_images/5089441490.jpg"
+        }
+      },
+      "featured-categories": {
+        "type": "featured-categories",
+        "blocks": {
+          "category_iPDhmN": {
+            "type": "category",
+            "settings": {
+              "collection": "light-animals",
+              "title": "Cozy Lamps",
+              "image": "shopify://shop_images/5186147315.jpg",
+              "background_color": "#f8e1e8",
+              "button_text": "Explore"
+            }
+          },
+          "category_gfNadD": {
+            "type": "category",
+            "settings": {
+              "collection": "frontpage",
+              "title": "Summer Stars",
+              "background_color": "#f8e1e8",
+              "button_text": "Explore"
+            }
+          }
+        },
+        "block_order": [
+          "category_iPDhmN",
+          "category_gfNadD"
+        ],
+        "settings": {
+          "title": "Shop by Category",
+          "subtitle": "Find something special for every space and occasion"
+        }
+      },
+      "featured-products": {
+        "type": "featured-products",
+        "settings": {
+          "title": "Featured Products",
+          "subtitle": "Our most loved items this season",
+          "collection": "light-animals",
+          "products_to_show": 4,
+          "view_all_link": "",
+          "view_all_text": "View All Products"
+        }
+      },
+      "instagram-showcase": {
+        "type": "instagram-showcase",
+        "settings": {
+          "title": "Follow Our Journey",
+          "subtitle": "@cozywhimsy on Instagram",
+          "video_url": "",
+          "embed_code": "",
+          "instagram_url": "",
+          "button_text": "Follow Us on Instagram"
+        }
+      },
+      "testimonials": {
+        "type": "testimonials",
+        "settings": {
+          "title": "What Our Customers Say",
+          "subtitle": "Real experiences from our community"
+        }
+      },
+      "newsletter": {
+        "type": "newsletter",
+        "settings": {
+          "title": "Join Our Newsletter",
+          "subtitle": "Subscribe to receive updates, access to exclusive deals, and more.",
+          "placeholder": "Enter your email address",
+          "button_text": "Subscribe"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "footer_text": "Bringing warmth and whimsy to your everyday life through carefully curated products that inspire joy and comfort.",
+          "instagram_link": "",
+          "pinterest_link": "",
+          "facebook_link": "",
+          "twitter_link": "",
+          "copyright_text": "© 2025 Cozywhimsy. All rights reserved.",
+          "footer_bottom_menu": ""
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}

@@ -82,7 +82,7 @@
         "type": "instagram-showcase",
         "settings": {
           "title": "Follow Our Journey",
-          "subtitle": "@cozywhimsy on Instagram",
+          "subtitle": "@cozywhimsy.store on Instagram",
           "video_url": "",
           "embed_code": "",
           "instagram_url": "",
@@ -92,8 +92,8 @@
       "testimonials": {
         "type": "testimonials",
         "settings": {
-          "title": "What Our Customers Say",
-          "subtitle": "Real experiences from our community"
+          "title": "",
+          "subtitle": ""
         }
       },
       "newsletter": {

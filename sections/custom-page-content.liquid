@@ -1,0 +1,79 @@
+<div class="custom-page-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">{{ page.title | escape }}</h1>
+    </div>
+    <div class="page-content rte">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Page Content",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Page Content"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .custom-page-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .page-header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+    margin-bottom: 0;
+    color: var(--dark-text);
+  }
+  
+  .page-content {
+    line-height: 1.7;
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 767px) {
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .page-content {
+      font-size: 1rem;
+    }
+  }
+</style>

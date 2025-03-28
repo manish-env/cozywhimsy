@@ -1,0 +1,109 @@
+<div class="collection-banner">
+  <div class="container">
+    {% if section.settings.show_collection_image and collection.image %}
+      <div class="collection-banner-image">
+        <img src="{{ collection.image | img_url: 'master' }}" alt="{{ collection.title | escape }}">
+      </div>
+    {% endif %}
+    
+    <div class="collection-banner-content">
+      <h1 class="collection-title">{{ collection.title | escape }}</h1>
+      
+      {% if section.settings.show_collection_description and collection.description != blank %}
+        <div class="collection-description rte">
+          {{ collection.description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "default": true,
+      "label": "Show collection description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "default": true,
+      "label": "Show collection image"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "background-1",
+          "label": "Light"
+        },
+        {
+          "value": "background-2",
+          "label": "Dark"
+        }
+      ],
+      "default": "background-1",
+      "label": "Color scheme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Banner"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .collection-banner {
+    padding: 60px 0 30px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--light-pink) 0%, var(--light-purple) 100%);
+  }
+  
+  .collection-banner-image {
+    max-width: 1000px;
+    margin: 0 auto 30px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .collection-banner-image img {
+    width: 100%;
+    display: block;
+  }
+  
+  .collection-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--dark-text);
+  }
+  
+  .collection-description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--light-text);
+  }
+  
+  @media (max-width: 767px) {
+    .collection-banner {
+      padding: 40px 0 20px;
+    }
+    
+    .collection-title {
+      font-size: 2rem;
+    }
+    
+    .collection-description {
+      font-size: 1rem;
+    }
+  }
+</style>

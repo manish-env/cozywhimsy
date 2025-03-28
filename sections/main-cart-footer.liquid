@@ -1,0 +1,312 @@
+<div class="cart-footer">
+  <div class="container">
+    {% if cart.item_count > 0 %}
+      <div class="cart-footer-content">
+        <div class="cart-footer-left">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'cart_notes' %}
+                <div class="cart-notes" {{ block.shopify_attributes }}>
+                  <label for="CartNote">{{ block.settings.cart_note_label }}</label>
+                  <textarea name="note" id="CartNote" placeholder="{{ block.settings.cart_note_placeholder }}">{{ cart.note }}</textarea>
+                </div>
+              
+              {% when 'shipping_calculator' %}
+                <div class="shipping-calculator" {{ block.shopify_attributes }}>
+                  <h3>{{ block.settings.shipping_calculator_heading }}</h3>
+                  <div class="shipping-calculator-form">
+                    <div class="field">
+                      <label for="address_country">Country</label>
+                      <select id="address_country" name="address[country]" data-default="{{ settings.shipping_calculator_default_country }}"></select>
+                    </div>
+                    <div class="field">
+                      <label for="address_province">State/Province</label>
+                      <select id="address_province" name="address[province]"></select>
+                    </div>
+                    <div class="field">
+                      <label for="address_zip">Zip/Postal Code</label>
+                      <input type="text" id="address_zip" name="address[zip]">
+                    </div>
+                    <div class="shipping-calculator-actions">
+                      <button type="button" class="get-rates">{{ block.settings.shipping_calculator_button_text }}</button>
+                    </div>
+                    <div id="shipping-rates-feedback"></div>
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+        
+        <div class="cart-footer-right">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'cart_subtotal' %}
+                <div class="cart-subtotal" {{ block.shopify_attributes }}>
+                  <div class="cart-subtotal-row">
+                    <span class="cart-subtotal-title">Subtotal</span>
+                    <span class="cart-subtotal-value">{{ cart.items_subtotal_price | money }}</span>
+                  </div>
+                  
+                  {% if cart.cart_level_discount_applications.size > 0 %}
+                    {% for discount_application in cart.cart_level_discount_applications %}
+                      <div class="cart-discount-row">
+                        <span class="cart-discount-title">{{ discount_application.title }}</span>
+                        <span class="cart-discount-value">-{{ discount_application.total_allocated_amount | money }}</span>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                  
+                  <div class="cart-total-row">
+                    <span class="cart-total-title">Total</span>
+                    <span class="cart-total-value">{{ cart.total_price | money }}</span>
+                  </div>
+                  
+                  {% if cart.taxes_included %}
+                    <div class="cart-tax-note">
+                      <small>Tax included. Shipping calculated at checkout.</small>
+                    </div>
+                  {% else %}
+                    <div class="cart-tax-note">
+                      <small>Tax and shipping calculated at checkout.</small>
+                    </div>
+                  {% endif %}
+                </div>
+              
+              {% when 'buttons' %}
+                <div class="cart-checkout" {{ block.shopify_attributes }}>
+                  <button type="submit" name="checkout" class="checkout-button" form="cart-form">
+                    Checkout
+                  </button>
+                  
+                  {% if additional_checkout_buttons %}
+                    <div class="additional-checkout-buttons">
+                      {{ content_for_additional_checkout_buttons }}
+                    </div>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart Footer",
+  "blocks": [
+    {
+      "type": "cart_subtotal",
+      "name": "Subtotal",
+      "limit": 1
+    },
+    {
+      "type": "cart_notes",
+      "name": "Cart Notes",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "cart_note_label",
+          "label": "Cart Note Label",
+          "default": "Add a note to your order"
+        },
+        {
+          "type": "text",
+          "id": "cart_note_placeholder",
+          "label": "Cart Note Placeholder",
+          "default": "How can we help you?"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "Checkout Buttons",
+      "limit": 1
+    },
+    {
+      "type": "shipping_calculator",
+      "name": "Shipping Calculator",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "shipping_calculator_heading",
+          "label": "Shipping Calculator Heading",
+          "default": "Estimate Shipping"
+        },
+        {
+          "type": "text",
+          "id": "shipping_calculator_button_text",
+          "label": "Calculate Shipping Button Text",
+          "default": "Calculate Shipping"
+        }
+      ]
+    }
+  ],
+  "settings": []
+}
+{% endschema %}
+
+<style>
+  .cart-footer {
+    margin-bottom: 50px;
+  }
+  
+  .cart-footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  
+  @media (max-width: 767px) {
+    .cart-footer-content {
+      grid-template-columns: 1fr;
+    }
+    
+    .cart-footer-left {
+      order: 2;
+    }
+    
+    .cart-footer-right {
+      order: 1;
+    }
+  }
+  
+  .cart-notes {
+    margin-bottom: 30px;
+  }
+  
+  .cart-notes label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  
+  .cart-notes textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-sm);
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .shipping-calculator {
+    margin-bottom: 30px;
+  }
+  
+  .shipping-calculator h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+  
+  .shipping-calculator-form .field {
+    margin-bottom: 15px;
+  }
+  
+  .shipping-calculator-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .shipping-calculator-form select,
+  .shipping-calculator-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-sm);
+  }
+  
+  .shipping-calculator-actions {
+    margin-top: 15px;
+  }
+  
+  .get-rates {
+    background: var(--light-purple);
+    color: var(--primary-purple);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .get-rates:hover {
+    background: var(--primary-purple);
+    color: white;
+  }
+  
+  #shipping-rates-feedback {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  
+  .cart-subtotal {
+    background: var(--light-gray);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+  }
+  
+  .cart-subtotal-row,
+  .cart-discount-row,
+  .cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .cart-total-row {
+    padding-top: 10px;
+    border-top: 1px solid var(--medium-gray);
+    font-weight: 600;
+    font-size: 1.1em;
+  }
+  
+  .cart-discount-title,
+  .cart-discount-value {
+    color: var(--primary-pink);
+  }
+  
+  .cart-tax-note {
+    text-align: center;
+    margin-top: 10px;
+    color: var(--light-text);
+  }
+  
+  .checkout-button {
+    width: 100%;
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+  }
+  
+  .checkout-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 107, 154, 0.3);
+  }
+  
+  .additional-checkout-buttons {
+    margin-top: 15px;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Shipping calculator functionality would go here
+    // This would typically use the Shopify Countries.js library
+    // For a full implementation, you would need to include the Countries.js script
+    // and implement the shipping calculator functionality
+  });
+</script>

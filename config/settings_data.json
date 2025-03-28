@@ -43,10 +43,20 @@
               "background_color": "#f8e1e8",
               "button_text": "Explore"
             }
+          },
+          "category_gfNadD": {
+            "type": "category",
+            "settings": {
+              "collection": "frontpage",
+              "title": "Summer Stars",
+              "background_color": "#f8e1e8",
+              "button_text": "Explore"
+            }
           }
         },
         "block_order": [
-          "category_iPDhmN"
+          "category_iPDhmN",
+          "category_gfNadD"
         ],
         "settings": {
           "title": "Shop by Category",

@@ -51,6 +51,8 @@
 {% schema %}
 {
   "name": "Featured Categories",
+  "tag": "section",
+  "class": "section",
   "settings": [
     {
       "type": "text",
@@ -62,7 +64,27 @@
       "type": "text",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Find something special for every space and occasion"
+      "default": "Explore our curated collections"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
     }
   ],
   "blocks": [
@@ -71,34 +93,26 @@
       "name": "Category",
       "settings": [
         {
+          "type": "text",
+          "id": "title",
+          "label": "Category title",
+          "default": "Category"
+        },
+        {
           "type": "collection",
           "id": "collection",
           "label": "Collection"
         },
         {
-          "type": "text",
-          "id": "title",
-          "label": "Custom Title",
-          "info": "Defaults to collection title if left blank"
-        },
-        {
           "type": "image_picker",
           "id": "image",
-          "label": "Custom Image",
-          "info": "Will use collection image if not specified"
-        },
-        {
-          "type": "color",
-          "id": "background_color",
-          "label": "Background Color",
-          "default": "#f8e1e8",
-          "info": "Used if no image is available"
+          "label": "Image"
         },
         {
           "type": "text",
           "id": "button_text",
-          "label": "Button Text",
-          "default": "Explore"
+          "label": "Button text",
+          "default": "Shop Now"
         }
       ]
     }
@@ -106,11 +120,7 @@
   "presets": [
     {
       "name": "Featured Categories",
-      "category": "Collection",
       "blocks": [
-        {
-          "type": "category"
-        },
         {
           "type": "category"
         },

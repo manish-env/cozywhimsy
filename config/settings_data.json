@@ -41,19 +41,17 @@
           "category_iPDhmN": {
             "type": "category",
             "settings": {
-              "collection": "light-animals",
               "title": "Cozy Lamps",
+              "collection": "light-animals",
               "image": "shopify://shop_images/5186147315.jpg",
-              "background_color": "#f8e1e8",
               "button_text": "Explore"
             }
           },
           "category_gfNadD": {
             "type": "category",
             "settings": {
-              "collection": "frontpage",
               "title": "Summer Stars",
-              "background_color": "#f8e1e8",
+              "collection": "frontpage",
               "button_text": "Explore"
             }
           }

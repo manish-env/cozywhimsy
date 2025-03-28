@@ -55,6 +55,22 @@
         "padding_bottom": 36
       }
     },
+    "featured_product_spotlight_9Jd4aF": {
+      "type": "featured-product-spotlight",
+      "settings": {
+        "title": "Featured Product",
+        "subtitle": "Discover our most popular item",
+        "product": "cute-cat-animal-silicone-baby-night-light",
+        "button_text": "View Details",
+        "add_to_cart_text": "Add to Cart",
+        "feature_1_icon": "★",
+        "feature_1_text": "Premium Quality",
+        "feature_2_icon": "🚚",
+        "feature_2_text": "Fast Shipping",
+        "feature_3_icon": "↻",
+        "feature_3_text": "Easy Returns"
+      }
+    },
     "featured_products": {
       "type": "featured-products",
       "settings": {
@@ -130,6 +146,7 @@
   "order": [
     "hero",
     "featured_categories",
+    "featured_product_spotlight_9Jd4aF",
     "featured_products",
     "instagram_showcase"
   ]

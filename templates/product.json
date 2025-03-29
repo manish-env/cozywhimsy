@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "main": {
+      "type": "enhanced-product",
+      "settings": {
+        "gallery_layout": "thumbnails",
+        "media_size": "large",
+        "variant_style": "buttons",
+        "hide_variants": false,
+        "add_to_cart_text": "Add to Cart",
+        "enable_buy_now": true,
+        "buy_now_text": "Buy Now",
+        "enable_order_booking": true,
+        "show_time_slots": true,
+        "enable_gift_option": true,
+        "show_shipping_info": true,
+        "free_shipping_threshold": "$50",
+        "return_days": "30",
+        "enable_sticky_info": true,
+        "enable_video_looping": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

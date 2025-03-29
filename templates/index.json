@@ -27,6 +27,14 @@
     "featured_categories": {
       "type": "featured-categories",
       "blocks": {
+        "category_WQQnD9": {
+          "type": "category",
+          "settings": {
+            "title": "Category",
+            "collection": "anime-collection",
+            "button_text": "Shop Now"
+          }
+        },
         "category_1": {
           "type": "category",
           "settings": {
@@ -45,6 +53,7 @@
         }
       },
       "block_order": [
+        "category_WQQnD9",
         "category_1",
         "category_2"
       ],

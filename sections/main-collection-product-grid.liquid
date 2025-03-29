@@ -1,5 +1,5 @@
 <div class="collection-product-grid">
-  <div class="container">
+  <div class="container product-container">
     <div class="collection-toolbar">
       {% if section.settings.enable_filtering %}
         <div class="collection-filters">
@@ -305,13 +305,20 @@
     padding: var(--padding-top, 36px) 0 var(--padding-bottom, 36px);
   }
   
+  .product-container {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
   .collection-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0 15px;
     margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .filter-button {
@@ -479,7 +486,8 @@
   .product-grid {
     display: grid;
     grid-template-columns: repeat(var(--columns-desktop, 4), 1fr);
-    gap: 30px;
+    gap: 20px;
+    padding: 0;
   }
   
   .product-card {
@@ -672,7 +680,12 @@
     }
   }
   
-  @media (max-width: 480px) {
+  @media (max-width: 479px) {
+    .product-grid {
+      grid-template-columns: repeat(var(--columns-mobile, 2), 1fr);
+      gap: 10px;
+    }
+    
     .product-info {
       padding: 10px;
     }

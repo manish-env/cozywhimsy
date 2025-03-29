@@ -13,8 +13,7 @@
       </div>
     </div>
     
-    <!-- Desktop Static Images -->
-    <div class="hero-images desktop-only">
+    <div class="hero-images">
       <div class="hero-image primary">
         {% if section.settings.image != blank %}
           <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
@@ -354,7 +353,7 @@
     justify-content: center;
   }
   
-  .desktop-only {
+  .hero-images {
     display: none;
   }
   

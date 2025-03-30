@@ -42,7 +42,7 @@
               {%- endif -%}
             {%- endfor -%}
             {%- if product.id != current_product.id and is_in_array == false -%}
-              {%- assign unique_related_products_array = unique_related_products_array | push: product.id -%}
+              {%- assign unique_related_products = unique_related_products | append: product.id | append: ',' -%}
             {%- endif -%}
           {%- endfor -%}
         {%- endif -%}

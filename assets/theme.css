@@ -53,14 +53,14 @@ img {
 }
 
 .container {
-    width: 90%;
+    width: 99%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
 section {
-    padding: 60px 0;
+    padding: 10px 0;
     position: relative;
     overflow: hidden;
 }
@@ -1969,7 +1969,7 @@ section h4,
 
 @media (max-width: 768px) {
     section {
-        padding: 60px 0;
+        padding: 10px 0;
     }
     
     .nav-toggle {

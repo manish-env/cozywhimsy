@@ -1,27 +1,336 @@
-<div class="collection-banner">
+<div class="collection-banner {% if section.settings.full_width %}full-width{% endif %}" 
+     style="background-color: {{ section.settings.bg_color }}; 
+            {% if section.settings.overlay_opacity > 0 and collection.image %}
+              background-image: linear-gradient(rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }})), url({{ collection.image | img_url: 'master' }});
+              background-size: cover;
+              background-position: center;
+            {% endif %}">
   <div class="container">
-    {% if section.settings.show_collection_image and collection.image %}
-      <div class="collection-banner-image">
-        <img src="{{ collection.image | img_url: 'master' }}" alt="{{ collection.title | escape }}">
+    <div class="collection-banner-content" style="text-align: {{ section.settings.text_alignment }};">
+      {% if section.settings.show_breadcrumbs %}
+        <nav class="breadcrumbs" aria-label="Breadcrumbs">
+          <ol>
+            <li><a href="/" style="color: {{ section.settings.breadcrumb_color }};">Home</a></li>
+            <li><a href="/collections" style="color: {{ section.settings.breadcrumb_color }};">Collections</a></li>
+            <li aria-current="page" style="color: {{ section.settings.breadcrumb_color }};">{{ collection.title }}</li>
+          </ol>
+        </nav>
+      {% endif %}
+      
+      <div class="collection-header">
+        <h1 class="collection-title" style="color: {{ section.settings.title_color }}; font-size: {{ section.settings.title_size }}px;">
+          {{ collection.title | escape }}
+        </h1>
+        
+        {% if section.settings.show_decorative_element %}
+          <div class="decorative-element">
+            <svg width="80" height="20" viewBox="0 0 80 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 10H30" stroke="{{ section.settings.decorative_color }}" stroke-width="2"/>
+              <circle cx="40" cy="10" r="5" fill="{{ section.settings.decorative_color }}"/>
+              <path d="M50 10H80" stroke="{{ section.settings.decorative_color }}" stroke-width="2"/>
+            </svg>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
-    
-    <div class="collection-banner-content">
-      <h1 class="collection-title">{{ collection.title | escape }}</h1>
       
       {% if section.settings.show_collection_description and collection.description != blank %}
-        <div class="collection-description rte">
+        <div class="collection-description rte" style="color: {{ section.settings.description_color }}; font-size: {{ section.settings.description_size }}px;">
           {{ collection.description }}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.show_collection_stats %}
+        <div class="collection-stats">
+          <span class="product-count">{{ collection.products_count }} products</span>
+          {% if collection.all_tags.size > 0 %}
+            <span class="tag-count">{{ collection.all_tags.size }} tags</span>
+          {% endif %}
         </div>
       {% endif %}
     </div>
   </div>
+  
+  {% if section.settings.show_wave_divider %}
+    <div class="wave-divider">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
+        <path fill="{{ section.settings.bg_color }}" fill-opacity="1" d="M0,32L60,42.7C120,53,240,75,360,74.7C480,75,600,53,720,42.7C840,32,960,32,1080,37.3C1200,43,1320,53,1380,58.7L1440,64L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+      </svg>
+    </div>
+  {% endif %}
 </div>
+
+<style>
+  .collection-banner {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .collection-banner.full-width {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .collection-banner .container {
+    max-width: {{ section.settings.content_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .collection-header {
+    display: flex;
+    flex-direction: column;
+    align-items: {{ section.settings.text_alignment }};
+    margin-bottom: 20px;
+  }
+  
+  .collection-title {
+    margin: 0 0 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: {{ section.settings.title_case }};
+  }
+  
+  .decorative-element {
+    margin: 15px 0;
+    text-align: {{ section.settings.text_alignment }};
+  }
+  
+  .collection-description {
+    margin-bottom: 25px;
+    max-width: 800px;
+    {% if section.settings.text_alignment == 'center' %}
+    margin-left: auto;
+    margin-right: auto;
+    {% elsif section.settings.text_alignment == 'right' %}
+    margin-left: auto;
+    {% endif %}
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  
+  .collection-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: {{ section.settings.text_alignment }};
+    font-size: 14px;
+    color: {{ section.settings.description_color }};
+    opacity: 0.8;
+    margin-top: 10px;
+  }
+  
+  .breadcrumbs {
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+  
+  .breadcrumbs li:not(:last-child)::after {
+    content: '/';
+    margin: 0 8px;
+    opacity: 0.5;
+  }
+  
+  .breadcrumbs a {
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .breadcrumbs a:hover {
+    opacity: 0.7;
+  }
+  
+  .wave-divider {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 1;
+    line-height: 0;
+  }
+  
+  .wave-divider svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  @media (max-width: 767px) {
+    .collection-title {
+      font-size: calc({{ section.settings.title_size }}px * 0.7) !important;
+    }
+    
+    .collection-description {
+      font-size: calc({{ section.settings.description_size }}px * 0.9) !important;
+    }
+    
+    .breadcrumbs {
+      font-size: 12px;
+    }
+    
+    .decorative-element svg {
+      width: 60px;
+      height: 15px;
+    }
+  }
+</style>
 
 {% schema %}
 {
   "name": "Collection Banner",
   "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200,
+      "label": "Content width (px)"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center",
+      "label": "Text alignment"
+    },
+    {
+      "type": "header",
+      "content": "Colors & Background"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "default": "#f8f8f8",
+      "label": "Background color"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "default": 30,
+      "label": "Image overlay opacity",
+      "info": "Darkens the collection image to ensure text readability"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "default": "#333333",
+      "label": "Title color"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "default": "#666666",
+      "label": "Description color"
+    },
+    {
+      "type": "color",
+      "id": "breadcrumb_color",
+      "default": "#666666",
+      "label": "Breadcrumb color"
+    },
+    {
+      "type": "color",
+      "id": "decorative_color",
+      "default": "#ff6b9a",
+      "label": "Decorative element color"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 36,
+      "label": "Title size (px)"
+    },
+    {
+      "type": "select",
+      "id": "title_case",
+      "options": [
+        {
+          "value": "none",
+          "label": "Normal"
+        },
+        {
+          "value": "uppercase",
+          "label": "UPPERCASE"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "none",
+      "label": "Title text case"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "label": "Description size (px)"
+    },
+    {
+      "type": "header",
+      "content": "Elements"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "default": true,
+      "label": "Show breadcrumbs"
+    },
     {
       "type": "checkbox",
       "id": "show_collection_description",
@@ -30,80 +339,59 @@
     },
     {
       "type": "checkbox",
-      "id": "show_collection_image",
+      "id": "show_decorative_element",
       "default": true,
-      "label": "Show collection image"
+      "label": "Show decorative element"
     },
     {
-      "type": "select",
-      "id": "color_scheme",
-      "options": [
-        {
-          "value": "background-1",
-          "label": "Light"
-        },
-        {
-          "value": "background-2",
-          "label": "Dark"
-        }
-      ],
-      "default": "background-1",
-      "label": "Color scheme"
+      "type": "checkbox",
+      "id": "show_collection_stats",
+      "default": true,
+      "label": "Show collection stats"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wave_divider",
+      "default": true,
+      "label": "Show wave divider"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "label": "Top padding (px)"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "label": "Bottom padding (px)"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "label": "Bottom margin (px)"
     }
   ],
   "presets": [
     {
-      "name": "Collection Banner"
+      "name": "Collection Banner",
+      "category": "Collection"
     }
   ]
 }
 {% endschema %}
-
-<style>
-  .collection-banner {
-    padding: 60px 0 30px;
-    text-align: center;
-    background: linear-gradient(135deg, var(--light-pink) 0%, var(--light-purple) 100%);
-  }
-  
-  .collection-banner-image {
-    max-width: 1000px;
-    margin: 0 auto 30px;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-  }
-  
-  .collection-banner-image img {
-    width: 100%;
-    display: block;
-  }
-  
-  .collection-title {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: var(--dark-text);
-  }
-  
-  .collection-description {
-    max-width: 800px;
-    margin: 0 auto;
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: var(--light-text);
-  }
-  
-  @media (max-width: 767px) {
-    .collection-banner {
-      padding: 40px 0 20px;
-    }
-    
-    .collection-title {
-      font-size: 2rem;
-    }
-    
-    .collection-description {
-      font-size: 1rem;
-    }
-  }
-</style>

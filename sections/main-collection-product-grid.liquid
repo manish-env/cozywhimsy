@@ -3,13 +3,13 @@
     <div class="collection-toolbar">
       {% if section.settings.enable_filtering %}
         <div class="collection-filters">
-          <button class="filter-button" aria-expanded="false" aria-controls="FilterDrawer" style="background: {{ section.settings.filter_button_bg }}; color: {{ section.settings.filter_button_text }}; border: {{ section.settings.filter_button_border }}; border-radius: {{ section.settings.button_radius }}px;">
-            <i class="fas fa-sliders-h"></i> Filter
+          <button class="filter-button" aria-expanded="false" aria-controls="FilterDrawer">
+            <i class="fas fa-sliders-h"></i> <span>Filter</span>
           </button>
           
           <div id="FilterDrawer" class="filter-drawer {% if section.settings.filter_type == 'drawer' %}filter-drawer-style{% endif %}">
             <div class="filter-drawer-header">
-              <h3>Filter</h3>
+              <h3>Filter Products</h3>
               <button class="close-filter" aria-label="Close filters">
                 <i class="fas fa-times"></i>
               </button>
@@ -22,8 +22,9 @@
                     <details class="filter-details">
                       <summary class="filter-title">
                         <div>{{ filter.label }}</div>
-                        <span class="icon-plus"></span>
-                        <span class="icon-minus"></span>
+                        <span class="icon-toggle">
+                          <i class="fas fa-chevron-down"></i>
+                        </span>
                       </summary>
                       <div class="filter-content">
                         {%- case filter.type -%}
@@ -37,7 +38,8 @@
                                            value="{{ filter_value.value }}" 
                                            {% if filter_value.active %}checked{% endif %} 
                                            {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}>
-                                    <span>{{ filter_value.label }}</span>
+                                    <span class="checkbox-custom"></span>
+                                    <span class="filter-text">{{ filter_value.label }}</span>
                                     <span class="filter-count">({{ filter_value.count }})</span>
                                   </label>
                                 </li>
@@ -75,23 +77,61 @@
       {% if section.settings.enable_sorting %}
         <div class="collection-sort">
           <label for="SortBy">Sort by:</label>
-          <select id="SortBy" class="sort-by">
-            <option value="manual" {% if collection.sort_by == 'manual' %}selected{% endif %}>Featured</option>
-            <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
-            <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
-            <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
-            <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
-            <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price, high to low</option>
-            <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Date, new to old</option>
-            <option value="created-ascending" {% if collection.sort_by == 'created-ascending' %}selected{% endif %}>Date, old to new</option>
-          </select>
+          <div class="select-wrapper">
+            <select id="SortBy" class="sort-by">
+              <option value="manual" {% if collection.sort_by == 'manual' %}selected{% endif %}>Featured</option>
+              <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+              <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
+              <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
+              <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
+              <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price, high to low</option>
+              <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Date, new to old</option>
+              <option value="created-ascending" {% if collection.sort_by == 'created-ascending' %}selected{% endif %}>Date, old to new</option>
+            </select>
+            <span class="select-icon">
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </div>
         </div>
       {% endif %}
+      
+      <div class="view-options">
+        <button class="view-option grid-view active" aria-label="Grid view">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="view-option list-view" aria-label="List view">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
     </div>
     
     <div class="product-count" {% if section.settings.hide_product_count %}style="display: none;"{% endif %}>
       <p style="font-size: {{ section.settings.product_count_size }}px; color: {{ section.settings.product_count_color }}; text-align: {{ section.settings.product_count_alignment }};">{{ collection.products_count }} products</p>
     </div>
+    
+    {% if collection.current_vendor or collection.current_type %}
+      <div class="active-filters">
+        <span class="active-filters-title">Active filters:</span>
+        <ul class="active-filters-list">
+          {% if collection.current_vendor %}
+            <li class="active-filter-item">
+              <span>Vendor: {{ collection.current_vendor }}</span>
+              <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="active-filter-remove">
+                <i class="fas fa-times"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if collection.current_type %}
+            <li class="active-filter-item">
+              <span>Type: {{ collection.current_type }}</span>
+              <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="active-filter-remove">
+                <i class="fas fa-times"></i>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
     
     <div class="product-grid" 
          style="grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr); gap: {{ section.settings.grid_gap }}px;"
@@ -176,7 +216,18 @@
                         class="add-to-cart-button js-add-to-cart-button" 
                         data-variant-id="{{ product.selected_or_first_available_variant.id }}"
                         {% unless product.available %}disabled{% endunless %}
-                        style="background-color: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }}; border-radius: {{ section.settings.add_to_cart_button_radius }}px;">
+                        style="font-family: var(--font-heading-family, 'Poppins', sans-serif);
+                        letter-spacing: 0.05em;
+                        text-transform: uppercase;
+                        font-size: 14px;
+                        font-weight: 500;
+                        padding: 10px 20px;
+                        width: 100%;
+                        border: none;
+                        transition: all 0.3s ease;
+                        border-radius: {{ section.settings.add_to_cart_button_radius }}px;
+                        background-color: {{ section.settings.button_bg_color }};
+                        color: {{ section.settings.button_text_color }};">
                   {% if product.available %}{{ section.settings.add_to_cart_text }}{% else %}{{ section.settings.sold_out_text }}{% endif %}
                 </button>
               </div>
@@ -214,6 +265,9 @@
     margin-bottom: 30px;
     flex-wrap: wrap;
     gap: 15px;
+    padding: 15px 20px;
+    background-color: var(--light-gray, #f8f8f8);
+    border-radius: var(--border-radius, 10px);
   }
   
   .collection-filters {
@@ -224,31 +278,355 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 15px;
-    background: {{ section.settings.filter_button_bg }};
-    color: {{ section.settings.filter_button_text }};
-    border: {{ section.settings.filter_button_border }};
-    border-radius: {{ section.settings.button_radius }}px;
+    padding: 10px 18px;
+    background: var(--white, #ffffff);
+    color: var(--dark-text, #333333);
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: var(--border-radius-sm, 6px);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .filter-button:hover {
+    background: var(--light-pink, #fff0f5);
+    color: var(--primary-pink, #ff6b9a);
+    border-color: var(--primary-pink, #ff6b9a);
+  }
+  
+  .filter-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 350px;
+    background: var(--white, #ffffff);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    padding: 20px;
+  }
+  
+  .filter-drawer.active {
+    transform: translateX(0);
+  }
+  
+  .filter-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--medium-gray, #eaeaea);
+  }
+  
+  .filter-drawer-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--dark-text, #333333);
+  }
+  
+  .close-filter {
+    background: transparent;
+    border: none;
+    color: var(--dark-text, #333333);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .close-filter:hover {
+    color: var(--primary-pink, #ff6b9a);
+  }
+  
+  .filter-group {
+    margin-bottom: 15px;
+  }
+  
+  .filter-details {
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: var(--border-radius-sm, 6px);
+    overflow: hidden;
+  }
+  
+  .filter-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    background-color: var(--light-gray, #f8f8f8);
+    transition: all 0.3s ease;
+  }
+  
+  .filter-title:hover {
+    background-color: var(--light-pink, #fff0f5);
+  }
+  
+  .filter-title div {
+    font-weight: 500;
+    color: var(--dark-text, #333333);
+  }
+  
+  .icon-toggle {
+    transition: transform 0.3s ease;
+  }
+  
+  details[open] .icon-toggle {
+    transform: rotate(180deg);
+  }
+  
+  .filter-content {
+    padding: 15px;
+    background-color: var(--white, #ffffff);
+  }
+  
+  .filter-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  
+  .filter-option {
+    margin-bottom: 10px;
+  }
+  
+  .filter-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .filter-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .checkbox-custom {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: var(--white, #ffffff);
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: 3px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .filter-label input[type="checkbox"]:checked ~ .checkbox-custom {
+    background-color: var(--primary-pink, #ff6b9a);
+    border-color: var(--primary-pink, #ff6b9a);
+  }
+  
+  .filter-label input[type="checkbox"]:checked ~ .checkbox-custom:after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .filter-text {
+    flex-grow: 1;
+    font-size: 14px;
+    color: var(--dark-text, #333333);
+  }
+  
+  .filter-count {
+    font-size: 12px;
+    color: var(--light-text, #666666);
+  }
+  
+  .price-range {
+    padding: 10px 0;
+  }
+  
+  .price-inputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .price-inputs .field {
+    flex: 1;
+  }
+  
+  .price-inputs label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: var(--dark-text, #333333);
+  }
+  
+  .price-inputs input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: var(--border-radius-sm, 6px);
+    font-size: 14px;
+  }
+  
+  .filter-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .apply-filters {
+    flex: 1;
+    padding: 10px;
+    background-color: var(--primary-pink, #ff6b9a);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm, 6px);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
   }
   
-  .filter-button:hover {
-    background: {{ section.settings.filter_button_bg_hover }};
-    color: {{ section.settings.filter_button_text_hover }};
+  .apply-filters:hover {
+    background-color: var(--primary-purple, #9370db);
   }
   
-  .product-grid {
-    display: grid;
-    margin-bottom: 40px;
+  .clear-filters {
+    padding: 10px;
+    background-color: transparent;
+    color: var(--dark-text, #333333);
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: var(--border-radius-sm, 6px);
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
   }
   
-  @media (max-width: 991px) {
-    .product-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: {{ section.settings.grid_gap_tablet }}px;
-    }
+  .clear-filters:hover {
+    background-color: var(--light-gray, #f8f8f8);
+  }
+  
+  .collection-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .collection-sort label {
+    font-size: 14px;
+    color: var(--dark-text, #333333);
+    font-weight: 500;
+  }
+  
+  .select-wrapper {
+    position: relative;
+  }
+  
+  .sort-by {
+    padding: 10px 35px 10px 15px;
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: var(--border-radius-sm, 6px);
+    background-color: var(--white, #ffffff);
+    font-size: 14px;
+    color: var(--dark-text, #333333);
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .sort-by:hover {
+    border-color: var(--primary-pink, #ff6b9a);
+  }
+  
+  .select-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--dark-text, #333333);
+  }
+  
+  .view-options {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .view-option {
+    background: transparent;
+    border: 1px solid var(--medium-gray, #eaeaea);
+    border-radius: var(--border-radius-sm, 6px);
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--light-text, #666666);
+  }
+  
+  .view-option:hover, .view-option.active {
+    background-color: var(--light-pink, #fff0f5);
+    color: var(--primary-pink, #ff6b9a);
+    border-color: var(--primary-pink, #ff6b9a);
+  }
+  
+  .product-count {
+    margin-bottom: 20px;
+  }
+  
+  .active-filters {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .active-filters-title {
+    font-size: 14px;
+    color: var(--dark-text, #333333);
+    font-weight: 500;
+  }
+  
+  .active-filters-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .active-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background-color: var(--light-pink, #fff0f5);
+    border-radius: var(--border-radius-sm, 6px);
+    font-size: 13px;
+    color: var(--primary-pink, #ff6b9a);
+  }
+  
+  .active-filter-remove {
+    color: var(--primary-pink, #ff6b9a);
+    transition: all 0.3s ease;
+  }
+  
+  .active-filter-remove:hover {
+    color: var(--primary-purple, #9370db);
   }
   
   @media (max-width: 767px) {
@@ -257,11 +635,24 @@
       {% if section.settings.toolbar_mobile_layout == 'column' %}
       align-items: flex-start;
       {% endif %}
+      padding: 12px 15px;
     }
     
-    .product-grid {
-      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
-      gap: {{ section.settings.grid_gap_mobile }}px;
+    .collection-sort, .collection-filters {
+      width: 100%;
+    }
+    
+    .filter-button, .sort-by {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .filter-drawer {
+      max-width: 100%;
+    }
+    
+    .view-options {
+      display: none;
     }
   }
   
@@ -367,21 +758,71 @@
   }
   
   .add-to-cart-button {
-    width: 100%;
-    padding: 10px 15px;
-    border: none;
-    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
   }
   
   .add-to-cart-button:hover {
-    opacity: 0.9;
+    background-color: {{ section.settings.button_bg_color | color_darken: 10 }} !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
   
-  .add-to-cart-button:disabled {
-    background-color: #cccccc !important;
+  .add-to-cart-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .add-to-cart-button[disabled] {
+    opacity: 0.6;
     cursor: not-allowed;
+    background-color: #cccccc !important;
+    color: #666666 !important;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .add-to-cart-button.added {
+    background-color: #4CAF50 !important;
+    color: white !important;
+  }
+  
+  .add-to-cart-button.error {
+    background-color: #F44336 !important;
+    color: white !important;
+  }
+  
+  .add-to-cart-button.loading {
+    position: relative;
+    color: transparent !important;
+  }
+  
+  .add-to-cart-button.loading:after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: calc(50% - 8px);
+    left: calc(50% - 8px);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top-color: white;
+    animation: button-loading-spinner 0.6s linear infinite;
+  }
+  
+  @keyframes button-loading-spinner {
+    from {
+      transform: rotate(0turn);
+    }
+    to {
+      transform: rotate(1turn);
+    }
+  }
+  
+  .product-actions {
+    margin-top: 10px;
+    text-align: center;
   }
 </style>
 
@@ -427,7 +868,8 @@
         const originalText = this.textContent;
         
         // Show loading state
-        this.textContent = '{{ section.settings.adding_to_cart_text }}';
+        this.textContent = '';
+        this.classList.add('loading');
         this.disabled = true;
         
         // Add to cart using Fetch API
@@ -455,6 +897,7 @@
           updateCartCount();
           
           // Show success state
+          this.classList.remove('loading');
           this.textContent = '{{ section.settings.added_to_cart_text }}';
           this.classList.add('added');
           
@@ -469,6 +912,7 @@
           console.error('Error adding item to cart:', error);
           
           // Show error state
+          this.classList.remove('loading');
           this.textContent = 'Error!';
           this.classList.add('error');
           

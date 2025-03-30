@@ -217,9 +217,16 @@
   .cart-item {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: 15px;
+    align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid var(--medium-gray);
-    align-items: center;
+    transition: opacity 0.3s ease, height 0.3s ease;
+  }
+  
+  .cart-item.removing {
+    opacity: 0.5;
+    pointer-events: none;
   }
   
   @media (max-width: 767px) {
@@ -468,16 +475,121 @@
     removeButtons.forEach(button => {
       button.addEventListener('click', function() {
         const itemKey = this.dataset.itemKey;
-        const input = document.querySelector(`.quantity-input[data-item-key="${itemKey}"]`);
+        const cartItem = document.getElementById(`CartItem-${itemKey}`);
         
-        input.value = 0;
-        
-        // Auto-update cart when item is removed
-        const updateButton = document.querySelector('.update-cart');
-        if (updateButton) {
-          updateButton.click();
+        // Show loading state
+        if (cartItem) {
+          cartItem.classList.add('removing');
         }
+        
+        // Use Fetch API to directly remove the item
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            id: itemKey,
+            quantity: 0
+          })
+        })
+        .then(response => response.json())
+        .then(cart => {
+          // Update cart count in header
+          const cartCountElement = document.querySelector('.cart-count');
+          if (cartCountElement) {
+            cartCountElement.textContent = cart.item_count;
+          }
+          
+          // Remove the item from DOM
+          if (cartItem) {
+            cartItem.style.height = '0';
+            cartItem.style.opacity = '0';
+            
+            setTimeout(() => {
+              cartItem.remove();
+              
+              // If cart is empty, refresh the page to show empty cart message
+              if (cart.item_count === 0) {
+                window.location.reload();
+              } else {
+                // Update cart totals
+                updateCartTotals(cart);
+              }
+            }, 300);
+          }
+        })
+        .catch(error => {
+          console.error('Error removing item from cart:', error);
+          // Remove loading state
+          if (cartItem) {
+            cartItem.classList.remove('removing');
+          }
+          alert('There was an error removing this item. Please try again.');
+        });
       });
     });
+    
+    // Function to update cart totals without refreshing
+    function updateCartTotals(cart) {
+      // Update subtotal
+      const subtotalElement = document.querySelector('.cart-subtotal-amount');
+      if (subtotalElement) {
+        subtotalElement.textContent = formatMoney(cart.items_subtotal_price);
+      }
+      
+      // Update total
+      const totalElement = document.querySelector('.cart-total-amount');
+      if (totalElement) {
+        totalElement.textContent = formatMoney(cart.total_price);
+      }
+    }
+    
+    // Format money according to shop currency format
+    function formatMoney(cents) {
+      const format = {{ shop.money_format | json }};
+      if (typeof cents === 'string') {
+        cents = cents.replace('.', '');
+      }
+      
+      let value = '';
+      const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+      
+      function formatWithDelimiters(number, precision, thousands, decimal) {
+        precision = precision || 2;
+        thousands = thousands || ',';
+        decimal = decimal || '.';
+        
+        if (isNaN(number) || number == null) {
+          return 0;
+        }
+        
+        number = (number / 100.0).toFixed(precision);
+        
+        const parts = number.split('.');
+        const dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+        const cents = parts[1] ? (decimal + parts[1]) : '';
+        
+        return dollars + cents;
+      }
+      
+      switch(format.match(placeholderRegex)[1]) {
+        case 'amount':
+          value = formatWithDelimiters(cents, 2);
+          break;
+        case 'amount_no_decimals':
+          value = formatWithDelimiters(cents, 0);
+          break;
+        case 'amount_with_comma_separator':
+          value = formatWithDelimiters(cents, 2, '.', ',');
+          break;
+        case 'amount_no_decimals_with_comma_separator':
+          value = formatWithDelimiters(cents, 0, '.', ',');
+          break;
+      }
+      
+      return format.replace(placeholderRegex, value);
+    }
   });
 </script>

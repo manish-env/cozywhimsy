@@ -98,51 +98,66 @@
          data-columns-mobile="{{ section.settings.columns_mobile }}">
       {% paginate collection.products by section.settings.products_per_page %}
         {% for product in collection.products %}
-          <div class="product-card">
+          <div class="product-card" style="{% if section.settings.card_style == 'bordered' %}border: 1px solid var(--border-color, #e8e8e8);{% endif %}{% if section.settings.card_style == 'shadowed' %}box-shadow: 0 2px 10px rgba(0,0,0,0.08);{% endif %}">
             <a href="{{ product.url }}" class="product-link">
               <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
-                <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image">
+                {% if section.settings.show_badges %}
+                  {% if product.compare_at_price > product.price and section.settings.show_sale_badge %}
+                    <span class="product-badge sale">{{ section.settings.sale_badge_text }}</span>
+                  {% endif %}
+                  
+                  {% if product.available == false and section.settings.show_sold_out_badge %}
+                    <span class="product-badge sold-out">{{ section.settings.sold_out_badge_text }}</span>
+                  {% endif %}
+                  
+                  {% assign days_limit = section.settings.new_badge_days | times: 86400 %}
+                  {% assign date_created = product.created_at | date: '%s' | plus: 0 %}
+                  {% assign date_now = 'now' | date: '%s' | plus: 0 %}
+                  {% assign date_threshold = date_created | plus: days_limit %}
+                  {% if date_now < date_threshold and section.settings.show_new_badge %}
+                    <span class="product-badge new">{{ section.settings.new_badge_text }}</span>
+                  {% endif %}
+                {% endif %}
+                
+                <img src="{{ product.featured_image | img_url: section.settings.image_size }}" alt="{{ product.title | escape }}" class="product-image">
                 
                 {% if section.settings.show_secondary_image and product.images.size > 1 %}
-                  <img src="{{ product.images[1] | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image-hover">
+                  <img src="{{ product.images[1] | img_url: section.settings.image_size }}" alt="{{ product.title | escape }}" class="product-image-hover">
                 {% endif %}
               </div>
               
-              <div class="product-info">
+              <div class="product-info" style="text-align: {{ section.settings.text_alignment }}; padding: {{ section.settings.card_padding }}px;">
                 {% if section.settings.show_vendor and product.vendor %}
-                  <p class="product-vendor">{{ product.vendor }}</p>
+                  <p class="product-vendor" style="color: var(--{{ section.settings.vendor_color }}, #777777);">{{ product.vendor }}</p>
                 {% endif %}
                 
-                <h3 class="product-title">{{ product.title }}</h3>
+                <h3 class="product-title" style="font-size: {{ section.settings.title_size }}px; font-weight: {{ section.settings.title_weight }};">{{ product.title }}</h3>
                 
-                <div class="product-price">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="sale-price">{{ product.price | money }}</span>
-                    <span class="compare-price">{{ product.compare_at_price | money }}</span>
-                  {% else %}
-                    <span class="regular-price">{{ product.price | money }}</span>
-                  {% endif %}
-                </div>
+                {% if section.settings.show_price %}
+                  <div class="product-price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="sale-price" style="color: var(--{{ section.settings.sale_price_color }}, #e94949);">{{ product.price | money }}</span>
+                      <span class="compare-price" style="color: var(--{{ section.settings.compare_price_color }}, #999999);">{{ product.compare_at_price | money }}</span>
+                    {% else %}
+                      <span class="regular-price" style="color: var(--{{ section.settings.regular_price_color }}, #333333);">{{ product.price | money }}</span>
+                    {% endif %}
+                  </div>
+                {% endif %}
                 
                 {% if section.settings.show_rating and product.metafields.reviews.rating %}
                   <div class="product-rating">
-                    <span class="stars" style="--rating: {{ product.metafields.reviews.rating.value }};">★★★★★</span>
+                    <span class="stars" style="--rating: {{ product.metafields.reviews.rating.value }}; --star-color: var(--{{ section.settings.star_color }}, #ffc107);">★★★★★</span>
                     <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
+                  </div>
+                {% endif %}
+                
+                {% if section.settings.show_description and product.description != blank %}
+                  <div class="product-description">
+                    {{ product.description | strip_html | truncatewords: section.settings.description_words }}
                   </div>
                 {% endif %}
               </div>
             </a>
-            
-            {% if section.settings.enable_quick_add %}
-              <div class="product-actions">
-                <form method="post" action="/cart/add" class="quick-add-form">
-                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                  <button type="submit" class="quick-add-button" {% unless product.available %}disabled{% endunless %}>
-                    {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
-                  </button>
-                </form>
-              </div>
-            {% endif %}
           </div>
         {% else %}
           <div class="empty-collection">
@@ -165,9 +180,13 @@
   "name": "Product Grid",
   "settings": [
     {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
       "type": "range",
       "id": "products_per_page",
-      "min": 8,
+      "min": 4,
       "max": 48,
       "step": 4,
       "default": 16,
@@ -184,23 +203,106 @@
     },
     {
       "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ],
+      "default": "2",
+      "label": "Number of columns on mobile"
+    },
+    {
+      "type": "header",
+      "content": "Card Style"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Simple"
+        },
+        {
+          "value": "bordered",
+          "label": "Bordered"
+        },
+        {
+          "value": "shadowed",
+          "label": "Shadowed"
+        }
+      ],
+      "default": "simple",
+      "label": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "default": 15,
+      "label": "Card padding"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_hover",
+      "default": true,
+      "label": "Enable hover effect"
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "select",
       "id": "image_ratio",
       "options": [
         {
           "value": "square",
-          "label": "Square"
+          "label": "Square (1:1)"
         },
         {
           "value": "portrait",
-          "label": "Portrait"
+          "label": "Portrait (3:4)"
         },
         {
           "value": "landscape",
-          "label": "Landscape"
+          "label": "Landscape (4:3)"
         }
       ],
-      "default": "portrait",
+      "default": "square",
       "label": "Image ratio"
+    },
+    {
+      "type": "select",
+      "id": "image_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "master",
+          "label": "Original"
+        }
+      ],
+      "default": "medium",
+      "label": "Image size"
     },
     {
       "type": "checkbox",
@@ -210,9 +312,172 @@
     },
     {
       "type": "checkbox",
+      "id": "enable_image_zoom",
+      "default": true,
+      "label": "Enable image zoom on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_flip",
+      "default": true,
+      "label": "Enable image flip on hover"
+    },
+    {
+      "type": "header",
+      "content": "Product Information"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Text alignment"
+    },
+    {
+      "type": "checkbox",
       "id": "show_vendor",
       "default": false,
       "label": "Show product vendor"
+    },
+    {
+      "type": "select",
+      "id": "vendor_color",
+      "options": [
+        {
+          "value": "text-light",
+          "label": "Light"
+        },
+        {
+          "value": "text-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "text-dark",
+          "label": "Dark"
+        },
+        {
+          "value": "primary-pink",
+          "label": "Primary Pink"
+        }
+      ],
+      "default": "text-medium",
+      "label": "Vendor text color"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "label": "Title font size"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500",
+      "label": "Title font weight"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "default": true,
+      "label": "Show product price"
+    },
+    {
+      "type": "select",
+      "id": "regular_price_color",
+      "options": [
+        {
+          "value": "text-light",
+          "label": "Light"
+        },
+        {
+          "value": "text-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "text-dark",
+          "label": "Dark"
+        },
+        {
+          "value": "primary-pink",
+          "label": "Primary Pink"
+        }
+      ],
+      "default": "text-dark",
+      "label": "Regular price color"
+    },
+    {
+      "type": "select",
+      "id": "sale_price_color",
+      "options": [
+        {
+          "value": "text-dark",
+          "label": "Dark"
+        },
+        {
+          "value": "primary-pink",
+          "label": "Primary Pink"
+        },
+        {
+          "value": "sale-red",
+          "label": "Sale Red"
+        }
+      ],
+      "default": "sale-red",
+      "label": "Sale price color"
+    },
+    {
+      "type": "select",
+      "id": "compare_price_color",
+      "options": [
+        {
+          "value": "text-light",
+          "label": "Light"
+        },
+        {
+          "value": "text-medium",
+          "label": "Medium"
+        },
+        {
+          "value": "text-dark",
+          "label": "Dark"
+        }
+      ],
+      "default": "text-light",
+      "label": "Compare price color"
     },
     {
       "type": "checkbox",
@@ -221,10 +486,98 @@
       "label": "Show product rating"
     },
     {
+      "type": "select",
+      "id": "star_color",
+      "options": [
+        {
+          "value": "star-yellow",
+          "label": "Yellow"
+        },
+        {
+          "value": "primary-pink",
+          "label": "Pink"
+        },
+        {
+          "value": "star-gold",
+          "label": "Gold"
+        }
+      ],
+      "default": "star-yellow",
+      "label": "Star color"
+    },
+    {
       "type": "checkbox",
-      "id": "enable_quick_add",
+      "id": "show_description",
+      "default": false,
+      "label": "Show product description"
+    },
+    {
+      "type": "range",
+      "id": "description_words",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "default": 15,
+      "label": "Description word limit"
+    },
+    {
+      "type": "header",
+      "content": "Product Badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
       "default": true,
-      "label": "Enable quick add"
+      "label": "Show product badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "default": true,
+      "label": "Show sale badge"
+    },
+    {
+      "type": "text",
+      "id": "sale_badge_text",
+      "default": "Sale",
+      "label": "Sale badge text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sold_out_badge",
+      "default": true,
+      "label": "Show sold out badge"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_badge_text",
+      "default": "Sold Out",
+      "label": "Sold out badge text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_new_badge",
+      "default": true,
+      "label": "Show new badge"
+    },
+    {
+      "type": "text",
+      "id": "new_badge_text",
+      "default": "New",
+      "label": "New badge text"
+    },
+    {
+      "type": "range",
+      "id": "new_badge_days",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 7,
+      "label": "Show new badge for X days"
+    },
+    {
+      "type": "header",
+      "content": "Filtering and Sorting"
     },
     {
       "type": "checkbox",
@@ -246,8 +599,7 @@
         }
       ],
       "default": "drawer",
-      "label": "Filter type",
-      "info": "Drawer filters are hidden in a slide-out panel, sidebar filters are always visible"
+      "label": "Filter layout"
     },
     {
       "type": "checkbox",
@@ -256,20 +608,8 @@
       "label": "Enable sorting"
     },
     {
-      "type": "select",
-      "id": "columns_mobile",
-      "options": [
-        {
-          "value": "1",
-          "label": "1 column"
-        },
-        {
-          "value": "2",
-          "label": "2 columns"
-        }
-      ],
-      "default": "2",
-      "label": "Number of columns on mobile"
+      "type": "header",
+      "content": "Section Spacing"
     },
     {
       "type": "range",
@@ -290,11 +630,6 @@
       "unit": "px",
       "label": "Bottom padding",
       "default": 36
-    }
-  ],
-  "presets": [
-    {
-      "name": "Product Grid"
     }
   ]
 }
@@ -492,17 +827,20 @@
   
   .product-card {
     position: relative;
-    background: white;
-    border-radius: var(--border-radius);
+    background-color: var(--card-background-color, white);
+    border-radius: var(--card-border-radius, 8px);
     overflow: hidden;
-    box-shadow: var(--box-shadow);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
+  {% if section.settings.enable_card_hover %}
   .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    {% if section.settings.card_style == 'shadowed' %}
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    {% endif %}
   }
+  {% endif %}
   
   .product-image-container {
     position: relative;
@@ -510,38 +848,87 @@
     overflow: hidden;
   }
   
-  .product-image-container[style*="--image-ratio: square"] {
+  .product-image-container.square {
     padding-bottom: 100%;
   }
   
-  .product-image-container[style*="--image-ratio: portrait"] {
+  .product-image-container.portrait {
     padding-bottom: 125%;
   }
   
-  .product-image-container[style*="--image-ratio: landscape"] {
-    padding-bottom: 75%;
+  .product-image-container.landscape {
+    padding-bottom: 80%;
   }
   
-  .product-image, .product-image-hover {
+  .product-image {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  {% if section.settings.enable_image_zoom %}
+  .product-card:hover .product-image {
+    transform: scale(1.05);
+  }
+  {% endif %}
+  
+  .product-image-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
     transition: opacity 0.3s ease;
   }
   
-  .product-image-hover {
-    opacity: 0;
-  }
-  
-  .product-card:hover .product-image {
-    opacity: 0;
-  }
-  
+  {% if section.settings.enable_image_flip %}
   .product-card:hover .product-image-hover {
     opacity: 1;
+  }
+  
+  .product-card:hover .product-image:not(.product-image-hover) {
+    opacity: 0;
+  }
+  {% endif %}
+  
+  .product-badge {
+    position: absolute;
+    z-index: 2;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+  
+  .product-badge.sale {
+    background-color: var(--sale-badge-bg, #e94949);
+    color: var(--sale-badge-text, white);
+    top: 10px;
+    left: 10px;
+  }
+  
+  .product-badge.sold-out {
+    background-color: var(--sold-out-badge-bg, #999999);
+    color: var(--sold-out-badge-text, white);
+    top: 10px;
+    right: 10px;
+  }
+  
+  .product-badge.new {
+    background-color: var(--new-badge-bg, #4CAF50);
+    color: var(--new-badge-text, white);
+    top: 10px;
+    {% if section.settings.show_sale_badge %}
+    left: 10px;
+    {% else %}
+    right: 10px;
+    {% endif %}
   }
   
   .product-info {
@@ -550,15 +937,12 @@
   
   .product-vendor {
     font-size: 12px;
-    color: var(--light-text);
-    text-transform: uppercase;
     margin-bottom: 5px;
   }
   
   .product-title {
-    font-size: 16px;
-    margin-bottom: 8px;
-    font-weight: 500;
+    margin: 0 0 10px;
+    line-height: 1.3;
   }
   
   .product-price {
@@ -566,15 +950,12 @@
   }
   
   .sale-price {
-    color: var(--primary-pink);
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: 8px;
   }
   
   .compare-price {
-    color: var(--light-text);
     text-decoration: line-through;
-    font-size: 14px;
   }
   
   .regular-price {
@@ -584,13 +965,14 @@
   .product-rating {
     display: flex;
     align-items: center;
-    gap: 5px;
+    margin-bottom: 10px;
   }
   
   .stars {
     position: relative;
     display: inline-block;
     color: #ddd;
+    font-size: 14px;
   }
   
   .stars::before {
@@ -598,63 +980,22 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: gold;
-    width: calc(var(--rating, 0) * 20%);
+    color: var(--star-color, #ffc107);
+    width: calc(var(--rating) * 20%);
     overflow: hidden;
   }
   
   .rating-count {
     font-size: 12px;
-    color: var(--light-text);
+    color: #777;
+    margin-left: 5px;
   }
   
-  .product-actions {
-    padding: 0 15px 15px;
-  }
-  
-  .quick-add-button {
-    width: 100%;
-    padding: 10px;
-    background: var(--light-purple);
-    color: var(--primary-purple);
-    border: none;
-    border-radius: 30px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .quick-add-button:hover {
-    background: var(--primary-purple);
-    color: white;
-  }
-  
-  .quick-add-button:disabled {
-    background: var(--medium-gray);
-    color: var(--light-text);
-    cursor: not-allowed;
-  }
-  
-  .pagination {
-    margin-top: 40px;
-    text-align: center;
-  }
-  
-  .pagination .page {
-    display: inline-block;
-    margin: 0 5px;
-  }
-  
-  .pagination .current {
-    color: var(--primary-pink);
-    font-weight: 600;
-  }
-  
-  .empty-collection {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 50px 0;
-    color: var(--light-text);
+  .product-description {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    margin-top: 10px;
   }
   
   @media (max-width: 991px) {

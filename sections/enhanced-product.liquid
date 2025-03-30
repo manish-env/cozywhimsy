@@ -39,6 +39,59 @@
             {% endfor %}
           </div>
         {% endif %}
+        
+        <div class="product-ratings-desktop">
+          <div class="ratings-summary">
+            <h3 class="ratings-title">Customer Reviews</h3>
+            <div class="ratings-average">
+              <div class="stars large" style="--rating: {{ product.metafields.reviews.rating.value | default: 5 }};">
+                <span>★★★★★</span>
+              </div>
+              <span class="rating-number">{{ product.metafields.reviews.rating.value | default: 5 }} out of 5</span>
+              <span class="rating-count">({{ product.metafields.reviews.rating_count | default: 0 }} reviews)</span>
+            </div>
+            
+            <div class="rating-breakdown">
+              <div class="rating-bar-container">
+                <div class="rating-label">5 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 75%;"></div>
+                </div>
+                <div class="rating-percentage">75%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">4 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 15%;"></div>
+                </div>
+                <div class="rating-percentage">15%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">3 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 5%;"></div>
+                </div>
+                <div class="rating-percentage">5%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">2 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 3%;"></div>
+                </div>
+                <div class="rating-percentage">3%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">1 Star</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 2%;"></div>
+                </div>
+                <div class="rating-percentage">2%</div>
+              </div>
+            </div>
+            
+            <button class="btn secondary-btn write-review-btn">Write a Review</button>
+          </div>
+        </div>
       </div>
       
       <div class="product-info">
@@ -66,6 +119,117 @@
         
         <div class="product-short-description">
           {{ product.description | strip_html | truncatewords: 30 }}
+        </div>
+        
+        <div class="product-ratings-mobile">
+          <div class="ratings-summary">
+            <h3 class="ratings-title">Customer Reviews</h3>
+            <div class="ratings-average">
+              <div class="stars large" style="--rating: {{ product.metafields.reviews.rating.value | default: 5 }};">
+                <span>★★★★★</span>
+              </div>
+              <span class="rating-number">{{ product.metafields.reviews.rating.value | default: 5 }} out of 5</span>
+              <span class="rating-count">({{ product.metafields.reviews.rating_count | default: 0 }} reviews)</span>
+            </div>
+            
+            <div class="rating-breakdown">
+              <div class="rating-bar-container">
+                <div class="rating-label">5 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 75%;"></div>
+                </div>
+                <div class="rating-percentage">75%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">4 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 15%;"></div>
+                </div>
+                <div class="rating-percentage">15%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">3 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 5%;"></div>
+                </div>
+                <div class="rating-percentage">5%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">2 Stars</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 3%;"></div>
+                </div>
+                <div class="rating-percentage">3%</div>
+              </div>
+              <div class="rating-bar-container">
+                <div class="rating-label">1 Star</div>
+                <div class="rating-bar">
+                  <div class="rating-fill" style="width: 2%;"></div>
+                </div>
+                <div class="rating-percentage">2%</div>
+              </div>
+            </div>
+            
+            <button class="btn secondary-btn write-review-btn">Write a Review</button>
+          </div>
+          
+          <div class="customer-reviews">
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-name">Sarah J.</div>
+                  <div class="review-date">March 15, 2025</div>
+                </div>
+                <div class="review-rating">
+                  <div class="stars" style="--rating: 5;">
+                    <span>★★★★★</span>
+                  </div>
+                </div>
+              </div>
+              <div class="review-title">Perfect fit and great quality!</div>
+              <div class="review-content">
+                <p>I absolutely love this product. The quality is excellent and it fits perfectly. Shipping was fast and the packaging was eco-friendly. Would definitely recommend!</p>
+              </div>
+            </div>
+            
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-name">Michael T.</div>
+                  <div class="review-date">March 10, 2025</div>
+                </div>
+                <div class="review-rating">
+                  <div class="stars" style="--rating: 4;">
+                    <span>★★★★★</span>
+                  </div>
+                </div>
+              </div>
+              <div class="review-title">Great product, minor issue with delivery</div>
+              <div class="review-content">
+                <p>The product itself is fantastic and exactly as described. I'm giving 4 stars because the delivery took longer than expected, but the quality makes up for it. Would buy again!</p>
+              </div>
+            </div>
+            
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-name">Emily R.</div>
+                  <div class="review-date">March 5, 2025</div>
+                </div>
+                <div class="review-rating">
+                  <div class="stars" style="--rating: 5;">
+                    <span>★★★★★</span>
+                  </div>
+                </div>
+              </div>
+              <div class="review-title">Exceeded my expectations!</div>
+              <div class="review-content">
+                <p>This is my second purchase from this store and I'm once again impressed with the quality. The colors are vibrant and the material feels premium. Customer service was also very helpful when I had questions.</p>
+              </div>
+            </div>
+            
+            <button class="btn secondary-btn load-more-reviews">Load More Reviews</button>
+          </div>
         </div>
         
         {% form 'product', product, id: 'ProductForm', class: 'product-form' %}
@@ -143,53 +307,68 @@
           
           {% if section.settings.enable_order_booking %}
           <div class="order-booking-options">
-            <h3 class="booking-title">Order Booking Options</h3>
+            <h3 class="booking-title">Book Your Order</h3>
             
-            <div class="delivery-date-picker">
-              <label for="DeliveryDate">Delivery Date</label>
-              <input 
-                type="date" 
-                id="DeliveryDate" 
-                name="properties[Delivery Date]" 
-                class="date-input"
-                min="{{ 'now' | date: '%Y-%m-%d' }}"
-                required
-              >
-              <p class="delivery-note">Please select your preferred delivery date</p>
-            </div>
-            
-            {% if section.settings.show_time_slots %}
-            <div class="delivery-time-slot">
-              <label for="DeliveryTime">Delivery Time Slot</label>
-              <select id="DeliveryTime" name="properties[Delivery Time]" required>
-                <option value="">Select a time slot</option>
-                <option value="Morning (9am - 12pm)">Morning (9am - 12pm)</option>
-                <option value="Afternoon (12pm - 3pm)">Afternoon (12pm - 3pm)</option>
-                <option value="Evening (3pm - 6pm)">Evening (3pm - 6pm)</option>
-              </select>
-            </div>
-            {% endif %}
-            
-            {% if section.settings.enable_gift_option %}
-            <div class="gift-option">
-              <label class="gift-checkbox-label">
-                <input type="checkbox" id="GiftOption" name="properties[Is Gift]" value="Yes">
-                <span class="checkbox-custom"></span>
-                This is a gift
-              </label>
-              
-              <div class="gift-message-container" style="display: none;">
-                <label for="GiftMessage">Gift Message</label>
-                <textarea 
-                  id="GiftMessage" 
-                  name="properties[Gift Message]" 
-                  placeholder="Enter your gift message here..."
-                  maxlength="200"
-                  rows="3"
-                ></textarea>
+            <div class="booking-form">
+              <div class="delivery-date-picker">
+                <label for="DeliveryDate">Delivery Date</label>
+                <div class="date-input-wrapper">
+                  <input 
+                    type="date" 
+                    id="DeliveryDate" 
+                    name="properties[Delivery Date]" 
+                    class="date-input"
+                    min="{{ 'now' | date: '%Y-%m-%d' }}"
+                    required
+                  >
+                  <span class="date-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  </span>
+                </div>
+                <p class="delivery-note">Please select your preferred delivery date</p>
               </div>
+              
+              {% if section.settings.show_time_slots %}
+              <div class="delivery-time-slot">
+                <label for="DeliveryTime">Delivery Time Slot</label>
+                <div class="select-wrapper">
+                  <select id="DeliveryTime" name="properties[Delivery Time]" required>
+                    <option value="">Select a time slot</option>
+                    <option value="Morning (9am - 12pm)">Morning (9am - 12pm)</option>
+                    <option value="Afternoon (12pm - 3pm)">Afternoon (12pm - 3pm)</option>
+                    <option value="Evening (3pm - 6pm)">Evening (3pm - 6pm)</option>
+                  </select>
+                  <span class="select-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </span>
+                </div>
+              </div>
+              {% endif %}
+              
+              {% if section.settings.enable_gift_option %}
+              <div class="gift-option">
+                <div class="gift-checkbox-container">
+                  <label class="gift-checkbox-label">
+                    <input type="checkbox" id="GiftOption" name="properties[Is Gift]" value="Yes">
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-text">This is a gift</span>
+                  </label>
+                </div>
+                
+                <div class="gift-message-container" style="display: none;">
+                  <label for="GiftMessage">Gift Message</label>
+                  <textarea 
+                    id="GiftMessage" 
+                    name="properties[Gift Message]" 
+                    placeholder="Enter your gift message here..."
+                    maxlength="200"
+                    rows="3"
+                  ></textarea>
+                  <div class="character-count"><span id="giftMessageCount">0</span>/200</div>
+                </div>
+              </div>
+              {% endif %}
             </div>
-            {% endif %}
           </div>
           {% endif %}
           
@@ -220,6 +399,7 @@
                 type="submit" 
                 name="checkout" 
                 class="btn secondary-btn buy-now"
+                formaction="/checkout"
               >
                 {{ section.settings.buy_now_text | default: 'Buy Now' }}
               </button>
@@ -274,7 +454,7 @@
               </button>
               <div class="accordion-content">
                 <div class="product-description">
-                  {{ product.description }}
+                  {{ product.description | replace: '<img', '<img class="hidden-img"' }}
                 </div>
               </div>
             </div>
@@ -454,10 +634,62 @@
       giftOption.addEventListener('change', function() {
         if (this.checked) {
           giftMessageContainer.style.display = 'block';
+          // Add a small delay before the animation to ensure display:block has taken effect
+          setTimeout(() => {
+            giftMessageContainer.style.opacity = '1';
+            giftMessageContainer.style.transform = 'translateY(0)';
+          }, 10);
         } else {
-          giftMessageContainer.style.display = 'none';
+          giftMessageContainer.style.opacity = '0';
+          giftMessageContainer.style.transform = 'translateY(-10px)';
+          // Wait for the animation to complete before hiding
+          setTimeout(() => {
+            giftMessageContainer.style.display = 'none';
+          }, 300);
         }
       });
+    }
+    
+    // Character count for gift message
+    const giftMessage = document.getElementById('GiftMessage');
+    const giftMessageCount = document.getElementById('giftMessageCount');
+    
+    if (giftMessage && giftMessageCount) {
+      giftMessage.addEventListener('input', function() {
+        const count = this.value.length;
+        giftMessageCount.textContent = count;
+        
+        // Change color when approaching limit
+        if (count > 180) {
+          giftMessageCount.style.color = '#e74c3c';
+        } else {
+          giftMessageCount.style.color = '';
+        }
+      });
+    }
+    
+    // Enhance date picker with better mobile experience
+    const dateInput = document.getElementById('DeliveryDate');
+    if (dateInput) {
+      // Add better styling for iOS devices
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        dateInput.style.paddingRight = '30px';
+      }
+      
+      // Set minimum date to today
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.min = `${yyyy}-${mm}-${dd}`;
+      
+      // Set a default date (3 days from now)
+      const defaultDate = new Date();
+      defaultDate.setDate(today.getDate() + 3);
+      const defaultYyyy = defaultDate.getFullYear();
+      const defaultMm = String(defaultDate.getMonth() + 1).padStart(2, '0');
+      const defaultDd = String(defaultDate.getDate()).padStart(2, '0');
+      dateInput.value = `${defaultYyyy}-${defaultMm}-${defaultDd}`;
     }
     
     // Accordion functionality
@@ -487,9 +719,15 @@
     
     // Add to cart functionality
     const addToCartForm = document.getElementById('ProductForm');
+    const buyNowBtn = document.querySelector('.buy-now');
     
     if (addToCartForm) {
       addToCartForm.addEventListener('submit', function(e) {
+        // Don't prevent default if Buy Now button was clicked
+        if (e.submitter && e.submitter.classList.contains('buy-now')) {
+          return; // Let the form submit normally to checkout
+        }
+        
         e.preventDefault();
         
         const submitButton = this.querySelector('.add-to-cart');
@@ -572,6 +810,303 @@
           icon.classList.remove('fas');
           icon.classList.add('far');
         }
+      });
+    }
+    
+    // Review functionality
+    const writeReviewBtns = document.querySelectorAll('.write-review-btn');
+    const loadMoreReviewsBtn = document.querySelector('.load-more-reviews');
+    
+    if (writeReviewBtns.length > 0) {
+      writeReviewBtns.forEach(button => {
+        button.addEventListener('click', function() {
+          // Implement review form display logic here
+          alert('Review form will be displayed here');
+        });
+      });
+    }
+    
+    if (loadMoreReviewsBtn) {
+      loadMoreReviewsBtn.addEventListener('click', function() {
+        // Implement loading more reviews logic here
+        this.textContent = 'Loading...';
+        
+        // Simulate loading delay
+        setTimeout(() => {
+          // Add more review items here
+          const reviewsContainer = document.querySelector('.customer-reviews');
+          
+          // Create new review items
+          const newReviews = [
+            {
+              name: 'John D.',
+              date: 'March 1, 2025',
+              rating: 5,
+              title: 'Fantastic product!',
+              content: 'This product exceeded all my expectations. The quality is outstanding and it arrived earlier than expected.'
+            },
+            {
+              name: 'Lisa M.',
+              date: 'February 25, 2025',
+              rating: 4,
+              title: 'Great value for money',
+              content: 'Really happy with my purchase. The product is well-made and looks exactly like the photos. Would recommend to friends.'
+            }
+          ];
+          
+          // Add new reviews to the container
+          newReviews.forEach(review => {
+            const reviewItem = document.createElement('div');
+            reviewItem.className = 'review-item';
+            reviewItem.innerHTML = `
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-name">${review.name}</div>
+                  <div class="review-date">${review.date}</div>
+                </div>
+                <div class="review-rating">
+                  <div class="stars" style="--rating: ${review.rating};">
+                    <span>★★★★★</span>
+                  </div>
+                </div>
+              </div>
+              <div class="review-title">${review.title}</div>
+              <div class="review-content">
+                <p>${review.content}</p>
+              </div>
+            `;
+            
+            // Insert before the Load More button
+            reviewsContainer.insertBefore(reviewItem, this);
+          });
+          
+          this.textContent = 'No More Reviews';
+          this.disabled = true;
+        }, 1000);
+      });
+    }
+    
+    // Create a modal for the review form
+    function createReviewModal() {
+      // Create modal container
+      const modal = document.createElement('div');
+      modal.className = 'review-modal';
+      
+      // Create modal content
+      const modalContent = document.createElement('div');
+      modalContent.className = 'review-modal-content';
+      
+      // Create close button
+      const closeBtn = document.createElement('span');
+      closeBtn.className = 'review-modal-close';
+      closeBtn.innerHTML = '&times;';
+      closeBtn.addEventListener('click', function() {
+        document.body.removeChild(modal);
+      });
+      
+      // Create form title
+      const formTitle = document.createElement('h3');
+      formTitle.textContent = 'Write a Review';
+      
+      // Create form
+      const form = document.createElement('form');
+      form.className = 'review-form';
+      form.innerHTML = `
+        <div class="form-group">
+          <label for="reviewerName">Your Name</label>
+          <input type="text" id="reviewerName" required>
+        </div>
+        <div class="form-group">
+          <label for="reviewRating">Rating</label>
+          <div class="rating-select">
+            <span class="star" data-rating="1">★</span>
+            <span class="star" data-rating="2">★</span>
+            <span class="star" data-rating="3">★</span>
+            <span class="star" data-rating="4">★</span>
+            <span class="star" data-rating="5">★</span>
+          </div>
+          <input type="hidden" id="reviewRating" value="5">
+        </div>
+        <div class="form-group">
+          <label for="reviewTitle">Review Title</label>
+          <input type="text" id="reviewTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="reviewContent">Your Review</label>
+          <textarea id="reviewContent" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn primary-btn">Submit Review</button>
+      `;
+      
+      // Add event listeners for star rating
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Thank you for your review! It will be published after moderation.');
+        document.body.removeChild(modal);
+      });
+      
+      // Append elements to modal
+      modalContent.appendChild(closeBtn);
+      modalContent.appendChild(formTitle);
+      modalContent.appendChild(form);
+      modal.appendChild(modalContent);
+      
+      // Add modal to body
+      document.body.appendChild(modal);
+      
+      // Add event listeners for star rating
+      const stars = modal.querySelectorAll('.star');
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = this.getAttribute('data-rating');
+          document.getElementById('reviewRating').value = rating;
+          
+          // Update visual state
+          stars.forEach(s => {
+            if (s.getAttribute('data-rating') <= rating) {
+              s.classList.add('selected');
+            } else {
+              s.classList.remove('selected');
+            }
+          });
+        });
+      });
+      
+      // Select 5 stars by default
+      stars.forEach(s => s.classList.add('selected'));
+      
+      // Add modal styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .review-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        
+        .review-modal-content {
+          background-color: white;
+          padding: 30px;
+          border-radius: 8px;
+          width: 90%;
+          max-width: 500px;
+          position: relative;
+        }
+        
+        .review-modal-close {
+          position: absolute;
+          top: 10px;
+          right: 15px;
+          font-size: 24px;
+          cursor: pointer;
+        }
+        
+        .review-form .form-group {
+          margin-bottom: 15px;
+        }
+        
+        .review-form label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 500;
+        }
+        
+        .review-form input, .review-form textarea {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+        
+        .rating-select {
+          display: flex;
+          font-size: 24px;
+          color: #ddd;
+        }
+        
+        .rating-select .star {
+          cursor: pointer;
+        }
+        
+        .rating-select .star.selected {
+          color: #ffc107;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    if (writeReviewBtns.length > 0) {
+      writeReviewBtns.forEach(button => {
+        button.addEventListener('click', function() {
+          createReviewModal();
+        });
+      });
+    }
+    
+    if (loadMoreReviewsBtn) {
+      loadMoreReviewsBtn.addEventListener('click', function() {
+        // Implement loading more reviews logic here
+        this.textContent = 'Loading...';
+        
+        // Simulate loading delay
+        setTimeout(() => {
+          // Add more review items here
+          const reviewsContainer = document.querySelector('.customer-reviews');
+          
+          // Create new review items
+          const newReviews = [
+            {
+              name: 'John D.',
+              date: 'March 1, 2025',
+              rating: 5,
+              title: 'Fantastic product!',
+              content: 'This product exceeded all my expectations. The quality is outstanding and it arrived earlier than expected.'
+            },
+            {
+              name: 'Lisa M.',
+              date: 'February 25, 2025',
+              rating: 4,
+              title: 'Great value for money',
+              content: 'Really happy with my purchase. The product is well-made and looks exactly like the photos. Would recommend to friends.'
+            }
+          ];
+          
+          // Add new reviews to the container
+          newReviews.forEach(review => {
+            const reviewItem = document.createElement('div');
+            reviewItem.className = 'review-item';
+            reviewItem.innerHTML = `
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-name">${review.name}</div>
+                  <div class="review-date">${review.date}</div>
+                </div>
+                <div class="review-rating">
+                  <div class="stars" style="--rating: ${review.rating};">
+                    <span>★★★★★</span>
+                  </div>
+                </div>
+              </div>
+              <div class="review-title">${review.title}</div>
+              <div class="review-content">
+                <p>${review.content}</p>
+              </div>
+            `;
+            
+            // Insert before the Load More button
+            reviewsContainer.insertBefore(reviewItem, this);
+          });
+          
+          this.textContent = 'No More Reviews';
+          this.disabled = true;
+        }, 1000);
       });
     }
   });
@@ -870,65 +1405,214 @@
   }
   
   .order-booking-options {
-    margin-top: 20px;
-    padding: 20px;
+    margin-top: 25px;
+    padding: 25px;
     background-color: #f9f9f9;
-    border-radius: 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   }
   
   .booking-title {
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 600;
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    color: var(--primary-pink);
+    text-align: center;
+    position: relative;
+  }
+  
+  .booking-title:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-pink);
+  }
+  
+  .booking-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
   
   .delivery-date-picker,
   .delivery-time-slot,
   .gift-option {
-    margin-bottom: 15px;
+    position: relative;
   }
   
   .delivery-date-picker label,
-  .delivery-time-slot label {
+  .delivery-time-slot label,
+  .gift-option label:not(.gift-checkbox-label) {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
+    font-size: 15px;
+    color: #333;
+  }
+  
+  .date-input-wrapper,
+  .select-wrapper {
+    position: relative;
   }
   
   .date-input,
   #DeliveryTime {
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--medium-gray);
-    border-radius: 4px;
-    font-size: 16px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  
+  .date-input:focus,
+  #DeliveryTime:focus,
+  #GiftMessage:focus {
+    outline: none;
+    border-color: var(--primary-pink);
+    box-shadow: 0 0 0 2px rgba(var(--primary-pink-rgb), 0.1);
+  }
+  
+  .date-icon,
+  .select-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    pointer-events: none;
   }
   
   .delivery-note {
     font-size: 13px;
-    color: var(--light-text);
-    margin-top: 5px;
+    color: #777;
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+  
+  .gift-checkbox-container {
+    margin-bottom: 10px;
   }
   
   .gift-checkbox-label {
     display: flex;
     align-items: center;
     cursor: pointer;
-    font-weight: 500;
+    user-select: none;
   }
   
   .gift-checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .checkbox-custom {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
     margin-right: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .gift-checkbox-label input:checked ~ .checkbox-custom {
+    background-color: var(--primary-pink);
+    border-color: var(--primary-pink);
+  }
+  
+  .checkbox-custom:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .gift-checkbox-label input:checked ~ .checkbox-custom:after {
+    display: block;
+  }
+  
+  .checkbox-text {
+    font-weight: 500;
+    font-size: 15px;
   }
   
   #GiftMessage {
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--medium-gray);
-    border-radius: 4px;
-    font-size: 16px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
     resize: vertical;
-    margin-top: 10px;
+    min-height: 80px;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .character-count {
+    text-align: right;
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+  }
+  
+  @media (min-width: 768px) {
+    .booking-form {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .gift-option {
+      grid-column: span 2;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .order-booking-options {
+      margin-left: 0;
+      margin-bottom: 0;
+      padding-left: 0;
+      padding-bottom: 0;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .booking-title {
+      text-align: left;
+      padding-left: 15px;
+    }
+    
+    .booking-title:after {
+      left: 15px;
+      transform: none;
+    }
+    
+    .booking-form {
+      padding: 0 15px 15px 0;
+    }
+    
+    .delivery-date-picker,
+    .delivery-time-slot,
+    .gift-option {
+      padding-left: 15px;
+    }
   }
   
   .product-actions {
@@ -1174,10 +1858,23 @@
     color: white;
   }
   
+  .hidden-img {
+    display: none !important;
+  }
+  
   @media (max-width: 767px) {
     .product-container {
       grid-template-columns: 1fr;
       gap: 30px;
+    }
+    
+    .product-ratings-desktop {
+      display: none;
+    }
+    
+    .product-ratings-mobile {
+      display: block;
+      margin-top: 30px;
     }
     
     .shipping-info {
@@ -1196,6 +1893,126 @@
       align-self: flex-end;
       margin-top: -50px;
     }
+  }
+  
+  /* Rating and Review Styles */
+  .product-ratings-desktop,
+  .product-ratings-mobile {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .product-ratings-mobile {
+    display: none;
+  }
+  
+  .ratings-title {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .ratings-average {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .stars.large {
+    font-size: 24px;
+  }
+  
+  .rating-number {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .rating-count {
+    font-size: 14px;
+    color: var(--light-text);
+  }
+  
+  .rating-breakdown {
+    margin-bottom: 20px;
+  }
+  
+  .rating-bar-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .rating-label {
+    width: 60px;
+    font-size: 14px;
+  }
+  
+  .rating-bar {
+    flex: 1;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 10px;
+  }
+  
+  .rating-fill {
+    height: 100%;
+    background-color: var(--primary-pink);
+  }
+  
+  .rating-percentage {
+    width: 40px;
+    font-size: 14px;
+    text-align: right;
+  }
+  
+  .write-review-btn {
+    margin-top: 10px;
+  }
+  
+  .customer-reviews {
+    margin-top: 30px;
+  }
+  
+  .review-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--medium-gray);
+  }
+  
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .reviewer-name {
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  
+  .review-date {
+    font-size: 12px;
+    color: var(--light-text);
+  }
+  
+  .review-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .review-content p {
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  .load-more-reviews {
+    margin-top: 20px;
+    width: 100%;
   }
 </style>
 

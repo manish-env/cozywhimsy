@@ -1,1 +1,50 @@
-{"sections":{"main":{"type":"enhanced-product","settings":{"gallery_layout":"thumbnails","media_size":"large","variant_style":"buttons","hide_variants":false,"add_to_cart_text":"Add to Cart","enable_buy_now":true,"buy_now_text":"Buy Now","enable_order_booking":true,"show_time_slots":true,"enable_gift_option":true,"show_shipping_info":true,"free_shipping_threshold":"$50","return_days":"30"}},"product_recommendations_4JNa6e":{"type":"product-recommendations","settings":{"heading":"You may also like","products_to_show":4,"columns_desktop":4,"image_ratio":"square","show_secondary_image":true,"show_vendor":false,"show_rating":false,"columns_mobile":2,"padding_top":36,"padding_bottom":28}}},"order":["main","product_recommendations_4JNa6e"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "enhanced-product",
+      "settings": {
+        "gallery_layout": "thumbnails",
+        "media_size": "large",
+        "variant_style": "buttons",
+        "hide_variants": false,
+        "add_to_cart_text": "Add to Cart",
+        "enable_buy_now": true,
+        "buy_now_text": "Buy Now",
+        "enable_order_booking": true,
+        "show_time_slots": true,
+        "enable_gift_option": true,
+        "show_shipping_info": true,
+        "free_shipping_threshold": "$50",
+        "return_days": "30"
+      }
+    },
+    "product_recommendations_4JNa6e": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "You may also like",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "image_ratio": "square",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": 2,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product_recommendations_4JNa6e"
+  ]
+}

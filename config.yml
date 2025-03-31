@@ -1,0 +1,12 @@
+development:
+  password: [your-private-app-password]
+  theme_id: "live"
+  store: your-store-name.myshopify.com
+  directory: .
+  ignore_files:
+    - config/settings_data.json
+    - .git/
+    - .github/
+    - .gitignore
+    - .DS_Store
+    - node_modules/

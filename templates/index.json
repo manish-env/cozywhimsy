@@ -1,1 +1,162 @@
-{"sections":{"hero":{"type":"hero","settings":{"heading":"Welcome to Cozywhimsy","subheading":"Handcrafted items that bring warmth and whimsy to your home","button_link":"\/collections\/all","button_text":"Shop Now","secondary_button_link":"","secondary_button_text":"Explore Collections","image":"shopify:\/\/shop_images\/5531344064.jpg","primary_caption":"New Arrivals","secondary_image":"shopify:\/\/shop_images\/5089441490.jpg","secondary_caption":"Featured Collection"}},"featured_categories":{"type":"featured-categories","blocks":{"category_WQQnD9":{"type":"category","settings":{"title":"Anime","collection":"anime-collection","button_text":"Shop Now"}},"category_1":{"type":"category","settings":{"title":"Home Decor","collection":"light-animals","button_text":"Shop Now"}},"category_2":{"type":"category","settings":{"title":"Accessories","collection":"frontpage","button_text":"Shop Now"}}},"block_order":["category_WQQnD9","category_1","category_2"],"settings":{"title":"Shop by Category","subtitle":"Explore our curated collections","padding_top":36,"padding_bottom":36}},"featured_product_spotlight_9Jd4aF":{"type":"featured-product-spotlight","settings":{"title":"Featured Product","subtitle":"Discover our most popular item","product":"cute-cat-animal-silicone-baby-night-light","button_text":"View Details","add_to_cart_text":"Add to Cart","feature_1_icon":"★","feature_1_text":"Premium Quality","feature_2_icon":"🚚","feature_2_text":"Fast Shipping","feature_3_icon":"↻","feature_3_text":"Easy Returns"}},"featured_products":{"type":"featured-products","settings":{"title":"Featured Products","subtitle":"Our most popular items","collection":"light-animals","products_to_show":4,"view_all_link":"","view_all_text":"View All Products"}},"instagram_showcase":{"type":"instagram-showcase","blocks":{"instagram_post_BiPPMq":{"type":"instagram_post","settings":{"image":"shopify:\/\/shop_images\/5089441490.jpg","link":"https:\/\/www.instagram.com\/p\/DHvSxAeJRDz\/","likes":"42","comments":"5"}},"instagram_post_bX4YeJ":{"type":"instagram_post","settings":{"image":"shopify:\/\/shop_images\/7833626408.jpg","link":"","likes":"42","comments":"5"}},"instagram_post_AFFCMc":{"type":"instagram_post","settings":{"image":"shopify:\/\/shop_images\/7570804289.jpg","link":"","likes":"42","comments":"5"}},"instagram_post_R37bzR":{"type":"instagram_post","settings":{"image":"shopify:\/\/shop_images\/8387574038.jpg","link":"","likes":"42","comments":"5"}}},"block_order":["instagram_post_BiPPMq","instagram_post_bX4YeJ","instagram_post_AFFCMc","instagram_post_R37bzR"],"settings":{"title":"Follow Us on Instagram","subtitle":"Tag us @cozywhimsy to be featured","profile_image":"shopify:\/\/shop_images\/Untitled_design_1.png","profile_name":"Cozy Whimsy","profile_username":"cozywhimsy","profile_bio":"Handcrafted items that bring warmth and whimsy to your home. Made with love in small batches.","profile_posts":"124","profile_followers":"5.2K","profile_following":"328","instagram_url":"https:\/\/www.instagram.com\/cozywhimsy.store\/","profile_button_text":"Follow on Instagram"}}},"order":["hero","featured_categories","featured_product_spotlight_9Jd4aF","featured_products","instagram_showcase"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "heading": "Welcome to Cozywhimsy",
+        "subheading": "Handcrafted items that bring warmth and whimsy to your home",
+        "button_link": "/collections/all",
+        "button_text": "Shop Now",
+        "secondary_button_link": "",
+        "secondary_button_text": "Explore Collections",
+        "image": "shopify://shop_images/5531344064.jpg",
+        "primary_caption": "New Arrivals",
+        "secondary_image": "shopify://shop_images/5089441490.jpg",
+        "secondary_caption": "Featured Collection"
+      }
+    },
+    "featured_categories": {
+      "type": "featured-categories",
+      "blocks": {
+        "category_WQQnD9": {
+          "type": "category",
+          "settings": {
+            "title": "Anime",
+            "collection": "anime-collection",
+            "button_text": "Shop Now"
+          }
+        },
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "title": "Home Decor",
+            "collection": "light-animals",
+            "button_text": "Shop Now"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "title": "Accessories",
+            "collection": "frontpage",
+            "button_text": "Shop Now"
+          }
+        }
+      },
+      "block_order": [
+        "category_WQQnD9",
+        "category_1",
+        "category_2"
+      ],
+      "settings": {
+        "title": "Shop by Category",
+        "subtitle": "Explore our curated collections",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "featured_product_spotlight_9Jd4aF": {
+      "type": "featured-product-spotlight",
+      "settings": {
+        "title": "Featured Product",
+        "subtitle": "Discover our most popular item",
+        "product": "cute-cat-animal-silicone-baby-night-light",
+        "button_text": "View Details",
+        "add_to_cart_text": "Add to Cart",
+        "feature_1_icon": "★",
+        "feature_1_text": "Premium Quality",
+        "feature_2_icon": "🚚",
+        "feature_2_text": "Fast Shipping",
+        "feature_3_icon": "↻",
+        "feature_3_text": "Easy Returns"
+      }
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {
+        "title": "Featured Products",
+        "subtitle": "Our most popular items",
+        "collection": "light-animals",
+        "products_to_show": 4,
+        "view_all_link": "",
+        "view_all_text": "View All Products"
+      }
+    },
+    "instagram_showcase": {
+      "type": "instagram-showcase",
+      "blocks": {
+        "instagram_post_BiPPMq": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/5089441490.jpg",
+            "link": "https://www.instagram.com/p/DHvSxAeJRDz/",
+            "likes": "42",
+            "comments": "5"
+          }
+        },
+        "instagram_post_bX4YeJ": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/7833626408.jpg",
+            "link": "",
+            "likes": "42",
+            "comments": "5"
+          }
+        },
+        "instagram_post_AFFCMc": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/7570804289.jpg",
+            "link": "",
+            "likes": "42",
+            "comments": "5"
+          }
+        },
+        "instagram_post_R37bzR": {
+          "type": "instagram_post",
+          "settings": {
+            "image": "shopify://shop_images/8387574038.jpg",
+            "link": "",
+            "likes": "42",
+            "comments": "5"
+          }
+        }
+      },
+      "block_order": [
+        "instagram_post_BiPPMq",
+        "instagram_post_bX4YeJ",
+        "instagram_post_AFFCMc",
+        "instagram_post_R37bzR"
+      ],
+      "settings": {
+        "title": "Follow Us on Instagram",
+        "subtitle": "Tag us @cozywhimsy to be featured",
+        "profile_image": "shopify://shop_images/Untitled_design_1.png",
+        "profile_name": "Cozy Whimsy",
+        "profile_username": "cozywhimsy",
+        "profile_bio": "Handcrafted items that bring warmth and whimsy to your home. Made with love in small batches.",
+        "profile_posts": "124",
+        "profile_followers": "5.2K",
+        "profile_following": "328",
+        "instagram_url": "https://www.instagram.com/cozywhimsy.store/",
+        "profile_button_text": "Follow on Instagram"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured_categories",
+    "featured_product_spotlight_9Jd4aF",
+    "featured_products",
+    "instagram_showcase"
+  ]
+}

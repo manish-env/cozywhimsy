@@ -1,0 +1,351 @@
+<article class="article" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="container">
+    <div class="article-container" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'article_featured_image' %}
+            {% if article.image %}
+              <div class="article-featured-image-wrapper" {{ block.shopify_attributes }}>
+                <div class="article-featured-image image-height-{{ block.settings.image_height }}">
+                  <img srcset="{% if article.image.width >= 350 %}{{ article.image | img_url: '350x' }} 350w,{% endif %}
+                               {% if article.image.width >= 750 %}{{ article.image | img_url: '750x' }} 750w,{% endif %}
+                               {% if article.image.width >= 1100 %}{{ article.image | img_url: '1100x' }} 1100w,{% endif %}
+                               {% if article.image.width >= 1500 %}{{ article.image | img_url: '1500x' }} 1500w,{% endif %}
+                               {% if article.image.width >= 2200 %}{{ article.image | img_url: '2200x' }} 2200w,{% endif %}
+                               {{ article.image | img_url: 'master' }} {{ article.image.width }}w"
+                       src="{{ article.image | img_url: '1100x' }}"
+                       sizes="(min-width: 1100px) 1100px, 100vw"
+                       loading="lazy"
+                       width="{{ article.image.width }}"
+                       height="{{ article.image.height }}"
+                       alt="{{ article.image.alt | escape }}"
+                       class="article-image">
+                </div>
+              </div>
+            {% endif %}
+          
+          {% when 'title' %}
+            <div class="article-header" {{ block.shopify_attributes }}>
+              <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
+              
+              <div class="article-meta">
+                {% if block.settings.blog_show_date %}
+                  <span class="article-date">
+                    <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+                      {{ article.published_at | date: "%B %d, %Y" }}
+                    </time>
+                  </span>
+                {% endif %}
+                
+                {% if block.settings.blog_show_author %}
+                  <span class="article-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                    by <span itemprop="name">{{ article.author }}</span>
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          
+          {% when 'content' %}
+            <div class="article-content rte" itemprop="articleBody" {{ block.shopify_attributes }}>
+              {{ article.content }}
+            </div>
+          
+          {% when 'share' %}
+            <div class="article-share" {{ block.shopify_attributes }}>
+              <div class="article-share-label">{{ block.settings.share_label }}</div>
+              <div class="article-share-buttons">
+                <a target="_blank" href="https://www.facebook.com/sharer.php?u={{ shop.url | append: article.url }}" class="article-share-button facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a target="_blank" href="https://twitter.com/share?text={{ article.title | url_encode }}&url={{ shop.url | append: article.url }}" class="article-share-button twitter">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a target="_blank" href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: article.url }}&media={{ article.image | img_url: 'original' }}&description={{ article.title | url_encode }}" class="article-share-button pinterest">
+                  <i class="fab fa-pinterest-p"></i>
+                </a>
+                <a target="_blank" href="mailto:?subject={{ article.title }}&body={{ shop.url | append: article.url }}" class="article-share-button email">
+                  <i class="fas fa-envelope"></i>
+                </a>
+              </div>
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article",
+  "blocks": [
+    {
+      "type": "article_featured_image",
+      "name": "Featured Image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "image_height",
+          "options": [
+            {
+              "value": "adapt",
+              "label": "Adapt to image"
+            },
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            }
+          ],
+          "default": "adapt",
+          "label": "Image height"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "blog_show_date",
+          "default": true,
+          "label": "Show date"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_author",
+          "default": true,
+          "label": "Show author"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "Content",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "share",
+      "name": "Share Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "share_label",
+          "default": "Share",
+          "label": "Share label"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .article-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .article-featured-image-wrapper {
+    margin-bottom: 30px;
+  }
+  
+  .article-featured-image {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .image-height-adapt {
+    /* Adaptive height based on image */
+  }
+  
+  .image-height-small {
+    padding-bottom: 30%;
+  }
+  
+  .image-height-medium {
+    padding-bottom: 50%;
+  }
+  
+  .image-height-large {
+    padding-bottom: 70%;
+  }
+  
+  .article-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    
+    /* For fixed height settings */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .image-height-adapt .article-image {
+    position: relative;
+    height: auto;
+  }
+  
+  .article-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .article-title {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .article-meta {
+    color: var(--light-text);
+    font-size: 0.9rem;
+  }
+  
+  .article-author {
+    margin-left: 10px;
+  }
+  
+  .article-content {
+    margin-bottom: 40px;
+    line-height: 1.8;
+    font-size: 1.1rem;
+  }
+  
+  .article-content p {
+    margin-bottom: 20px;
+  }
+  
+  .article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-sm);
+    margin: 20px 0;
+  }
+  
+  .article-content h2 {
+    font-size: 1.8rem;
+    margin: 30px 0 15px;
+  }
+  
+  .article-content h3 {
+    font-size: 1.5rem;
+    margin: 25px 0 15px;
+  }
+  
+  .article-content ul, 
+  .article-content ol {
+    margin: 20px 0;
+    padding-left: 20px;
+  }
+  
+  .article-content li {
+    margin-bottom: 10px;
+  }
+  
+  .article-content blockquote {
+    border-left: 4px solid var(--primary-pink);
+    padding-left: 20px;
+    margin: 30px 0;
+    font-style: italic;
+    color: var(--light-text);
+  }
+  
+  .article-share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--medium-gray);
+  }
+  
+  .article-share-label {
+    margin-right: 15px;
+    font-weight: 500;
+  }
+  
+  .article-share-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .article-share-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .article-share-button.facebook {
+    background-color: #3b5998;
+  }
+  
+  .article-share-button.twitter {
+    background-color: #1da1f2;
+  }
+  
+  .article-share-button.pinterest {
+    background-color: #bd081c;
+  }
+  
+  .article-share-button.email {
+    background-color: #666666;
+  }
+  
+  .article-share-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 767px) {
+    .article-title {
+      font-size: 2rem;
+    }
+    
+    .article-content {
+      font-size: 1rem;
+    }
+  }
+</style>

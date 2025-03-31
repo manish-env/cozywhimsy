@@ -1,0 +1,308 @@
+<section class="related-products">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
+    </div>
+    
+    <div class="product-grid">
+      {%- assign current_product = product -%}
+      {%- assign current_product_tags = current_product.tags | join: ',' | append: ',' -%}
+      
+      {%- if section.settings.products_to_show > 0 -%}
+        {%- capture related_products -%}
+          {%- for tag in current_product.tags -%}
+            {%- assign related_products_temp = collections.all.products | where: "tags", tag -%}
+            {%- for related_product in related_products_temp -%}
+              {%- if related_product.id != current_product.id -%}
+                {{ related_product.id }}{% unless forloop.last %},{% endunless %}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        
+        {%- assign related_products_array = related_products | split: ',' -%}
+        {%- assign unique_related_products = '' -%}
+        
+        {%- for product_id in related_products_array -%}
+          {%- unless unique_related_products contains product_id -%}
+            {%- assign unique_related_products = unique_related_products | append: product_id | append: ',' -%}
+          {%- endunless -%}
+        {%- endfor -%}
+        
+        {%- assign unique_related_products_array = unique_related_products | split: ',' -%}
+        
+        {%- if unique_related_products_array.size < section.settings.products_to_show -%}
+          {%- assign additional_products_needed = section.settings.products_to_show | minus: unique_related_products_array.size -%}
+          {%- for product in collections.all.products limit: additional_products_needed -%}
+            {%- assign is_in_array = false -%}
+            {%- for id in unique_related_products_array -%}
+              {%- if id == product.id -%}
+                {%- assign is_in_array = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if product.id != current_product.id and is_in_array == false -%}
+              {%- assign unique_related_products = unique_related_products | append: product.id | append: ',' -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+        
+        {%- for product_id in unique_related_products_array limit: section.settings.products_to_show -%}
+          {%- assign product = all_products[product_id] -%}
+          
+          {% if product.id != blank %}
+            <div class="product-card">
+              {% if product.tags contains 'new' %}
+                <div class="product-badge">New</div>
+              {% elsif product.tags contains 'bestseller' %}
+                <div class="product-badge bestseller">Bestseller</div>
+              {% endif %}
+              
+              <a href="{{ product.url }}" class="product-img-link">
+                <div class="product-img" style="background-image: url('{{ product.featured_image | img_url: 'master' }}'); background-size: cover; background-position: center;"></div>
+              </a>
+              
+              <div class="product-content">
+                <h3><a href="{{ product.url }}">{{ product.title }}</a></h3>
+                <p class="price">
+                  {% if product.compare_at_price > product.price %}
+                    <span class="sale-price">{{ product.price | money }}</span>
+                    <span class="compare-price">{{ product.compare_at_price | money }}</span>
+                  {% else %}
+                    {{ product.price | money }}
+                  {% endif %}
+                </p>
+                <div class="product-actions">
+                  {% if product.available %}
+                    <button class="add-to-cart" data-product-id="{{ product.id }}">
+                      {% if product.variants.size > 1 %}
+                        View Options
+                      {% else %}
+                        Add to Cart
+                      {% endif %}
+                    </button>
+                  {% else %}
+                    <button class="add-to-cart sold-out" disabled>Sold Out</button>
+                  {% endif %}
+                  <button class="wishlist-btn" data-product-id="{{ product.id }}">
+                    <i class="far fa-heart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <div class="product-card">
+            <div class="product-img" style="background-color: #f5f5f5;"></div>
+            <div class="product-content">
+              <h3>Product Title</h3>
+              <p class="price">$29.99</p>
+              <div class="product-actions">
+                <button class="add-to-cart">Add to Cart</button>
+                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+      const productId = this.getAttribute('data-product-id');
+      if (productId) {
+        if (this.textContent.trim() === 'View Options') {
+          window.location.href = '/products/' + productId;
+        } else {
+          // Add to cart functionality
+          // This would typically use the Shopify AJAX API
+          console.log('Adding product to cart:', productId);
+        }
+      }
+    });
+  });
+  
+  document.querySelectorAll('.wishlist-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      this.classList.toggle('active');
+      const icon = this.querySelector('i');
+      if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+      } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        },
+        {
+          "value": "h3",
+          "label": "Small"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Number of products to show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Number of columns on desktop",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        }
+      ],
+      "default": "background-1"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show secondary image on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show product rating",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Number of columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 28
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

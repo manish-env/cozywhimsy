@@ -1,0 +1,178 @@
+<header class="site-header">
+  <div class="header-container">
+    <div class="logo-container">
+      <a href="/" class="logo">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ shop.name }}">
+        {% else %}
+          <img src="{{ 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }}">
+        {% endif %}
+      </a>
+    </div>
+    
+    <div class="search-container">
+      <form action="/search" method="get" class="search-form">
+        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="search-input" aria-label="Search">
+        <button type="submit" class="search-button" aria-label="Submit search">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
+    
+    <div class="nav-toggle" id="navToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    
+    <div class="header-right">
+      <nav class="main-nav" id="mainNav">
+        <ul class="nav-list">
+          {% for link in section.settings.menu.links %}
+            {% if link.links != blank %}
+              <li class="nav-item has-dropdown {% if link.active %}active{% endif %}">
+                <a href="{{ link.url }}" class="nav-link">
+                  {{ link.title }}
+                  <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  {% for childlink in link.links %}
+                    <li class="dropdown-item">
+                      <a href="{{ childlink.url }}" class="dropdown-link">{{ childlink.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% else %}
+              <li class="nav-item {% if link.active %}active{% endif %}">
+                <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+      
+      <div class="header-actions">
+        <a href="/account" class="icon-link" aria-label="Account">
+          <div class="icon-wrapper">
+            <i class="fas fa-user"></i>
+          </div>
+          <span class="icon-text">Account</span>
+        </a>
+        <a href="/cart" class="icon-link cart-icon" aria-label="Cart">
+          <div class="icon-wrapper">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count">{{ cart.item_count }}</span>
+          </div>
+          <span class="icon-text">Cart</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="header-spacer"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('navToggle');
+    const mainNav = document.getElementById('mainNav');
+    const header = document.querySelector('.site-header');
+    
+    // Toggle mobile menu
+    navToggle.addEventListener('click', function() {
+      mainNav.classList.toggle('active');
+      this.classList.toggle('active');
+      document.body.classList.toggle('nav-open');
+    });
+    
+    // Handle dropdown menus on mobile
+    const dropdownLinks = document.querySelectorAll('.has-dropdown > .nav-link');
+    
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (window.innerWidth < 992) {
+          e.preventDefault();
+          this.parentNode.classList.toggle('dropdown-open');
+        }
+      });
+    });
+    
+    // Sticky header on scroll
+    let lastScrollTop = 0;
+    
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 100) {
+        header.classList.add('sticky');
+        
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          header.classList.add('hide');
+        } else {
+          // Scrolling up
+          header.classList.remove('hide');
+        }
+      } else {
+        header.classList.remove('sticky');
+        header.classList.remove('hide');
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder text",
+      "default": "Search for products..."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Enable sticky header",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "header_bg",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_text",
+      "label": "Text color",
+      "default": "#333333"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "category": "Header"
+    }
+  ]
+}
+{% endschema %}

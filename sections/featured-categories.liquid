@@ -1,0 +1,373 @@
+<section class="featured-categories">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    </div>
+    
+    <!-- Desktop Grid View -->
+    <div class="category-grid desktop-only">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          <div class="category-card" {{ block.shopify_attributes }}>
+            {% if block.settings.collection != blank %}
+              <a href="{{ block.settings.collection.url }}" class="category-img-link">
+                {% if block.settings.image != blank %}
+                  <div class="category-img" style="background-image: url('{{ block.settings.image | img_url: 'master' }}'); background-size: cover; background-position: center;"></div>
+                {% elsif block.settings.collection.image != blank %}
+                  <div class="category-img" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}'); background-size: cover; background-position: center;"></div>
+                {% else %}
+                  <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
+                {% endif %}
+              </a>
+              <div class="category-content">
+                <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
+                <a href="{{ block.settings.collection.url }}" class="category-link">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
+              </div>
+            {% else %}
+              <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
+              <div class="category-content">
+                <h3>{{ block.settings.title | default: "Category Name" }}</h3>
+                <a href="#" class="category-link">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% comment %} Display placeholder categories if no blocks are added {% endcomment %}
+        {% for i in (1..4) %}
+          <div class="category-card">
+            <div class="category-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};"></div>
+            <div class="category-content">
+              <h3>Sample Category {{ i }}</h3>
+              <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    
+    <!-- Mobile Stories View -->
+    <div class="category-stories-container mobile-only">
+      <div class="category-stories">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <div class="category-story" {{ block.shopify_attributes }}>
+              {% if block.settings.collection != blank %}
+                <a href="{{ block.settings.collection.url }}" class="story-img-container">
+                  {% if block.settings.image != blank %}
+                    <div class="story-img" style="background-image: url('{{ block.settings.image | img_url: 'master' }}');"></div>
+                  {% elsif block.settings.collection.image != blank %}
+                    <div class="story-img" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}');"></div>
+                  {% else %}
+                    <div class="story-img" style="background-color: {{ block.settings.background_color }};"></div>
+                  {% endif %}
+                </a>
+                <div class="story-title">
+                  <p>{{ block.settings.title | default: block.settings.collection.title }}</p>
+                </div>
+              {% else %}
+                <a href="#" class="story-img-container">
+                  <div class="story-img" style="background-color: {{ block.settings.background_color }};"></div>
+                </a>
+                <div class="story-title">
+                  <p>{{ block.settings.title | default: "Category" }}</p>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% comment %} Display placeholder categories if no blocks are added {% endcomment %}
+          {% for i in (1..6) %}
+            <div class="category-story">
+              <a href="#" class="story-img-container">
+                <div class="story-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};"></div>
+              </a>
+              <div class="story-title">
+                <p>Category {{ i }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-categories {
+    padding: 30px 0;
+    background-color: #fff;
+  }
+  
+  /* Desktop Grid Styles */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 25px;
+    margin-top: 20px;
+  }
+  
+  .category-card {
+    background-color: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 107, 154, 0.15);
+  }
+  
+  .category-img-link {
+    display: block;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .category-img {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    transition: all 0.5s ease;
+    position: relative;
+  }
+  
+  .category-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .category-content h3 {
+    margin: 0 0 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .category-link {
+    display: inline-flex;
+    align-items: center;
+    color: #ff6b9a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: auto;
+    transition: all 0.3s ease;
+  }
+  
+  .category-link i {
+    margin-left: 6px;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+  }
+  
+  .category-link:hover {
+    color: #e1306c;
+  }
+  
+  .category-link:hover i {
+    transform: translateX(4px);
+  }
+  
+  /* Mobile Stories Styles */
+  .category-stories-container {
+    display: none;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    margin-top: 15px;
+    padding: 5px 0;
+  }
+  
+  .category-stories-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .category-stories {
+    display: flex;
+    padding: 0 15px;
+  }
+  
+  .category-story {
+    flex: 0 0 auto;
+    width: 80px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .story-img-container {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #ff6b9a, #e1306c);
+    margin-bottom: 8px;
+  }
+  
+  .story-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid white;
+  }
+  
+  .story-title {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .story-title p {
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .desktop-only {
+    display: grid;
+  }
+  
+  .mobile-only {
+    display: none;
+  }
+  
+  @media (max-width: 991px) {
+    .category-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .desktop-only {
+      display: none;
+    }
+    
+    .mobile-only {
+      display: block;
+    }
+    
+    .featured-categories {
+      padding: 20px 0 15px;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .section-subtitle {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured Categories",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Explore our curated collections"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category title",
+          "default": "Category"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Categories",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

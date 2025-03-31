@@ -1,0 +1,64 @@
+<section class="newsletter">
+  <div class="container">
+    <div class="newsletter-content">
+      <div class="newsletter-text">
+        <h2>{{ section.settings.title | escape }}</h2>
+        <p>{{ section.settings.subtitle | escape }}</p>
+      </div>
+      
+      <div class="newsletter-form">
+        {% form 'customer', id: 'newsletter-form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="form-group">
+            <input type="email" name="contact[email]" id="newsletter-email" class="form-control" placeholder="{{ section.settings.placeholder }}" required>
+            <button type="submit" class="btn primary-btn">{{ section.settings.button_text }}</button>
+          </div>
+          {% if form.posted_successfully? %}
+            <p class="form-success">{{ 'general.newsletter_form.confirmation' | t }}</p>
+          {% endif %}
+          {% if form.errors %}
+            <p class="form-error">{{ form.errors.messages['email'] }}</p>
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Join Our Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Subscribe to receive updates, access to exclusive deals, and more."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input Placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Subscribe"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,108 @@
+<div class="blog-header" style="text-align: {{ section.settings.alignment }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    {% if section.settings.show_title and blog.title %}
+      <h1 class="blog-title">{{ blog.title }}</h1>
+    {% endif %}
+    
+    {% if section.settings.show_description and blog.metafields.description.content %}
+      <div class="blog-description rte">
+        {{ blog.metafields.description.content }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Blog Header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "default": true,
+      "label": "Show blog title"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "default": true,
+      "label": "Show blog description"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center",
+      "label": "Text alignment"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Header"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .blog-header {
+    background: linear-gradient(135deg, var(--light-pink) 0%, var(--light-purple) 100%);
+  }
+  
+  .blog-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--dark-text);
+  }
+  
+  .blog-description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--light-text);
+  }
+  
+  @media (max-width: 767px) {
+    .blog-title {
+      font-size: 2rem;
+    }
+    
+    .blog-description {
+      font-size: 1rem;
+    }
+  }
+</style>

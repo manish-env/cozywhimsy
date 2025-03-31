@@ -1,0 +1,805 @@
+<footer class="site-footer">
+  <div class="footer-wave">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,0 C240,40 480,60 720,60 C960,60 1200,40 1440,0 L1440,120 L0,120 Z" fill="var(--light-pink)"></path>
+    </svg>
+  </div>
+
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-content">
+        <!-- Brand Column -->
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            {% if section.settings.footer_logo != blank %}
+              <img src="{{ section.settings.footer_logo | img_url: 'master' }}" alt="{{ shop.name }}">
+            {% else %}
+              <img src="{{ 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }}">
+            {% endif %}
+          </a>
+          <div class="footer-tagline">{{ section.settings.footer_text }}</div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="footer-nav">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'link_list' %}
+                <div class="footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
+                  {% assign footer_menu = block.settings.menu %}
+                  {% if linklists[footer_menu].links.size > 0 %}
+                    <ul class="footer-menu">
+                      {% for link in linklists[footer_menu].links %}
+                        <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% when 'text' %}
+                <div class="footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
+                  <div class="footer-text">{{ block.settings.text }}</div>
+                </div>
+              {% when 'contact' %}
+                <div class="footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
+                  <ul class="contact-info">
+                    {% if block.settings.email != blank %}
+                      <li class="contact-item">
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <a href="mailto:{{ block.settings.email }}" class="contact-text">{{ block.settings.email }}</a>
+                      </li>
+                    {% endif %}
+                    {% if block.settings.phone != blank %}
+                      <li class="contact-item">
+                        <i class="fas fa-phone-alt contact-icon"></i>
+                        <a href="tel:{{ block.settings.phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}" class="contact-text">{{ block.settings.phone }}</a>
+                      </li>
+                    {% endif %}
+                    {% if block.settings.address != blank %}
+                      <li class="contact-item">
+                        <i class="fas fa-map-marker-alt contact-icon"></i>
+                        <span class="contact-text">{{ block.settings.address }}</span>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+              {% when 'image' %}
+                <div class="footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
+                  {% if block.settings.image != blank %}
+                    <div class="footer-image">
+                      <img 
+                        src="{{ block.settings.image | img_url: '300x' }}" 
+                        alt="{{ block.settings.image.alt | escape }}"
+                        loading="lazy"
+                      >
+                    </div>
+                  {% endif %}
+                  {% if block.settings.image_link != blank %}
+                    <a href="{{ block.settings.image_link }}" class="footer-link">{{ block.settings.image_link_text }}</a>
+                  {% endif %}
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+
+        <!-- Connect Section -->
+        <div class="footer-connect">
+          {% if section.settings.show_newsletter %}
+            <div class="newsletter-signup">
+              <h4 class="footer-heading">{{ section.settings.newsletter_title }}</h4>
+              <p class="newsletter-text">{{ section.settings.newsletter_text }}</p>
+              {% form 'customer', id: 'footer-newsletter-form' %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="newsletter-form">
+                  <input 
+                    type="email" 
+                    name="contact[email]" 
+                    class="newsletter-input" 
+                    placeholder="{{ section.settings.newsletter_placeholder }}" 
+                    required
+                    aria-label="{{ section.settings.newsletter_placeholder }}"
+                  >
+                  <button type="submit" class="newsletter-submit">
+                    <i class="fas fa-paper-plane"></i>
+                  </button>
+                </div>
+                {% if form.posted_successfully? %}
+                  <p class="newsletter-success">{{ section.settings.newsletter_success_text }}</p>
+                {% endif %}
+                {% if form.errors %}
+                  <p class="newsletter-error">{{ form.errors.messages['email'] }}</p>
+                {% endif %}
+              {% endform %}
+            </div>
+          {% endif %}
+
+          <div class="social-links-container">
+            <h4 class="footer-heading">{{ section.settings.social_heading }}</h4>
+            <div class="social-links">
+              <a href="{{ section.settings.instagram_link | default: '#' }}" target="_blank" aria-label="Instagram" class="social-link instagram">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="{{ section.settings.pinterest_link | default: '#' }}" target="_blank" aria-label="Pinterest" class="social-link pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </a>
+              <a href="{{ section.settings.facebook_link | default: '#' }}" target="_blank" aria-label="Facebook" class="social-link facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="{{ section.settings.twitter_link | default: '#' }}" target="_blank" aria-label="Twitter" class="social-link twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="{{ section.settings.tiktok_link | default: '#' }}" target="_blank" aria-label="TikTok" class="social-link tiktok">
+                <i class="fab fa-tiktok"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="footer-bottom-content">
+        <p class="copyright">{{ section.settings.copyright_text }}</p>
+        {% if section.settings.footer_bottom_menu.links.size > 0 %}
+          <div class="footer-bottom-links">
+            {% for link in section.settings.footer_bottom_menu.links %}
+              <a href="{{ link.url }}" class="footer-bottom-link">{{ link.title }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_payment_icons %}
+          <div class="payment-icons">
+            {% for type in shop.enabled_payment_types %}
+              {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    margin-top: 30px;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .footer-wave {
+    position: absolute;
+    top: -60px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    overflow: hidden;
+  }
+  
+  .footer-wave svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .footer-main {
+    background-color: var(--light-pink);
+    padding: 30px 0 20px;
+    position: relative;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    position: relative;
+  }
+  
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .footer-logo {
+    display: block;
+    max-width: 120px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .footer-logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .footer-tagline {
+    margin-bottom: 10px;
+    line-height: 1.4;
+    font-size: 0.85rem;
+    color: var(--dark-text);
+  }
+  
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  
+  .footer-heading {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    color: var(--primary-pink);
+    position: relative;
+    display: inline-block;
+  }
+  
+  .footer-heading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background: var(--primary-pink);
+    bottom: -3px;
+    left: 0;
+    opacity: 0.7;
+  }
+  
+  .footer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-menu li {
+    margin-bottom: 6px;
+  }
+  
+  .footer-link {
+    color: var(--dark-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 0.8rem;
+    position: relative;
+  }
+  
+  .footer-link:hover {
+    color: var(--primary-pink);
+    transform: translateX(3px);
+  }
+  
+  .footer-text {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--dark-text);
+  }
+  
+  .contact-info {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  
+  .contact-icon {
+    color: var(--primary-pink);
+    margin-right: 8px;
+    font-size: 0.8rem;
+    width: 14px;
+  }
+  
+  .contact-text {
+    color: var(--dark-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+  }
+  
+  a.contact-text:hover {
+    color: var(--primary-pink);
+  }
+  
+  .footer-image {
+    margin-bottom: 10px;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  }
+  
+  .footer-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: all 0.5s ease;
+  }
+  
+  .footer-image:hover img {
+    transform: scale(1.05);
+  }
+  
+  .footer-connect {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .newsletter-signup {
+    margin-bottom: 10px;
+  }
+  
+  .newsletter-text {
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--dark-text);
+  }
+  
+  .newsletter-form {
+    display: flex;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  .newsletter-input {
+    width: 100%;
+    padding: 8px 40px 8px 15px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    background-color: var(--white);
+    color: var(--dark-text);
+    font-family: inherit;
+  }
+  
+  .newsletter-input::placeholder {
+    color: var(--light-text);
+  }
+  
+  .newsletter-input:focus {
+    outline: none;
+    border-color: var(--primary-pink);
+    box-shadow: 0 0 0 2px rgba(255, 107, 154, 0.1);
+  }
+  
+  .newsletter-submit {
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-pink);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .newsletter-submit:hover {
+    background: var(--primary-purple);
+    transform: translateY(-50%) scale(1.05);
+  }
+  
+  .newsletter-success {
+    color: #4caf50;
+    margin-top: 6px;
+    font-size: 0.75rem;
+  }
+  
+  .newsletter-error {
+    color: #f44336;
+    margin-top: 6px;
+    font-size: 0.75rem;
+  }
+  
+  .social-links-container {
+    margin-top: 5px;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--white);
+    color: var(--primary-pink);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  
+  .social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  }
+  
+  .social-link.instagram:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+  }
+  
+  .social-link.pinterest:hover {
+    background: #E60023;
+    color: white;
+  }
+  
+  .social-link.facebook:hover {
+    background: #3b5998;
+    color: white;
+  }
+  
+  .social-link.twitter:hover {
+    background: #1DA1F2;
+    color: white;
+  }
+  
+  .social-link.tiktok:hover {
+    background: #000;
+    color: white;
+  }
+  
+  .footer-bottom {
+    background-color: var(--white);
+    padding: 12px 0;
+    border-top: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  .footer-bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .copyright {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--light-text);
+  }
+  
+  .footer-bottom-links {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .footer-bottom-link {
+    color: var(--light-text);
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+  }
+  
+  .footer-bottom-link:hover {
+    color: var(--primary-pink);
+  }
+  
+  .payment-icons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .payment-icon {
+    width: 32px;
+    height: 20px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+  }
+  
+  .payment-icon:hover {
+    opacity: 1;
+  }
+  
+  @media (max-width: 991px) {
+    .footer-content {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .footer-connect {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .footer-content {
+      grid-template-columns: 1fr;
+    }
+    
+    .footer-nav {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .footer-connect {
+      grid-column: span 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .footer-bottom-content {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .footer-bottom-links {
+      justify-content: center;
+    }
+    
+    .payment-icons {
+      justify-content: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo & Branding"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "Footer Logo"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_text",
+      "label": "Footer Text",
+      "default": "Bringing warmth and whimsy to your everyday life through carefully curated products that inspire joy and comfort."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter title",
+      "default": "Stay in the Loop"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "Join our cozy community for exclusive updates, new arrivals, and special offers!"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email placeholder text",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_text",
+      "label": "Button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success_text",
+      "label": "Success message",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social media icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Social heading",
+      "default": "Follow Us"
+    },
+    {
+      "type": "text",
+      "id": "instagram_link",
+      "label": "Instagram Link"
+    },
+    {
+      "type": "text",
+      "id": "pinterest_link",
+      "label": "Pinterest Link"
+    },
+    {
+      "type": "text",
+      "id": "facebook_link",
+      "label": "Facebook Link"
+    },
+    {
+      "type": "text",
+      "id": "twitter_link",
+      "label": "Twitter Link"
+    },
+    {
+      "type": "text",
+      "id": "tiktok_link",
+      "label": "TikTok Link"
+    },
+    {
+      "type": "header",
+      "content": "Footer Bottom"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": " 2025 Cozywhimsy. All rights reserved."
+    },
+    {
+      "type": "link_list",
+      "id": "footer_bottom_menu",
+      "label": "Footer Bottom Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Quick links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Text column"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share information about your brand with your customers.</p>"
+        }
+      ]
+    },
+    {
+      "type": "contact",
+      "name": "Contact",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Contact"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email",
+          "default": "hello@cozywhimsy.com"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone",
+          "default": "+1 (555) 123-4567"
+        },
+        {
+          "type": "text",
+          "id": "address",
+          "label": "Address",
+          "default": "123 Cozy Street, Whimsy Town"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Our Store"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "image_link",
+          "label": "Image link"
+        },
+        {
+          "type": "text",
+          "id": "image_link_text",
+          "label": "Link text",
+          "default": "Learn more"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "link_list"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "contact"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

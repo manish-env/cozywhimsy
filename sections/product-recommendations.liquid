@@ -1,0 +1,388 @@
+<div class="product-recommendations">
+  <div class="container">
+    {% if section.settings.heading != blank %}
+      <div class="section-header">
+        <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {% endif %}
+    
+    <div class="product-grid" 
+         data-columns-desktop="{{ section.settings.columns_desktop }}" 
+         data-columns-mobile="{{ section.settings.columns_mobile }}">
+      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+        {% for product in recommendations.products %}
+          <div class="product-card">
+            {% if product.tags contains 'new' %}
+              <div class="product-badge">New</div>
+            {% elsif product.tags contains 'bestseller' %}
+              <div class="product-badge bestseller">Bestseller</div>
+            {% elsif product.compare_at_price > product.price %}
+              <div class="product-badge sale">Sale</div>
+            {% endif %}
+            
+            <a href="{{ product.url }}" class="product-img-link">
+              <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
+                <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image">
+                
+                {% if section.settings.show_secondary_image and product.images.size > 1 %}
+                  <img src="{{ product.images[1] | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image-hover">
+                {% endif %}
+              </div>
+            </a>
+            
+            <div class="product-info">
+              {% if section.settings.show_vendor %}
+                <div class="product-vendor">{{ product.vendor }}</div>
+              {% endif %}
+              
+              <h3 class="product-title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+              
+              <div class="product-price">
+                {% if product.compare_at_price > product.price %}
+                  <span class="sale-price">{{ product.price | money }}</span>
+                  <span class="compare-price">{{ product.compare_at_price | money }}</span>
+                {% else %}
+                  <span class="regular-price">{{ product.price | money }}</span>
+                {% endif %}
+              </div>
+              
+              {% if section.settings.show_rating and product.metafields.reviews.rating %}
+                <div class="product-rating">
+                  <div class="stars" style="--rating: {{ product.metafields.reviews.rating.value }};">
+                    <span>★★★★★</span>
+                  </div>
+                  <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {%- else -%}
+        {% for i in (1..4) %}
+          <div class="product-card placeholder">
+            <div class="product-image-container">
+              <div class="placeholder-image"></div>
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Sample Product</h3>
+              <div class="product-price">
+                <span class="regular-price">$29.99</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-recommendations {
+    padding: var(--padding-top, 36px) 0 var(--padding-bottom, 36px);
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+    margin: 0;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns-desktop, 4), 1fr);
+    gap: 30px;
+  }
+  
+  .product-card {
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--primary-pink);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+    z-index: 2;
+  }
+  
+  .product-badge.bestseller {
+    background-color: #ffa500;
+  }
+  
+  .product-badge.sale {
+    background-color: #e53935;
+  }
+  
+  .product-image-container {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    padding-bottom: 100%;
+  }
+  
+  .product-image-container[style*="--image-ratio: square"] {
+    padding-bottom: 100%;
+  }
+  
+  .product-image-container[style*="--image-ratio: portrait"] {
+    padding-bottom: 125%;
+  }
+  
+  .product-image-container[style*="--image-ratio: landscape"] {
+    padding-bottom: 75%;
+  }
+  
+  .product-image, .product-image-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+  
+  .product-image-hover {
+    opacity: 0;
+  }
+  
+  .product-card:hover .product-image {
+    opacity: 0;
+  }
+  
+  .product-card:hover .product-image-hover {
+    opacity: 1;
+  }
+  
+  .placeholder-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+  }
+  
+  .product-info {
+    padding: 15px 0;
+  }
+  
+  .product-vendor {
+    font-size: 12px;
+    color: var(--light-text);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  
+  .product-title {
+    font-size: 16px;
+    margin: 0 0 8px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  
+  .product-title a {
+    color: var(--dark-text);
+    text-decoration: none;
+  }
+  
+  .product-title a:hover {
+    color: var(--primary-pink);
+  }
+  
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sale-price {
+    color: var(--primary-pink);
+    font-weight: 600;
+  }
+  
+  .compare-price {
+    color: var(--light-text);
+    text-decoration: line-through;
+    font-size: 14px;
+  }
+  
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  
+  .stars {
+    position: relative;
+    display: inline-block;
+    color: #ddd;
+    font-size: 14px;
+  }
+  
+  .stars::before {
+    content: "★★★★★";
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ffc107;
+    width: calc(var(--rating) * 20%);
+    overflow: hidden;
+  }
+  
+  .rating-count {
+    font-size: 12px;
+    color: var(--light-text);
+  }
+  
+  @media (max-width: 767px) {
+    .product-grid {
+      grid-template-columns: repeat(var(--columns-mobile, 2), 1fr);
+      gap: 15px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const productId = document.querySelector('.enhanced-product-template')?.getAttribute('data-product-id');
+    
+    if (productId) {
+      // Fetch product recommendations
+      fetch(`/recommendations/products.json?product_id=${productId}&limit=4&section_id=product-recommendations`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.products && data.products.length > 0) {
+            // Process recommendations
+            console.log('Product recommendations loaded:', data.products.length);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching product recommendations:', error);
+        });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "You may also like",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        }
+      ],
+      "default": "square",
+      "label": "Image ratio"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": true,
+      "label": "Show second image on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "Show product vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "Show product rating"
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "label": "Number of columns on mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 36,
+      "label": "Top padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 28,
+      "label": "Bottom padding"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Recommendations",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

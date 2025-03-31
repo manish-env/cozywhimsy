@@ -1,0 +1,98 @@
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    </div>
+    
+    <div class="testimonial-slider">
+      {% for block in section.blocks %}
+        <div class="testimonial-item" {{ block.shopify_attributes }}>
+          <div class="testimonial-content">
+            <div class="stars">
+              {% assign rating = block.settings.rating | default: 5 %}
+              {% for i in (1..5) %}
+                {% if i <= rating %}
+                  <i class="fas fa-star"></i>
+                {% else %}
+                  <i class="far fa-star"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <p>{{ block.settings.quote }}</p>
+            <div class="testimonial-author">
+              <h4>{{ block.settings.author_name }}</h4>
+              <p>{{ block.settings.author_title }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Real experiences from our community"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "Rating"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "The quality of every item I've purchased has been exceptional. Cozywhimsy has become my go-to for unique home decor and gifts!"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "Sarah Johnson"
+        },
+        {
+          "type": "text",
+          "id": "author_title",
+          "label": "Author Title",
+          "default": "Loyal Customer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "testimonial"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Cozywhimsy",
+    "theme_version": "1.0.0",
+    "theme_author": "Cozywhimsy",
+    "theme_documentation_url": "https://help.shopify.com",
+    "theme_support_url": "https://support.shopify.com"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary Colors"
+      },
+      {
+        "type": "color",
+        "id": "primary_pink",
+        "label": "Primary Pink",
+        "default": "#ff6b9a"
+      },
+      {
+        "type": "color",
+        "id": "primary_purple",
+        "label": "Primary Purple",
+        "default": "#9370db"
+      },
+      {
+        "type": "header",
+        "content": "Background Colors"
+      },
+      {
+        "type": "color",
+        "id": "light_pink",
+        "label": "Light Pink",
+        "default": "#fff0f5"
+      },
+      {
+        "type": "color",
+        "id": "light_purple",
+        "label": "Light Purple",
+        "default": "#f0e6ff"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Font Families"
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Headings",
+        "default": "poppins_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Body text",
+        "default": "poppins_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "accent_font",
+        "label": "Accent text",
+        "default": "playfair_display_n4"
+      }
+    ]
+  }
+]

@@ -13,7 +13,7 @@
       "type": "hero",
       "settings": {
         "enable_hero_section": true,
-        "hide_on_mobile": false,
+        "hide_on_mobile": true,
         "hide_on_desktop": false,
         "heading": "Welcome to Cozywhimsy",
         "subheading": "Handcrafted items that bring warmth and whimsy to your home",
@@ -80,10 +80,15 @@
       "settings": {
         "title": "Shop by Category",
         "subtitle": "Explore our curated collections",
-        "show_title_desktop": true,
-        "show_subtitle_desktop": true,
+        "show_title_desktop": false,
+        "show_subtitle_desktop": false,
         "show_title_mobile": false,
         "show_subtitle_mobile": false,
+        "show_separator_desktop": true,
+        "show_separator_mobile": false,
+        "separator_color": "#ff6b9a",
+        "separator_width": 50,
+        "separator_margin": 20,
         "padding_top": 36,
         "padding_bottom": 36
       }

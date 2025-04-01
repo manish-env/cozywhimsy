@@ -23,8 +23,13 @@
         </p>
       {% endif %}
       
-      {% if section.settings.show_separator %}
-        <div class="section-separator" style="
+      {% assign show_separator = false %}
+      {% if section.settings.show_separator_desktop or section.settings.show_separator_mobile %}
+        {% assign show_separator = true %}
+      {% endif %}
+      
+      {% if show_separator %}
+        <div class="section-separator {% if section.settings.show_separator_desktop == false %}desktop-hide-separator{% endif %} {% if section.settings.show_separator_mobile == false %}mobile-hide-separator{% endif %}" style="
           width: {{ section.settings.separator_width }}%; 
           border-color: {{ section.settings.separator_color }};
           margin: {{ section.settings.separator_margin }}px auto;
@@ -310,6 +315,10 @@
     .desktop-hide-subtitle .section-subtitle {
       display: none;
     }
+    
+    .desktop-hide-separator {
+      display: none;
+    }
   }
   
   @media (max-width: 991px) {
@@ -352,10 +361,8 @@
     .mobile-hide-subtitle .section-subtitle {
       display: none;
     }
-     .mobile-hide-subtitle .section-subtitle {
-      display: none;
-    }
-    .desktop-hide-subtitle.section-subtitle {
+    
+    .mobile-hide-separator {
       display: none;
     }
   }
@@ -411,22 +418,23 @@
       "label": "Show subtitle on mobile",
       "default": true
     },
-      {
-      "type": "checkbox",
-      "id": "show_separator",
-      "label": "Show Separator",
-      "default": true
-    },
     {
       "type": "header",
       "content": "Separator Line"
     },
     {
       "type": "checkbox",
-      "id": "show_separator",
-      "label": "Show separator line",
+      "id": "show_separator_desktop",
+      "label": "Show separator line on desktop",
       "default": true,
-      "info": "Display a horizontal line between the heading and grid"
+      "info": "Display a horizontal line between the heading and grid on desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator_mobile",
+      "label": "Show separator line on mobile",
+      "default": true,
+      "info": "Display a horizontal line between the heading and grid on mobile"
     },
     {
       "type": "color",

@@ -12,6 +12,9 @@
     "hero": {
       "type": "hero",
       "settings": {
+        "enable_hero_section": true,
+        "hide_on_mobile": false,
+        "hide_on_desktop": false,
         "heading": "Welcome to Cozywhimsy",
         "subheading": "Handcrafted items that bring warmth and whimsy to your home",
         "button_link": "/collections/all",
@@ -21,7 +24,14 @@
         "image": "shopify://shop_images/5531344064.jpg",
         "primary_caption": "New Arrivals",
         "secondary_image": "shopify://shop_images/5089441490.jpg",
-        "secondary_caption": "Featured Collection"
+        "secondary_caption": "Featured Collection",
+        "mobile_hero_style": "carousel",
+        "mobile_banner_height": 450,
+        "mobile_image_size": "600x",
+        "mobile_image_position": "center center",
+        "mobile_overlay_opacity": 60,
+        "mobile_fallback_bg": "#f8f8f8",
+        "mobile_slide_delay": 5000
       }
     },
     "featured_categories": {
@@ -70,6 +80,10 @@
       "settings": {
         "title": "Shop by Category",
         "subtitle": "Explore our curated collections",
+        "show_title_desktop": true,
+        "show_subtitle_desktop": true,
+        "show_title_mobile": false,
+        "show_subtitle_mobile": false,
         "padding_top": 36,
         "padding_bottom": 36
       }

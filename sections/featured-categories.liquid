@@ -1,26 +1,24 @@
 <section class="featured-categories">
   <div class="container">
     <div class="section-header">
-      {% assign show_title = false %}
-      {% if section.settings.show_title_desktop or section.settings.show_title_mobile %}
-        {% assign show_title = true %}
+      {% if section.settings.title != blank %}
+        {% if section.settings.show_title_desktop or section.settings.show_title_mobile %}
+          <h2 class="section-title 
+            {% unless section.settings.show_title_desktop %}desktop-hide-title{% endunless %} 
+            {% unless section.settings.show_title_mobile %}mobile-hide-title{% endunless %}">
+            {{ section.settings.title | escape }}
+          </h2>
+        {% endif %}
       {% endif %}
       
-      {% if section.settings.title != blank and show_title %}
-        <h2 class="section-title {% if section.settings.show_title_desktop == false %}desktop-hide-title{% endif %} {% if section.settings.show_title_mobile == false %}mobile-hide-title{% endif %}">
-          {{ section.settings.title | escape }}
-        </h2>
-      {% endif %}
-      
-      {% assign show_subtitle = false %}
-      {% if section.settings.show_subtitle_desktop or section.settings.show_subtitle_mobile %}
-        {% assign show_subtitle = true %}
-      {% endif %}
-      
-      {% if section.settings.subtitle != blank and show_subtitle %}
-        <p class="section-subtitle {% if section.settings.show_subtitle_desktop == false %}desktop-hide-subtitle{% endif %} {% if section.settings.show_subtitle_mobile == false %}mobile-hide-subtitle{% endif %}">
-          {{ section.settings.subtitle | escape }}
-        </p>
+      {% if section.settings.subtitle != blank %}
+        {% if section.settings.show_subtitle_desktop or section.settings.show_subtitle_mobile %}
+          <p class="section-subtitle 
+            {% unless section.settings.show_subtitle_desktop %}desktop-hide-subtitle{% endunless %} 
+            {% unless section.settings.show_subtitle_mobile %}mobile-hide-subtitle{% endunless %}">
+            {{ section.settings.subtitle | escape }}
+          </p>
+        {% endif %}
       {% endif %}
     </div>
     

@@ -1,9 +1,15 @@
 <section class="featured-categories">
   <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
-      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    {% if section.settings.show_title_desktop or section.settings.show_title_mobile %}
+    <div class="section-header {% if section.settings.show_title_desktop == false %}desktop-hide-title{% endif %} {% if section.settings.show_title_mobile == false %}mobile-hide-title{% endif %}">
+      {% if section.settings.title != blank %}
+        <h2 class="section-title">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle != blank and (section.settings.show_subtitle_desktop or section.settings.show_subtitle_mobile) %}
+        <p class="section-subtitle {% if section.settings.show_subtitle_desktop == false %}desktop-hide-subtitle{% endif %} {% if section.settings.show_subtitle_mobile == false %}mobile-hide-subtitle{% endif %}">{{ section.settings.subtitle | escape }}</p>
+      {% endif %}
     </div>
+    {% endif %}
     
     <!-- Desktop Grid View -->
     <div class="category-grid desktop-only">
@@ -98,6 +104,25 @@
   .featured-categories {
     padding: 30px 0;
     background-color: #fff;
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .section-subtitle {
+    font-size: 16px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
   }
   
   /* Desktop Grid Styles */
@@ -249,6 +274,17 @@
     display: none;
   }
   
+  /* Title visibility controls */
+  @media (min-width: 768px) {
+    .desktop-hide-title {
+      display: none;
+    }
+    
+    .desktop-hide-subtitle .section-subtitle {
+      display: none;
+    }
+  }
+  
   @media (max-width: 991px) {
     .category-grid {
       grid-template-columns: repeat(3, 1fr);
@@ -281,6 +317,14 @@
     .section-subtitle {
       font-size: 14px;
     }
+    
+    .mobile-hide-title {
+      display: none;
+    }
+    
+    .mobile-hide-subtitle .section-subtitle {
+      display: none;
+    }
   }
 </style>
 
@@ -290,6 +334,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Section Title & Subtitle"
+    },
     {
       "type": "text",
       "id": "title",
@@ -301,6 +349,38 @@
       "id": "subtitle",
       "label": "Subtitle",
       "default": "Explore our curated collections"
+    },
+    {
+      "type": "header",
+      "content": "Title & Subtitle Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title_desktop",
+      "label": "Show title on desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle_desktop",
+      "label": "Show subtitle on desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title_mobile",
+      "label": "Show title on mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle_mobile",
+      "label": "Show subtitle on mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
     },
     {
       "type": "range",

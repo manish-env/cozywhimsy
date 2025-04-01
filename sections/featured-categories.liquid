@@ -8,7 +8,7 @@
       
       {% if section.settings.title != blank and show_title %}
         <h2 class="section-title {% if section.settings.show_title_desktop == false %}desktop-hide-title{% endif %} {% if section.settings.show_title_mobile == false %}mobile-hide-title{% endif %}">
-          {{ section.settings.title | escape }}
+         title {{ section.settings.title | escape }}
         </h2>
       {% endif %}
       
@@ -19,7 +19,7 @@
       
       {% if section.settings.subtitle != blank and show_subtitle %}
         <p class="section-subtitle {% if section.settings.show_subtitle_desktop == false %}desktop-hide-subtitle{% endif %} {% if section.settings.show_subtitle_mobile == false %}mobile-hide-subtitle{% endif %}">
-          {{ section.settings.subtitle | escape }}
+        subtitle  {{ section.settings.subtitle | escape }}
         </p>
       {% endif %}
     </div>

@@ -9,7 +9,7 @@
       {% assign product = all_products[section.settings.product] %}
       
       {% if product != blank %}
-        <div class="spotlight-product">
+        <div class="spotlight-product" data-product-id="{{ product.id }}">
           <div class="spotlight-image">
             {% if product.featured_image != blank %}
               <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title | escape }}">
@@ -81,9 +81,13 @@
               <a href="{{ product.url }}" class="btn primary-btn">{{ section.settings.button_text | default: 'View Details' }}</a>
               
               {% if product.available and product.variants.size == 1 %}
-                <button class="btn secondary-btn add-to-cart" data-product-id="{{ product.id }}">
-                  {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
-                </button>
+                <form action="/cart/add" method="post" class="add-to-cart-form">
+                  <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="btn secondary-btn add-to-cart-button">
+                    {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
+                  </button>
+                </form>
               {% endif %}
             </div>
           </div>
@@ -384,62 +388,68 @@
       });
     }
     
-    // Add to cart functionality
-    const addToCartBtn = document.querySelector('.add-to-cart');
-    if (addToCartBtn) {
-      addToCartBtn.addEventListener('click', function() {
-        const productId = this.getAttribute('data-product-id');
-        if (productId) {
-          // Add to cart using Shopify AJAX API
-          const originalText = this.textContent;
-          this.textContent = 'Adding...';
-          this.disabled = true;
+    // Add to cart functionality using form submission with AJAX
+    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
+    
+    addToCartForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitButton = this.querySelector('.add-to-cart-button');
+        const originalText = submitButton.textContent;
+        
+        // Show loading state
+        submitButton.textContent = 'Adding...';
+        submitButton.disabled = true;
+        
+        // Get form data
+        const formData = new FormData(this);
+        const formObject = {};
+        formData.forEach((value, key) => {
+          formObject[key] = value;
+        });
+        
+        // Send AJAX request
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formObject)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Success state
+          submitButton.textContent = 'Added!';
           
-          fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              id: productId,
-              quantity: 1
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            // Update button text temporarily
-            this.textContent = 'Added!';
-            
-            // Update cart count
-            fetch('/cart.js')
-              .then(res => res.json())
-              .then(cart => {
-                const cartCountElement = document.querySelector('.cart-count');
-                if (cartCountElement) {
-                  cartCountElement.textContent = cart.item_count;
-                  cartCountElement.classList.add('updated');
-                  setTimeout(() => cartCountElement.classList.remove('updated'), 1000);
-                }
-              });
-            
-            // Reset button after delay
-            setTimeout(() => {
-              this.textContent = originalText;
-              this.disabled = false;
-            }, 2000);
-          })
-          .catch(error => {
-            console.error('Error adding product to cart:', error);
-            this.textContent = 'Error';
-            setTimeout(() => {
-              this.textContent = originalText;
-              this.disabled = false;
-            }, 2000);
-          });
-        }
+          // Update cart count if needed
+          fetch('/cart.js')
+            .then(res => res.json())
+            .then(cart => {
+              const cartCountElement = document.querySelector('.cart-count');
+              if (cartCountElement) {
+                cartCountElement.textContent = cart.item_count;
+              }
+            });
+          
+          // Reset button after delay
+          setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+          }, 2000);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          submitButton.textContent = 'Error';
+          
+          // Reset button after delay
+          setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+          }, 2000);
+        });
       });
-    }
+    });
   });
 </script>
 

@@ -1,4 +1,4 @@
-<div class="collection-banner {% if section.settings.full_width %}full-width{% endif %}" 
+<div class="collection-banner {% if section.settings.full_width %}full-width{% endif %} {% if request.design_mode != true %}mobile-banner-control{% endif %}" 
      style="background-color: {{ section.settings.bg_color }}; 
             {% if section.settings.overlay_opacity > 0 and collection.image %}
               background-image: linear-gradient(rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }})), url({{ collection.image | img_url: 'master' }});
@@ -173,24 +173,102 @@
   }
   
   @media (max-width: 767px) {
+    .collection-banner {
+      padding: {{ section.settings.padding_top | divided_by: 2 }}px 0 {{ section.settings.padding_bottom | divided_by: 2 }}px;
+      margin-bottom: {{ section.settings.margin_bottom | divided_by: 2 }}px;
+    }
+    
+    .collection-banner .container {
+      padding: 0 15px;
+    }
+    
     .collection-title {
       font-size: calc({{ section.settings.title_size }}px * 0.7) !important;
+      margin-bottom: 5px;
     }
     
     .collection-description {
       font-size: calc({{ section.settings.description_size }}px * 0.9) !important;
+      margin-bottom: 15px;
+      line-height: 1.4;
     }
     
     .breadcrumbs {
-      font-size: 12px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 5px;
+      display: flex;
+    }
+    
+    .breadcrumbs ol {
+      display: inline-flex;
+    }
+    
+    .breadcrumbs::-webkit-scrollbar {
+      height: 2px;
+    }
+    
+    .breadcrumbs::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+    
+    .decorative-element {
+      margin: 8px 0;
     }
     
     .decorative-element svg {
       width: 60px;
       height: 15px;
     }
+    
+    .collection-stats {
+      font-size: 12px;
+      flex-wrap: wrap;
+      justify-content: {{ section.settings.text_alignment }};
+    }
+    
+    .wave-divider {
+      height: 50px;
+    }
+    
+    /* Hide banner on mobile if setting is enabled */
+    .mobile-banner-control.hidden-on-mobile {
+      display: none;
+    }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if we should hide the banner on mobile based on the setting in the product grid section
+    function checkMobileBannerVisibility() {
+      const mobileBannerControl = document.querySelector('.mobile-banner-control');
+      if (!mobileBannerControl) return;
+      
+      // Get the product grid section to check its settings
+      const productGridSection = document.querySelector('.collection-product-grid');
+      if (!productGridSection) return;
+      
+      // Check if we should hide the banner on mobile
+      const showBannerOnMobile = productGridSection.getAttribute('data-show-banner-mobile') !== 'false';
+      
+      if (!showBannerOnMobile && window.innerWidth <= 767) {
+        mobileBannerControl.classList.add('hidden-on-mobile');
+      } else {
+        mobileBannerControl.classList.remove('hidden-on-mobile');
+      }
+    }
+    
+    // Run on page load
+    checkMobileBannerVisibility();
+    
+    // Run on window resize
+    window.addEventListener('resize', checkMobileBannerVisibility);
+  });
+</script>
 
 {% schema %}
 {

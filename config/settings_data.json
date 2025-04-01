@@ -164,7 +164,7 @@
           "product_count_alignment": "left",
           "product_count_size": 14,
           "product_count_color": "#666666",
-          "toolbar_mobile_layout": "row",
+          "toolbar_mobile_layout": "column",
           "filter_button_bg": "#f5f5f5",
           "filter_button_text": "#333333",
           "filter_button_bg_hover": "#e0e0e0",

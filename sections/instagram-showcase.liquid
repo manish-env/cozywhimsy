@@ -80,6 +80,139 @@
           {% endfor %}
         {% endif %}
       </div>
+      
+      <div class="instagram-reels-container">
+        {% if section.settings.reel_embed_code_1 != blank or section.settings.reel_embed_code_2 != blank or section.settings.reel_embed_code_3 != blank %}
+          {% if section.settings.reel_embed_code_1 != blank %}
+            <div class="instagram-reel-item">
+              <div class="reel-embed">
+                {{ section.settings.reel_embed_code_1 }}
+              </div>
+            </div>
+          {% else %}
+            <div class="instagram-reel-item placeholder-reel">
+              <div class="placeholder-reel-content">
+                <i class="fas fa-video"></i>
+                <span>Reel 1</span>
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if section.settings.reel_embed_code_2 != blank %}
+            <div class="instagram-reel-item">
+              <div class="reel-embed">
+                {{ section.settings.reel_embed_code_2 }}
+              </div>
+            </div>
+          {% else %}
+            <div class="instagram-reel-item placeholder-reel">
+              <div class="placeholder-reel-content">
+                <i class="fas fa-video"></i>
+                <span>Reel 2</span>
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if section.settings.reel_embed_code_3 != blank %}
+            <div class="instagram-reel-item">
+              <div class="reel-embed">
+                {{ section.settings.reel_embed_code_3 }}
+              </div>
+            </div>
+          {% else %}
+            <div class="instagram-reel-item placeholder-reel">
+              <div class="placeholder-reel-content">
+                <i class="fas fa-video"></i>
+                <span>Reel 3</span>
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          {% comment %} Display placeholder reels if no embed codes are provided {% endcomment %}
+          {% for i in (1..3) %}
+            <div class="instagram-reel-item placeholder-reel">
+              <div class="placeholder-reel-content">
+                <i class="fas fa-video"></i>
+                <span>Reel {{ i }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      
+      <!-- Mobile Carousel for Reels -->
+      <div class="instagram-reels-carousel">
+        <div class="carousel-container">
+          <div class="carousel-track">
+            {% if section.settings.reel_embed_code_1 != blank or section.settings.reel_embed_code_2 != blank or section.settings.reel_embed_code_3 != blank %}
+              {% if section.settings.reel_embed_code_1 != blank %}
+                <div class="carousel-slide">
+                  <div class="reel-embed">
+                    {{ section.settings.reel_embed_code_1 }}
+                  </div>
+                </div>
+              {% else %}
+                <div class="carousel-slide placeholder-reel">
+                  <div class="placeholder-reel-content">
+                    <i class="fas fa-video"></i>
+                    <span>Reel 1</span>
+                  </div>
+                </div>
+              {% endif %}
+              
+              {% if section.settings.reel_embed_code_2 != blank %}
+                <div class="carousel-slide">
+                  <div class="reel-embed">
+                    {{ section.settings.reel_embed_code_2 }}
+                  </div>
+                </div>
+              {% else %}
+                <div class="carousel-slide placeholder-reel">
+                  <div class="placeholder-reel-content">
+                    <i class="fas fa-video"></i>
+                    <span>Reel 2</span>
+                  </div>
+                </div>
+              {% endif %}
+              
+              {% if section.settings.reel_embed_code_3 != blank %}
+                <div class="carousel-slide">
+                  <div class="reel-embed">
+                    {{ section.settings.reel_embed_code_3 }}
+                  </div>
+                </div>
+              {% else %}
+                <div class="carousel-slide placeholder-reel">
+                  <div class="placeholder-reel-content">
+                    <i class="fas fa-video"></i>
+                    <span>Reel 3</span>
+                  </div>
+                </div>
+              {% endif %}
+            {% else %}
+              {% comment %} Display placeholder reels if no embed codes are provided {% endcomment %}
+              {% for i in (1..3) %}
+                <div class="carousel-slide placeholder-reel">
+                  <div class="placeholder-reel-content">
+                    <i class="fas fa-video"></i>
+                    <span>Reel {{ i }}</span>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          
+          <div class="carousel-nav">
+            <button class="carousel-prev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+            <div class="carousel-dots">
+              <span class="carousel-dot active" data-index="0"></span>
+              <span class="carousel-dot" data-index="1"></span>
+              <span class="carousel-dot" data-index="2"></span>
+            </div>
+            <button class="carousel-next" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -402,81 +535,322 @@
     font-size: 12px;
   }
 }
+
+.instagram-reels-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  width: 100%;
+}
+
+.instagram-reel-item {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 9/16;
+  max-height: 500px;
+  height: 100%;
+}
+
+.reel-embed {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reel-embed iframe {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.placeholder-reel {
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-reel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #e1306c;
+}
+
+.placeholder-reel-content i {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.placeholder-reel-content span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.instagram-reels-carousel {
+  display: none;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 100%;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 9/16;
+  height: 400px;
+}
+
+.carousel-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  gap: 15px;
+}
+
+.carousel-prev, .carousel-next {
+  background: none;
+  border: none;
+  color: #e1306c;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-prev:disabled, .carousel-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: #e1306c;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .instagram-content {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+@media (max-width: 991px) {
+  .instagram-content {
+    flex-direction: column;
+  }
+  
+  .instagram-reels-container {
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .instagram-showcase {
+    padding: 40px 0;
+  }
+  
+  .instagram-content {
+    gap: 20px;
+  }
+  
+  .instagram-profile {
+    width: 100%;
+  }
+  
+  .instagram-reels-container {
+    display: none;
+  }
+  
+  .instagram-reels-carousel {
+    display: block;
+  }
+  
+  .carousel-slide {
+    height: 450px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-slide {
+    height: 400px;
+  }
+}
+
+@media (max-width: 375px) {
+  .carousel-slide {
+    height: 350px;
+  }
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Check if Instagram Access Token is provided
-  const accessToken = '{{ section.settings.instagram_access_token }}';
-  const username = '{{ section.settings.profile_username }}';
-  const postCount = {{ section.settings.instagram_post_count | default: 8 }};
-  
-  if (accessToken) {
-    fetchInstagramFeed(accessToken, postCount);
-  } else {
-    console.log('Instagram Access Token not provided. Using placeholder content.');
+  // Load Instagram embed script if embed code is present
+  if (document.querySelector('.reel-embed')) {
+    // Check if the Instagram embed script is already loaded
+    if (!document.getElementById('instagram-embed-script')) {
+      const script = document.createElement('script');
+      script.id = 'instagram-embed-script';
+      script.src = '//www.instagram.com/embed.js';
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    } else {
+      // If script already exists, process any new embeds
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
+    }
   }
   
-  function fetchInstagramFeed(token, count) {
-    // Instagram Graph API endpoint for user media
-    const endpoint = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,like_count,comments_count&access_token=${token}&limit=${count}`;
+  // Initialize carousel for mobile
+  const initCarousel = () => {
+    const track = document.querySelector('.carousel-track');
+    const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+    const dots = Array.from(document.querySelectorAll('.carousel-dot'));
+    const prevButton = document.querySelector('.carousel-prev');
+    const nextButton = document.querySelector('.carousel-next');
     
-    fetch(endpoint)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data && data.data) {
-          displayInstagramFeed(data.data);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching Instagram data:', error);
+    if (!track || slides.length === 0) return;
+    
+    let currentIndex = 0;
+    
+    // Update carousel position
+    const updateCarousel = () => {
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      
+      // Update dots
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
       });
-  }
-  
-  function displayInstagramFeed(posts) {
-    const feedContainer = document.getElementById('instagram-feed-container');
+      
+      // Update buttons
+      prevButton.disabled = currentIndex === 0;
+      nextButton.disabled = currentIndex === slides.length - 1;
+    };
     
-    // Clear placeholder content
-    feedContainer.innerHTML = '';
-    
-    // Create HTML for each post
-    posts.forEach(post => {
-      // Only process image posts (can be expanded to include videos/carousels)
-      if (post.media_type === 'IMAGE' || post.media_type === 'CAROUSEL_ALBUM') {
-        const imageUrl = post.media_url;
-        const postUrl = post.permalink;
-        const caption = post.caption || '';
-        const likes = post.like_count || 0;
-        const comments = post.comments_count || 0;
-        
-        const postElement = document.createElement('div');
-        postElement.className = 'instagram-item';
-        
-        postElement.innerHTML = `
-          <img src="${imageUrl}" alt="${caption.substring(0, 30)}...">
-          <div class="instagram-overlay">
-            <div class="overlay-icons">
-              <span class="likes"><i class="fas fa-heart"></i> ${likes}</span>
-              <span class="comments"><i class="fas fa-comment"></i> ${comments}</span>
-            </div>
-          </div>
-          <a href="${postUrl}" class="instagram-link" target="_blank" rel="noopener"></a>
-        `;
-        
-        feedContainer.appendChild(postElement);
+    // Event listeners
+    prevButton.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCarousel();
       }
     });
     
-    // If no posts were found or processed
-    if (feedContainer.children.length === 0) {
-      feedContainer.innerHTML = '<p class="no-posts">No Instagram posts found. Please check your access token.</p>';
-    }
+    nextButton.addEventListener('click', () => {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        updateCarousel();
+      }
+    });
+    
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        updateCarousel();
+      });
+    });
+    
+    // Initialize
+    updateCarousel();
+    
+    // Process Instagram embeds after slide change
+    const processEmbedsAfterTransition = () => {
+      track.addEventListener('transitionend', () => {
+        if (window.instgrm) {
+          window.instgrm.Embeds.process();
+        }
+      });
+    };
+    
+    processEmbedsAfterTransition();
+    
+    // Add touch swipe functionality
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    track.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    track.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+    
+    const handleSwipe = () => {
+      const swipeThreshold = 50; // Minimum distance to register as swipe
+      
+      if (touchEndX < touchStartX - swipeThreshold && currentIndex < slides.length - 1) {
+        // Swipe left
+        currentIndex++;
+        updateCarousel();
+      } else if (touchEndX > touchStartX + swipeThreshold && currentIndex > 0) {
+        // Swipe right
+        currentIndex--;
+        updateCarousel();
+      }
+    };
+  };
+  
+  // Initialize carousel when DOM is loaded
+  if (window.innerWidth <= 767) {
+    setTimeout(() => {
+      initCarousel();
+    }, 500); // Small delay to ensure DOM is fully loaded
   }
+  
+  // Reinitialize on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth <= 767) {
+        initCarousel();
+      }
+    }, 250);
+  });
 });
 </script>
 
@@ -572,6 +946,32 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "profile_button_text",
       "label": "Profile Button Text",
       "default": "Follow on Instagram"
+    },
+    {
+      "type": "header",
+      "content": "Instagram Reels"
+    },
+    {
+      "type": "html",
+      "id": "reel_embed_code_1",
+      "label": "Reel 1 Embed Code",
+      "info": "Paste the embed code from Instagram Reel. To get this: 1) Go to the Reel on Instagram 2) Click '...' 3) Select 'Embed' 4) Copy the code"
+    },
+    {
+      "type": "html",
+      "id": "reel_embed_code_2",
+      "label": "Reel 2 Embed Code",
+      "info": "Paste the embed code from Instagram Reel"
+    },
+    {
+      "type": "html",
+      "id": "reel_embed_code_3",
+      "label": "Reel 3 Embed Code",
+      "info": "Paste the embed code from Instagram Reel"
+    },
+    {
+      "type": "paragraph",
+      "content": "The embed codes will display your Instagram Reels in real-time, including likes, comments, and views."
     }
   ],
   "blocks": [
@@ -591,13 +991,13 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
           "type": "text",
-          "id": "likes",
+          "id": "like_count",
           "label": "Number of Likes",
           "default": "42"
         },
         {
           "type": "text",
-          "id": "comments",
+          "id": "comment_count",
           "label": "Number of Comments",
           "default": "5"
         }

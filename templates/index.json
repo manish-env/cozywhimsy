@@ -11,6 +11,19 @@
   "sections": {
     "hero": {
       "type": "hero",
+      "blocks": {
+        "slide_HhY4ry": {
+          "type": "slide",
+          "settings": {
+            "slide_caption": "Slide Title",
+            "slide_button_link": "",
+            "slide_button_text": "Shop Now"
+          }
+        }
+      },
+      "block_order": [
+        "slide_HhY4ry"
+      ],
       "settings": {
         "enable_hero_section": true,
         "hide_on_mobile": false,
@@ -78,6 +91,13 @@
         "category_2"
       ],
       "settings": {
+        "show_banner_desktop": false,
+        "show_banner_mobile": false,
+        "banner_image": "shopify://shop_images/A_little_Cozy_a_little_whimsy.png",
+        "banner_title": "Shop Our Collections",
+        "banner_text": "Discover our curated selection of products designed to bring comfort and style to your home.",
+        "banner_button_text": "Shop Now",
+        "banner_button_link": "",
         "title": "Shop by Category",
         "subtitle": "Explore our curated collections",
         "show_title_desktop": true,

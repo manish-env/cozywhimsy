@@ -16,6 +16,10 @@
           "search_placeholder": "Search for products...",
           "menu": "main-menu",
           "sticky_header": true,
+          "mobile_navbar_style": "bottom_tabs",
+          "mobile_navbar_categories_link": "",
+          "mobile_navbar_active_color": "#ff6b9a",
+          "mobile_navbar_position": "fixed",
           "header_bg": "#ffffff",
           "header_text": "#333333"
         }
@@ -164,7 +168,6 @@
           "product_count_alignment": "left",
           "product_count_size": 14,
           "product_count_color": "#666666",
-          "toolbar_mobile_layout": "column",
           "filter_button_bg": "#f5f5f5",
           "filter_button_text": "#333333",
           "filter_button_bg_hover": "#e0e0e0",

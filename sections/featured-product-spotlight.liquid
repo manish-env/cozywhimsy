@@ -9,15 +9,17 @@
       {% assign product = all_products[section.settings.product] %}
       
       {% if product != blank %}
-        <div class="spotlight-product" data-product-id="{{ product.id }}">
+        <div id="product-spotlight-app" class="spotlight-product" data-product-handle="{{ product.handle }}" data-product-id="{{ product.id }}">
           <div class="spotlight-image">
             {% if product.featured_image != blank %}
-              <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title | escape }}">
+              <img :src="currentImage" alt="{{ product.title | escape }}">
               
               {% if product.images.size > 1 %}
                 <div class="spotlight-thumbnails">
                   {% for image in product.images limit: 3 %}
-                    <div class="thumbnail{% if forloop.first %} active{% endif %}" data-image="{{ image | img_url: 'large' }}">
+                    <div class="thumbnail{% if forloop.first %} active{% endif %}" 
+                         @click="setActiveImage('{{ image | img_url: 'large' }}', $event)"
+                         data-image="{{ image | img_url: 'large' }}">
                       <img src="{{ image | img_url: 'small' }}" alt="{{ product.title | escape }}">
                     </div>
                   {% endfor %}
@@ -77,18 +79,11 @@
               {% endif %}
             </div>
             
-            <div class="spotlight-actions">
-              <a href="{{ product.url }}" class="btn primary-btn">{{ section.settings.button_text | default: 'View Details' }}</a>
-              
-              {% if product.available and product.variants.size == 1 %}
-                <form action="/cart/add" method="post" class="add-to-cart-form">
-                  <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-                  <input type="hidden" name="quantity" value="1">
-                  <button type="submit" class="btn secondary-btn add-to-cart-button">
-                    {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
-                  </button>
-                </form>
-              {% endif %}
+            <div class="view-details-wrapper">
+              <button @click="viewProductDetails" class="view-details-button" :class="{'loading': isLoading}">
+                <span v-if="!isLoading">{{ section.settings.button_text | default: 'View Details' }}</span>
+                <span v-else>Loading...</span>
+              </button>
             </div>
           </div>
         </div>
@@ -116,9 +111,8 @@
                 <div class="feature-text">Fast Shipping</div>
               </div>
             </div>
-            <div class="spotlight-actions">
-              <a href="#" class="btn primary-btn">View Details</a>
-              <button class="btn secondary-btn">Add to Cart</button>
+            <div class="view-details-wrapper">
+              <a href="#" class="view-details-button">View Details</a>
             </div>
           </div>
         </div>
@@ -303,10 +297,34 @@
   color: var(--light-text);
 }
 
-.spotlight-actions {
+.view-details-wrapper {
   margin-top: auto;
-  display: flex;
-  gap: 15px;
+}
+
+.view-details-button {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: #ff6b9a;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.view-details-button:hover {
+  background-color: #e05c89;
+}
+
+.view-details-button.loading {
+  background-color: #e05c89;
+  cursor: wait;
 }
 
 .placeholder-image {
@@ -357,99 +375,53 @@
   .spotlight-features {
     grid-template-columns: 1fr;
   }
-  
-  .spotlight-actions {
-    flex-direction: column;
-  }
-  
-  .spotlight-actions .btn {
-    width: 100%;
-  }
 }
 </style>
 
+<!-- Load Vue.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Thumbnail image switching
-    const thumbnails = document.querySelectorAll('.thumbnail');
-    if (thumbnails.length > 0) {
-      thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', function() {
-          const mainImage = this.closest('.spotlight-image').querySelector('img:first-child');
-          const imageUrl = this.getAttribute('data-image');
-          
-          // Update main image
-          mainImage.src = imageUrl;
-          
-          // Update active state
-          thumbnails.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-        });
+    // Initialize Vue app if the product spotlight exists
+    const productSpotlightElement = document.getElementById('product-spotlight-app');
+    
+    if (productSpotlightElement) {
+      new Vue({
+        el: '#product-spotlight-app',
+        delimiters: ['${', '}'], // Use different delimiters to avoid conflicts with Liquid
+        data: {
+          currentImage: '{{ product.featured_image | img_url: "large" }}',
+          isLoading: false,
+          productHandle: productSpotlightElement.getAttribute('data-product-handle'),
+          productId: productSpotlightElement.getAttribute('data-product-id')
+        },
+        methods: {
+          setActiveImage(imageUrl, event) {
+            this.currentImage = imageUrl;
+            
+            // Update active state for thumbnails
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumbnail => {
+              thumbnail.classList.remove('active');
+            });
+            
+            // Add active class to clicked thumbnail
+            if (event && event.currentTarget) {
+              event.currentTarget.classList.add('active');
+            }
+          },
+          viewProductDetails() {
+            this.isLoading = true;
+            
+            // Add a small delay to show loading state
+            setTimeout(() => {
+              window.location.href = '/products/' + this.productHandle;
+            }, 300);
+          }
+        }
       });
     }
-    
-    // Add to cart functionality using form submission with AJAX
-    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
-    
-    addToCartForms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitButton = this.querySelector('.add-to-cart-button');
-        const originalText = submitButton.textContent;
-        
-        // Show loading state
-        submitButton.textContent = 'Adding...';
-        submitButton.disabled = true;
-        
-        // Get form data
-        const formData = new FormData(this);
-        const formObject = {};
-        formData.forEach((value, key) => {
-          formObject[key] = value;
-        });
-        
-        // Send AJAX request
-        fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formObject)
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Success state
-          submitButton.textContent = 'Added!';
-          
-          // Update cart count if needed
-          fetch('/cart.js')
-            .then(res => res.json())
-            .then(cart => {
-              const cartCountElement = document.querySelector('.cart-count');
-              if (cartCountElement) {
-                cartCountElement.textContent = cart.item_count;
-              }
-            });
-          
-          // Reset button after delay
-          setTimeout(() => {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-          }, 2000);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          submitButton.textContent = 'Error';
-          
-          // Reset button after delay
-          setTimeout(() => {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-          }, 2000);
-        });
-      });
-    });
   });
 </script>
 
@@ -484,12 +456,6 @@
       "id": "button_text",
       "label": "Button text",
       "default": "View Details"
-    },
-    {
-      "type": "text",
-      "id": "add_to_cart_text",
-      "label": "Add to cart text",
-      "default": "Add to Cart"
     },
     {
       "type": "header",

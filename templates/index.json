@@ -82,8 +82,13 @@
         "subtitle": "Explore our curated collections",
         "show_title_desktop": true,
         "show_subtitle_desktop": true,
-        "show_title_mobile": false,
-        "show_subtitle_mobile": false,
+        "show_title_mobile": true,
+        "show_subtitle_mobile": true,
+        "show_separator_desktop": true,
+        "show_separator_mobile": false,
+        "separator_color": "#ff6b9a",
+        "separator_width": 50,
+        "separator_margin": 20,
         "padding_top": 36,
         "padding_bottom": 36
       }

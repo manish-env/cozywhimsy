@@ -1,4 +1,4 @@
-<header class="site-header">
+<header class="site-header {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}has-bottom-tabs{% endif %}">
   <div class="header-container">
     <div class="logo-container">
       <a href="/" class="logo">
@@ -71,13 +71,154 @@
   </div>
 </header>
 
+{% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
+  <div class="mobile-bottom-navbar">
+    <a href="/" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="/search" class="bottom-nav-item {% if request.path contains '/search' %}active{% endif %}">
+      <i class="fas fa-search"></i>
+      <span>Search</span>
+    </a>
+    {% if section.settings.mobile_navbar_categories_link != blank %}
+      <a href="{{ section.settings.mobile_navbar_categories_link }}" class="bottom-nav-item {% if request.path contains section.settings.mobile_navbar_categories_link %}active{% endif %}">
+        <i class="fas fa-th-large"></i>
+        <span>Categories</span>
+      </a>
+    {% endif %}
+    <a href="/account" class="bottom-nav-item {% if request.path contains '/account' %}active{% endif %}">
+      <i class="fas fa-user"></i>
+      <span>Account</span>
+    </a>
+    <a href="/cart" class="bottom-nav-item {% if request.path contains '/cart' %}active{% endif %}">
+      <i class="fas fa-shopping-bag"></i>
+      <span>Cart</span>
+      {% if cart.item_count > 0 %}
+        <span class="bottom-nav-cart-count">{{ cart.item_count }}</span>
+      {% endif %}
+    </a>
+  </div>
+{% endif %}
+
 <div class="header-spacer"></div>
+
+<style>
+  /* Bottom Tab Navbar Styles */
+  .mobile-bottom-navbar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: {{ section.settings.header_bg }};
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 5px 0;
+    transition: transform 0.3s ease;
+  }
+  
+  .mobile-bottom-navbar.bottom-nav-hidden {
+    transform: translateY(100%);
+  }
+  
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-decoration: none;
+    color: {{ section.settings.header_text }};
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .bottom-nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  
+  .bottom-nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+  }
+  
+  .bottom-nav-item.active {
+    opacity: 1;
+    color: {{ section.settings.mobile_navbar_active_color | default: '#ff6b9a' }};
+  }
+  
+  .bottom-nav-cart-count {
+    position: absolute;
+    top: 0;
+    right: calc(50% - 15px);
+    background-color: {{ section.settings.mobile_navbar_active_color | default: '#ff6b9a' }};
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @media (max-width: 767px) {
+    .site-header.has-bottom-tabs .header-actions {
+      display: none;
+    }
+    
+    .mobile-bottom-navbar {
+      display: flex;
+    }
+    
+    body {
+      padding-bottom: 60px;
+    }
+    
+    /* Adjust search container for different navbar styles */
+    {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
+      .search-container {
+        display: none;
+      }
+    {% endif %}
+    
+    /* Adjust header for simplified top navbar */
+    {% if section.settings.mobile_navbar_style == 'simplified_top' %}
+      .site-header .header-container {
+        padding: 10px 15px;
+      }
+      
+      .site-header .logo img {
+        max-height: 30px;
+      }
+      
+      .site-header .search-container {
+        flex: 1;
+        margin: 0 10px;
+      }
+      
+      .site-header .header-actions .icon-text {
+        display: none;
+      }
+      
+      .site-header .header-actions .icon-wrapper {
+        margin-right: 0;
+      }
+    {% endif %}
+  }
+</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('navToggle');
     const mainNav = document.getElementById('mainNav');
     const header = document.querySelector('.site-header');
+    const bottomNavbar = document.querySelector('.mobile-bottom-navbar');
+    const bottomNavPosition = '{{ section.settings.mobile_navbar_position }}';
     
     // Toggle mobile menu
     navToggle.addEventListener('click', function() {
@@ -98,12 +239,13 @@
       });
     });
     
-    // Sticky header on scroll
+    // Sticky header and bottom navbar on scroll
     let lastScrollTop = 0;
     
     window.addEventListener('scroll', function() {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
+      // Handle top header
       if (scrollTop > 100) {
         header.classList.add('sticky');
         
@@ -117,6 +259,17 @@
       } else {
         header.classList.remove('sticky');
         header.classList.remove('hide');
+      }
+      
+      // Handle bottom navbar visibility based on settings
+      if (bottomNavbar && bottomNavPosition === 'scroll') {
+        if (scrollTop > lastScrollTop && scrollTop > 150) {
+          // Scrolling down - hide the navbar
+          bottomNavbar.classList.add('bottom-nav-hidden');
+        } else {
+          // Scrolling up - show the navbar
+          bottomNavbar.classList.remove('bottom-nav-hidden');
+        }
       }
       
       lastScrollTop = scrollTop;
@@ -150,6 +303,61 @@
       "id": "sticky_header",
       "label": "Enable sticky header",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile Navigation"
+    },
+    {
+      "type": "select",
+      "id": "mobile_navbar_style",
+      "label": "Mobile navbar style",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard (hamburger menu)"
+        },
+        {
+          "value": "simplified_top",
+          "label": "Simplified top navbar"
+        },
+        {
+          "value": "bottom_tabs",
+          "label": "Bottom tab navigation"
+        }
+      ],
+      "default": "standard",
+      "info": "Choose how navigation appears on mobile devices"
+    },
+    {
+      "type": "url",
+      "id": "mobile_navbar_categories_link",
+      "label": "Categories link (for bottom tabs)",
+      "info": "URL for the Categories tab in bottom navigation"
+    },
+    {
+      "type": "color",
+      "id": "mobile_navbar_active_color",
+      "label": "Active tab color",
+      "default": "#ff6b9a",
+      "info": "Color for active tab in bottom navigation"
+    },
+    {
+      "type": "select",
+      "id": "mobile_navbar_position",
+      "label": "Bottom navbar position",
+      "options": [
+        {
+          "value": "fixed",
+          "label": "Fixed (always visible)"
+        },
+        {
+          "value": "scroll",
+          "label": "Show on scroll up"
+        }
+      ],
+      "default": "fixed",
+      "info": "Control when the bottom navbar is visible"
     },
     {
       "type": "header",

@@ -4,104 +4,221 @@
       <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
     </div>
     
-    <div class="product-grid">
+    <div class="product-grid" data-columns-desktop="{{ section.settings.columns_desktop }}" data-columns-mobile="{{ section.settings.columns_mobile }}">
       {%- assign current_product = product -%}
-      {%- assign current_product_tags = current_product.tags | join: ',' | append: ',' -%}
+      {%- assign related_products_shown = 0 -%}
+      {%- assign products_to_show = section.settings.products_to_show | default: 4 -%}
       
-      {%- if section.settings.products_to_show > 0 -%}
-        {%- capture related_products -%}
-          {%- for tag in current_product.tags -%}
-            {%- assign related_products_temp = collections.all.products | where: "tags", tag -%}
-            {%- for related_product in related_products_temp -%}
-              {%- if related_product.id != current_product.id -%}
-                {{ related_product.id }}{% unless forloop.last %},{% endunless %}
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endfor -%}
-        {%- endcapture -%}
-        
-        {%- assign related_products_array = related_products | split: ',' -%}
-        {%- assign unique_related_products = '' -%}
-        
-        {%- for product_id in related_products_array -%}
-          {%- unless unique_related_products contains product_id -%}
-            {%- assign unique_related_products = unique_related_products | append: product_id | append: ',' -%}
-          {%- endunless -%}
-        {%- endfor -%}
-        
-        {%- assign unique_related_products_array = unique_related_products | split: ',' -%}
-        
-        {%- if unique_related_products_array.size < section.settings.products_to_show -%}
-          {%- assign additional_products_needed = section.settings.products_to_show | minus: unique_related_products_array.size -%}
-          {%- for product in collections.all.products limit: additional_products_needed -%}
-            {%- assign is_in_array = false -%}
-            {%- for id in unique_related_products_array -%}
-              {%- if id == product.id -%}
-                {%- assign is_in_array = true -%}
-                {%- break -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- if product.id != current_product.id and is_in_array == false -%}
-              {%- assign unique_related_products = unique_related_products | append: product.id | append: ',' -%}
+      {% comment %} First try to find products with matching tags {% endcomment %}
+      {%- if current_product.tags.size > 0 -%}
+        {%- for tag in current_product.tags -%}
+          {%- if related_products_shown >= products_to_show -%}
+            {%- break -%}
+          {%- endif -%}
+          
+          {%- for related_product in collections.all.products -%}
+            {%- if related_products_shown >= products_to_show -%}
+              {%- break -%}
+            {%- endif -%}
+            
+            {%- if related_product.id != current_product.id and related_product.tags contains tag and related_product.available -%}
+              {%- unless forloop.index0 > 0 and related_products_shown > 0 and related_products contains related_product.id -%}
+                {%- assign related_products_shown = related_products_shown | plus: 1 -%}
+                {%- assign related_products = related_products | append: related_product.id | append: ',' -%}
+                
+                <div class="product-card">
+                  {% if related_product.tags contains 'new' %}
+                    <div class="product-badge">New</div>
+                  {% elsif related_product.tags contains 'bestseller' %}
+                    <div class="product-badge bestseller">Bestseller</div>
+                  {% elsif related_product.compare_at_price > related_product.price %}
+                    <div class="product-badge sale">Sale</div>
+                  {% endif %}
+                  
+                  <a href="{{ related_product.url }}" class="product-img-link">
+                    <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
+                      <img src="{{ related_product.featured_image | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image">
+                      
+                      {% if section.settings.show_secondary_image and related_product.images.size > 1 %}
+                        <img src="{{ related_product.images[1] | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image-hover">
+                      {% endif %}
+                    </div>
+                  </a>
+                  
+                  <div class="product-info">
+                    {% if section.settings.show_vendor %}
+                      <div class="product-vendor">{{ related_product.vendor }}</div>
+                    {% endif %}
+                    
+                    <h3 class="product-title">
+                      <a href="{{ related_product.url }}">{{ related_product.title }}</a>
+                    </h3>
+                    
+                    <div class="product-price">
+                      {% if related_product.compare_at_price > related_product.price %}
+                        <span class="sale-price">{{ related_product.price | money }}</span>
+                        <span class="compare-price">{{ related_product.compare_at_price | money }}</span>
+                      {% else %}
+                        <span class="regular-price">{{ related_product.price | money }}</span>
+                      {% endif %}
+                    </div>
+                    
+                    {% if section.settings.show_rating and related_product.metafields.reviews.rating %}
+                      <div class="product-rating">
+                        <div class="stars" style="--rating: {{ related_product.metafields.reviews.rating.value }};">
+                          <span>★★★★★</span>
+                        </div>
+                        <span class="rating-count">({{ related_product.metafields.reviews.rating_count }})</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {%- endunless -%}
             {%- endif -%}
           {%- endfor -%}
-        {%- endif -%}
-        
-        {%- for product_id in unique_related_products_array limit: section.settings.products_to_show -%}
-          {%- assign product = all_products[product_id] -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {% comment %} If we don't have enough related products by tag, fill with products from the same collection {% endcomment %}
+      {%- if related_products_shown < products_to_show and collection != blank -%}
+        {%- for related_product in collection.products -%}
+          {%- if related_products_shown >= products_to_show -%}
+            {%- break -%}
+          {%- endif -%}
           
-          {% if product.id != blank %}
-            <div class="product-card">
-              {% if product.tags contains 'new' %}
-                <div class="product-badge">New</div>
-              {% elsif product.tags contains 'bestseller' %}
-                <div class="product-badge bestseller">Bestseller</div>
-              {% endif %}
+          {%- if related_product.id != current_product.id and related_product.available -%}
+            {%- unless related_products contains related_product.id -%}
+              {%- assign related_products_shown = related_products_shown | plus: 1 -%}
+              {%- assign related_products = related_products | append: related_product.id | append: ',' -%}
               
-              <a href="{{ product.url }}" class="product-img-link">
-                <div class="product-img" style="background-image: url('{{ product.featured_image | img_url: 'master' }}'); background-size: cover; background-position: center;"></div>
-              </a>
-              
-              <div class="product-content">
-                <h3><a href="{{ product.url }}">{{ product.title }}</a></h3>
-                <p class="price">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="sale-price">{{ product.price | money }}</span>
-                    <span class="compare-price">{{ product.compare_at_price | money }}</span>
-                  {% else %}
-                    {{ product.price | money }}
+              <div class="product-card">
+                {% if related_product.tags contains 'new' %}
+                  <div class="product-badge">New</div>
+                {% elsif related_product.tags contains 'bestseller' %}
+                  <div class="product-badge bestseller">Bestseller</div>
+                {% elsif related_product.compare_at_price > related_product.price %}
+                  <div class="product-badge sale">Sale</div>
+                {% endif %}
+                
+                <a href="{{ related_product.url }}" class="product-img-link">
+                  <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
+                    <img src="{{ related_product.featured_image | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image">
+                    
+                    {% if section.settings.show_secondary_image and related_product.images.size > 1 %}
+                      <img src="{{ related_product.images[1] | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image-hover">
+                    {% endif %}
+                  </div>
+                </a>
+                
+                <div class="product-info">
+                  {% if section.settings.show_vendor %}
+                    <div class="product-vendor">{{ related_product.vendor }}</div>
                   {% endif %}
-                </p>
-                <div class="product-actions">
-                  {% if product.available %}
-                    <button class="add-to-cart" data-product-id="{{ product.id }}">
-                      {% if product.variants.size > 1 %}
-                        View Options
-                      {% else %}
-                        Add to Cart
-                      {% endif %}
-                    </button>
-                  {% else %}
-                    <button class="add-to-cart sold-out" disabled>Sold Out</button>
+                  
+                  <h3 class="product-title">
+                    <a href="{{ related_product.url }}">{{ related_product.title }}</a>
+                  </h3>
+                  
+                  <div class="product-price">
+                    {% if related_product.compare_at_price > related_product.price %}
+                      <span class="sale-price">{{ related_product.price | money }}</span>
+                      <span class="compare-price">{{ related_product.compare_at_price | money }}</span>
+                    {% else %}
+                      <span class="regular-price">{{ related_product.price | money }}</span>
+                    {% endif %}
+                  </div>
+                  
+                  {% if section.settings.show_rating and related_product.metafields.reviews.rating %}
+                    <div class="product-rating">
+                      <div class="stars" style="--rating: {{ related_product.metafields.reviews.rating.value }};">
+                        <span>★★★★★</span>
+                      </div>
+                      <span class="rating-count">({{ related_product.metafields.reviews.rating_count }})</span>
+                    </div>
                   {% endif %}
-                  <button class="wishlist-btn" data-product-id="{{ product.id }}">
-                    <i class="far fa-heart"></i>
-                  </button>
                 </div>
               </div>
-            </div>
-          {% endif %}
+            {%- endunless -%}
+          {%- endif -%}
         {%- endfor -%}
-      {%- else -%}
+      {%- endif -%}
+      
+      {% comment %} If we still don't have enough products, fill with random products {% endcomment %}
+      {%- if related_products_shown < products_to_show -%}
+        {%- assign additional_needed = products_to_show | minus: related_products_shown -%}
+        {%- for related_product in collections.all.products limit: 20 -%}
+          {%- if related_products_shown >= products_to_show -%}
+            {%- break -%}
+          {%- endif -%}
+          
+          {%- if related_product.id != current_product.id and related_product.available -%}
+            {%- unless related_products contains related_product.id -%}
+              {%- assign related_products_shown = related_products_shown | plus: 1 -%}
+              {%- assign related_products = related_products | append: related_product.id | append: ',' -%}
+              
+              <div class="product-card">
+                {% if related_product.tags contains 'new' %}
+                  <div class="product-badge">New</div>
+                {% elsif related_product.tags contains 'bestseller' %}
+                  <div class="product-badge bestseller">Bestseller</div>
+                {% elsif related_product.compare_at_price > related_product.price %}
+                  <div class="product-badge sale">Sale</div>
+                {% endif %}
+                
+                <a href="{{ related_product.url }}" class="product-img-link">
+                  <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
+                    <img src="{{ related_product.featured_image | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image">
+                    
+                    {% if section.settings.show_secondary_image and related_product.images.size > 1 %}
+                      <img src="{{ related_product.images[1] | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image-hover">
+                    {% endif %}
+                  </div>
+                </a>
+                
+                <div class="product-info">
+                  {% if section.settings.show_vendor %}
+                    <div class="product-vendor">{{ related_product.vendor }}</div>
+                  {% endif %}
+                  
+                  <h3 class="product-title">
+                    <a href="{{ related_product.url }}">{{ related_product.title }}</a>
+                  </h3>
+                  
+                  <div class="product-price">
+                    {% if related_product.compare_at_price > related_product.price %}
+                      <span class="sale-price">{{ related_product.price | money }}</span>
+                      <span class="compare-price">{{ related_product.compare_at_price | money }}</span>
+                    {% else %}
+                      <span class="regular-price">{{ related_product.price | money }}</span>
+                    {% endif %}
+                  </div>
+                  
+                  {% if section.settings.show_rating and related_product.metafields.reviews.rating %}
+                    <div class="product-rating">
+                      <div class="stars" style="--rating: {{ related_product.metafields.reviews.rating.value }};">
+                        <span>★★★★★</span>
+                      </div>
+                      <span class="rating-count">({{ related_product.metafields.reviews.rating_count }})</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      
+      {% comment %} If no products were found, show placeholders {% endcomment %}
+      {%- if related_products_shown == 0 -%}
         {%- for i in (1..4) -%}
-          <div class="product-card">
-            <div class="product-img" style="background-color: #f5f5f5;"></div>
-            <div class="product-content">
-              <h3>Product Title</h3>
-              <p class="price">$29.99</p>
-              <div class="product-actions">
-                <button class="add-to-cart">Add to Cart</button>
-                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+          <div class="product-card placeholder">
+            <div class="product-image-container">
+              <div class="placeholder-image"></div>
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Sample Product</h3>
+              <div class="product-price">
+                <span class="regular-price">$29.99</span>
               </div>
             </div>
           </div>

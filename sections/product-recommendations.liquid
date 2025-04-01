@@ -266,19 +266,100 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const productId = document.querySelector('.enhanced-product-template')?.getAttribute('data-product-id');
+    const recommendationsContainer = document.querySelector('.product-grid');
     
-    if (productId) {
+    if (productId && recommendationsContainer) {
+      // Show loading state
+      recommendationsContainer.classList.add('loading');
+      
       // Fetch product recommendations
-      fetch(`/recommendations/products.json?product_id=${productId}&limit=4&section_id=product-recommendations`)
+      fetch(`/recommendations/products.json?product_id=${productId}&limit={{ section.settings.products_to_show }}&section_id=product-recommendations`)
         .then(response => response.json())
         .then(data => {
           if (data.products && data.products.length > 0) {
-            // Process recommendations
+            // Clear placeholder content
+            recommendationsContainer.innerHTML = '';
+            
+            // Process recommendations and update DOM
+            data.products.forEach(product => {
+              const productCard = document.createElement('div');
+              productCard.className = 'product-card';
+              
+              // Add badges if applicable
+              if (product.tags && product.tags.includes('new')) {
+                productCard.innerHTML += '<div class="product-badge">New</div>';
+              } else if (product.tags && product.tags.includes('bestseller')) {
+                productCard.innerHTML += '<div class="product-badge bestseller">Bestseller</div>';
+              } else if (product.compare_at_price_max > product.price) {
+                productCard.innerHTML += '<div class="product-badge sale">Sale</div>';
+              }
+              
+              // Product image with hover effect if enabled
+              let productImageHtml = `
+                <a href="${product.url}" class="product-img-link">
+                  <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
+                    <img src="${product.featured_image}" alt="${product.title}" class="product-image">
+              `;
+              
+              if ({{ section.settings.show_secondary_image | json }} && product.images && product.images.length > 1) {
+                productImageHtml += `<img src="${product.images[1]}" alt="${product.title}" class="product-image-hover">`;
+              }
+              
+              productImageHtml += `</div></a>`;
+              productCard.innerHTML += productImageHtml;
+              
+              // Product info
+              let productInfoHtml = '<div class="product-info">';
+              
+              if ({{ section.settings.show_vendor | json }}) {
+                productInfoHtml += `<div class="product-vendor">${product.vendor}</div>`;
+              }
+              
+              productInfoHtml += `
+                <h3 class="product-title">
+                  <a href="${product.url}">${product.title}</a>
+                </h3>
+                
+                <div class="product-price">
+              `;
+              
+              if (product.compare_at_price_max > product.price) {
+                productInfoHtml += `
+                  <span class="sale-price">${product.price_min}</span>
+                  <span class="compare-price">${product.compare_at_price_max}</span>
+                `;
+              } else {
+                productInfoHtml += `<span class="regular-price">${product.price_min}</span>`;
+              }
+              
+              productInfoHtml += '</div>';
+              
+              if ({{ section.settings.show_rating | json }} && product.metafields && product.metafields.reviews && product.metafields.reviews.rating) {
+                productInfoHtml += `
+                  <div class="product-rating">
+                    <div class="stars" style="--rating: ${product.metafields.reviews.rating};">
+                      <span>★★★★★</span>
+                    </div>
+                    <span class="rating-count">(${product.metafields.reviews.rating_count})</span>
+                  </div>
+                `;
+              }
+              
+              productInfoHtml += '</div>';
+              productCard.innerHTML += productInfoHtml;
+              
+              recommendationsContainer.appendChild(productCard);
+            });
+            
             console.log('Product recommendations loaded:', data.products.length);
           }
+          
+          // Remove loading state
+          recommendationsContainer.classList.remove('loading');
         })
         .catch(error => {
           console.error('Error fetching product recommendations:', error);
+          recommendationsContainer.classList.remove('loading');
         });
     }
   });

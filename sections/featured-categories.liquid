@@ -20,6 +20,14 @@
           </p>
         {% endif %}
       {% endif %}
+      
+      {% if section.settings.show_separator %}
+        <div class="section-separator" style="
+          width: {{ section.settings.separator_width }}%; 
+          border-color: {{ section.settings.separator_color }};
+          margin: {{ section.settings.separator_margin }}px auto;
+        "></div>
+      {% endif %}
     </div>
     
     <!-- Desktop Grid View -->
@@ -134,6 +142,12 @@
     color: #666;
     max-width: 600px;
     margin: 0 auto;
+  }
+  
+  .section-separator {
+    border-bottom: 1px solid;
+    margin: 20px auto;
+    width: 50%;
   }
   
   /* Desktop Grid Styles */
@@ -388,6 +402,43 @@
       "id": "show_subtitle_mobile",
       "label": "Show subtitle on mobile",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Separator Line"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show separator line",
+      "default": true,
+      "info": "Display a horizontal line between the heading and grid"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Separator width",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "separator_margin",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Separator margin",
+      "default": 20
     },
     {
       "type": "header",

@@ -17,6 +17,7 @@
           "menu": "main-menu",
           "sticky_header": true,
           "mobile_navbar_style": "bottom_tabs",
+          "hide_hamburger_menu": true,
           "mobile_navbar_categories_link": "",
           "mobile_navbar_active_color": "#ff6b9a",
           "mobile_navbar_position": "fixed",

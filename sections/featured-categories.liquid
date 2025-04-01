@@ -89,46 +89,97 @@
     <!-- Mobile Grid View -->
     <div class="category-grid-mobile mobile-only">
       {% if section.blocks.size > 0 %}
-        {% for block in section.blocks %}
-          <div class="category-card-mobile" {{ block.shopify_attributes }}>
-            {% if block.settings.collection != blank %}
-              <a href="{{ block.settings.collection.url }}" class="category-img-mobile">
-                {% if block.settings.image != blank %}
-                  <div class="category-img-bg" style="background-image: url('{{ block.settings.image | img_url: 'master' }}');"></div>
-                {% elsif block.settings.collection.image != blank %}
-                  <div class="category-img-bg" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}');"></div>
+        <div class="stories-carousel">
+          <div class="stories-track">
+            {% for block in section.blocks %}
+              <div class="story-item" {{ block.shopify_attributes }}>
+                {% if block.settings.collection != blank %}
+                  <a href="{{ block.settings.collection.url }}" class="story-link">
+                    <div class="story-circle">
+                      {% if block.settings.image != blank %}
+                        <div class="story-image" style="background-image: url('{{ block.settings.image | img_url: 'medium' }}');"></div>
+                      {% elsif block.settings.collection.image != blank %}
+                        <div class="story-image" style="background-image: url('{{ block.settings.collection.image | img_url: 'medium' }}');"></div>
+                      {% else %}
+                        <div class="story-image" style="background-color: {{ block.settings.background_color }};">
+                          <span class="story-placeholder">{{ block.settings.title | default: block.settings.collection.title | slice: 0, 1 | upcase }}</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <span class="story-title">{{ block.settings.title | default: block.settings.collection.title }}</span>
+                  </a>
                 {% else %}
-                  <div class="category-img-bg" style="background-color: {{ block.settings.background_color }};"></div>
+                  <div class="story-circle">
+                    <div class="story-image" style="background-color: {{ block.settings.background_color }};">
+                      <span class="story-placeholder">{{ block.settings.title | default: "Category" | slice: 0, 1 | upcase }}</span>
+                    </div>
+                  </div>
+                  <span class="story-title">{{ block.settings.title | default: "Category" }}</span>
                 {% endif %}
-              </a>
-              <div class="category-content-mobile">
-                <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
-                <a href="{{ block.settings.collection.url }}" class="category-link-mobile">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
               </div>
-            {% else %}
-              <a href="#" class="category-img-mobile">
-                <div class="category-img-bg" style="background-color: {{ block.settings.background_color }};"></div>
-              </a>
-              <div class="category-content-mobile">
-                <h3>{{ block.settings.title | default: "Category Name" }}</h3>
-                <a href="#" class="category-link-mobile">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
-              </div>
-            {% endif %}
+            {% endfor %}
           </div>
-        {% endfor %}
+        </div>
+        
+        <div class="mobile-categories">
+          {% for block in section.blocks %}
+            <div class="category-card-mobile" {{ block.shopify_attributes }}>
+              {% if block.settings.collection != blank %}
+                <a href="{{ block.settings.collection.url }}" class="category-img-mobile">
+                  {% if block.settings.image != blank %}
+                    <div class="category-img-bg" style="background-image: url('{{ block.settings.image | img_url: 'master' }}');"></div>
+                  {% elsif block.settings.collection.image != blank %}
+                    <div class="category-img-bg" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}');"></div>
+                  {% else %}
+                    <div class="category-img-bg" style="background-color: {{ block.settings.background_color }};"></div>
+                  {% endif %}
+                </a>
+                <div class="category-content-mobile">
+                  <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
+                  <a href="{{ block.settings.collection.url }}" class="category-link-mobile">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
+                </div>
+              {% else %}
+                <a href="#" class="category-img-mobile">
+                  <div class="category-img-bg" style="background-color: {{ block.settings.background_color }};"></div>
+                </a>
+                <div class="category-content-mobile">
+                  <h3>{{ block.settings.title | default: "Category Name" }}</h3>
+                  <a href="#" class="category-link-mobile">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
       {% else %}
         {% comment %} Display placeholder categories if no blocks are added {% endcomment %}
-        {% for i in (1..4) %}
-          <div class="category-card-mobile">
-            <a href="#" class="category-img-mobile">
-              <div class="category-img-bg" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};"></div>
-            </a>
-            <div class="category-content-mobile">
-              <h3>Sample Category {{ i }}</h3>
-              <a href="#" class="category-link-mobile">Explore <i class="fas fa-arrow-right"></i></a>
-            </div>
+        <div class="stories-carousel">
+          <div class="stories-track">
+            {% for i in (1..5) %}
+              <div class="story-item">
+                <div class="story-circle">
+                  <div class="story-image" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#e8f8f1', '#fff0e6', '#e6f0ff' %};">
+                    <span class="story-placeholder">{{ i }}</span>
+                  </div>
+                </div>
+                <span class="story-title">Category {{ i }}</span>
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
+        </div>
+        
+        <div class="mobile-categories">
+          {% for i in (1..4) %}
+            <div class="category-card-mobile">
+              <a href="#" class="category-img-mobile">
+                <div class="category-img-bg" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};"></div>
+              </a>
+              <div class="category-content-mobile">
+                <h3>Sample Category {{ i }}</h3>
+                <a href="#" class="category-link-mobile">Explore <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
     </div>
   </div>
@@ -254,6 +305,86 @@
   .category-grid-mobile {
     display: none;
     padding: 0 15px;
+  }
+  
+  /* Instagram Stories Style for Mobile */
+  .stories-carousel {
+    position: relative;
+    padding: 15px 0;
+    margin-bottom: 25px;
+    overflow: hidden;
+  }
+  
+  .stories-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    padding: 5px 0;
+    margin: 0;
+  }
+  
+  .stories-track::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .story-item {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 8px;
+    width: 75px;
+  }
+  
+  .story-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    margin-bottom: 8px;
+  }
+  
+  .story-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .story-placeholder {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .story-title {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    max-width: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .story-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mobile-categories {
+    margin-top: 10px;
   }
   
   .category-card-mobile {
@@ -458,8 +589,49 @@
       display: none;
     }
     {% endif %}
+    
+    /* For smaller mobile screens */
+    @media (max-width: 374px) {
+      .story-circle {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .story-item {
+        width: 65px;
+      }
+      
+      .story-title {
+        font-size: 11px;
+        max-width: 65px;
+      }
+    }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only initialize on mobile
+    if (window.innerWidth <= 767) {
+      initStoriesCarousel();
+    }
+    
+    // Re-initialize on resize if crossing the mobile breakpoint
+    window.addEventListener('resize', function() {
+      if (window.innerWidth <= 767) {
+        initStoriesCarousel();
+      }
+    });
+    
+    function initStoriesCarousel() {
+      const track = document.querySelector('.stories-track');
+      if (!track) return;
+      
+      const items = track.querySelectorAll('.story-item');
+      if (items.length === 0) return;
+    }
+  });
+</script>
 
 {% schema %}
 {

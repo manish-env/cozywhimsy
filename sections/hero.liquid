@@ -1,4 +1,5 @@
-<section class="hero {% if section.settings.mobile_hero_style == 'carousel' %}mobile-carousel-style{% elsif section.settings.mobile_hero_style == 'static' %}mobile-static-style{% elsif section.settings.mobile_hero_style == 'hidden' %}mobile-hidden-style{% endif %}">
+{% if section.settings.enable_hero_section %}
+<section class="hero {% if section.settings.mobile_hero_style == 'carousel' %}mobile-carousel-style{% elsif section.settings.mobile_hero_style == 'static' %}mobile-static-style{% elsif section.settings.mobile_hero_style == 'hidden' %}mobile-hidden-style{% endif %} {% if section.settings.hide_on_mobile %}hide-on-mobile{% endif %} {% if section.settings.hide_on_desktop %}hide-on-desktop{% endif %}">
   <div class="hero-wrapper">
     <div class="hero-content">
       <h1>{{ section.settings.heading | escape }}</h1>
@@ -117,8 +118,10 @@
   </div>
   {% endif %}
 </section>
+{% endif %}
 
 <style>
+{% if section.settings.enable_hero_section %}
 .hero {
   width: 100%;
   background-color: #fff;
@@ -355,6 +358,10 @@
     align-items: center;
   }
   
+  .hero.hide-on-mobile {
+    display: none !important;
+  }
+  
   .hero-wrapper {
     flex-direction: column;
     padding: 20px 15px;
@@ -485,6 +492,13 @@
   }
 }
 
+/* Desktop-only visibility control */
+@media screen and (min-width: 992px) {
+  .hero.hide-on-desktop {
+    display: none !important;
+  }
+}
+
 /* Add this for better touch experience on mobile */
 @media (hover: none) {
   .hero-image .image-overlay {
@@ -503,10 +517,12 @@
     transform: none;
   }
 }
+{% endif %}
 </style>
 
 <!-- Initialize Swiper for Mobile -->
 <script>
+{% if section.settings.enable_hero_section %}
   document.addEventListener('DOMContentLoaded', function() {
     // Mobile Swiper - Only initialize if not using static style
     if (!document.querySelector('.mobile-hero-carousel.static-mobile-banner')) {
@@ -525,12 +541,34 @@
       });
     }
   });
+{% endif %}
 </script>
 
 {% schema %}
 {
   "name": "Hero",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_hero_section",
+      "label": "Enable Hero Section",
+      "default": true,
+      "info": "Uncheck to completely hide the hero section on all devices"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on Mobile Devices",
+      "default": false,
+      "info": "Hide hero section on mobile devices only (screen width less than 992px)"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on Desktop Devices",
+      "default": false,
+      "info": "Hide hero section on desktop devices only (screen width 992px and above)"
+    },
     {
       "type": "text",
       "id": "heading",

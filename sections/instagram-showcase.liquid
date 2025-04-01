@@ -482,11 +482,37 @@ document.addEventListener('DOMContentLoaded', function() {
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
+      
+      // Process embeds when script loads
+      script.onload = function() {
+        processInstagramEmbeds();
+      };
     } else {
       // If script already exists, process any new embeds
-      if (window.instgrm) {
-        window.instgrm.Embeds.process();
-      }
+      processInstagramEmbeds();
+    }
+  }
+  
+  // Function to process Instagram embeds and add autoplay parameter
+  function processInstagramEmbeds() {
+    if (window.instgrm) {
+      window.instgrm.Embeds.process();
+      
+      // Add autoplay parameter to all Instagram embeds
+      setTimeout(() => {
+        const embedIframes = document.querySelectorAll('.instagram-embed iframe, .reel-embed iframe');
+        embedIframes.forEach(iframe => {
+          // Only modify if the iframe doesn't already have autoplay
+          if (iframe.src && !iframe.src.includes('autoplay=1')) {
+            // Add autoplay parameter to the iframe src
+            if (iframe.src.includes('?')) {
+              iframe.src += '&autoplay=1&mute=1';
+            } else {
+              iframe.src += '?autoplay=1&mute=1';
+            }
+          }
+        });
+      }, 1000); // Small delay to ensure embeds are processed first
     }
   }
   
@@ -514,6 +540,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // Update buttons
       prevButton.disabled = currentIndex === 0;
       nextButton.disabled = currentIndex === slides.length - 1;
+      
+      // Process Instagram embeds after slide change
+      processInstagramEmbeds();
     };
     
     // Event listeners
@@ -540,17 +569,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize
     updateCarousel();
-    
-    // Process Instagram embeds after slide change
-    const processEmbedsAfterTransition = () => {
-      track.addEventListener('transitionend', () => {
-        if (window.instgrm) {
-          window.instgrm.Embeds.process();
-        }
-      });
-    };
-    
-    processEmbedsAfterTransition();
     
     // Add touch swipe functionality
     let touchStartX = 0;

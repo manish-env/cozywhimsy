@@ -132,7 +132,6 @@
         "settings": {
           "show_banner_desktop": true,
           "show_banner_mobile": false,
-          "banner_image": "shopify://shop_images/A_little_Cozy_a_little_whimsy.png",
           "full_width": true,
           "content_width": 1200,
           "text_alignment": "left",

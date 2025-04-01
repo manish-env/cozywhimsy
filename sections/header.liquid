@@ -19,11 +19,13 @@
       </form>
     </div>
     
+    {% unless section.settings.hide_hamburger_menu %}
     <div class="nav-toggle" id="navToggle">
       <span></span>
       <span></span>
       <span></span>
     </div>
+    {% endunless %}
     
     <div class="header-right">
       <nav class="main-nav" id="mainNav">
@@ -209,6 +211,13 @@
         margin-right: 0;
       }
     {% endif %}
+    
+    /* Hide main navigation when hamburger is hidden */
+    {% if section.settings.hide_hamburger_menu %}
+      .main-nav {
+        display: none;
+      }
+    {% endif %}
   }
 </style>
 
@@ -328,6 +337,13 @@
       ],
       "default": "standard",
       "info": "Choose how navigation appears on mobile devices"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_hamburger_menu",
+      "label": "Hide hamburger menu on mobile",
+      "default": false,
+      "info": "When enabled, the hamburger menu icon will be hidden on mobile devices"
     },
     {
       "type": "url",

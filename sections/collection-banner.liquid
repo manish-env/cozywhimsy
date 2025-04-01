@@ -1,6 +1,10 @@
-<div class="collection-banner {% if section.settings.full_width %}full-width{% endif %} {% if request.design_mode != true %}mobile-banner-control{% endif %}" 
+<div class="collection-banner {% if section.settings.full_width %}full-width{% endif %} {% if section.settings.show_banner_desktop == false %}desktop-hide-banner{% endif %} {% if section.settings.show_banner_mobile == false %}mobile-hide-banner{% endif %}" 
      style="background-color: {{ section.settings.bg_color }}; 
-            {% if section.settings.overlay_opacity > 0 and collection.image %}
+            {% if section.settings.banner_image != blank %}
+              background-image: linear-gradient(rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }})), url({{ section.settings.banner_image | img_url: 'master' }});
+              background-size: cover;
+              background-position: center;
+            {% elsif section.settings.overlay_opacity > 0 and collection.image %}
               background-image: linear-gradient(rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }})), url({{ collection.image | img_url: 'master' }});
               background-size: cover;
               background-position: center;
@@ -172,6 +176,19 @@
     height: 100%;
   }
   
+  /* Banner visibility controls */
+  @media (min-width: 768px) {
+    .desktop-hide-banner {
+      display: none !important;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .mobile-hide-banner {
+      display: none !important;
+    }
+  }
+  
   @media (max-width: 767px) {
     .collection-banner {
       padding: {{ section.settings.padding_top | divided_by: 2 }}px 0 {{ section.settings.padding_bottom | divided_by: 2 }}px;
@@ -274,6 +291,27 @@
 {
   "name": "Collection Banner",
   "settings": [
+    {
+      "type": "header",
+      "content": "Visibility Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner_desktop",
+      "label": "Show banner on desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner_mobile",
+      "label": "Show banner on mobile",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Custom banner image (overrides collection image)"
+    },
     {
       "type": "header",
       "content": "Layout"

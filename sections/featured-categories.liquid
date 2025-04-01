@@ -23,18 +23,7 @@
         </p>
       {% endif %}
       
-      {% assign show_separator = false %}
-      {% if section.settings.show_separator_desktop or section.settings.show_separator_mobile %}
-        {% assign show_separator = true %}
-      {% endif %}
-      
-      {% if show_separator %}
-        <div class="section-separator {% if section.settings.show_separator_desktop == false %}desktop-hide-separator{% endif %} {% if section.settings.show_separator_mobile == false %}mobile-hide-separator{% endif %}" style="
-          width: {{ section.settings.separator_width }}%; 
-          border-color: {{ section.settings.separator_color }};
-          margin: {{ section.settings.separator_margin }}px auto;
-        "></div>
-      {% endif %}
+    
     </div>
     
     <!-- Desktop Grid View -->

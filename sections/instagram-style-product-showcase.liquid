@@ -38,12 +38,12 @@
           
           {% for block in section.blocks %}
             {% if block.settings.product != blank %}
-              {% assign product = block.settings.product %}
+              {% assign product = all_products[block.settings.product] %}
               <a href="{{ product.url }}" class="story-highlight" {{ block.shopify_attributes }}>
                 <div class="story-highlight-circle {% if block.settings.highlight_style == 'gradient' %}gradient-border{% elsif block.settings.highlight_style == 'custom' %}custom-border{% endif %}" style="{% if block.settings.highlight_style == 'custom' %}--border-color: {{ block.settings.border_color }};{% endif %}">
                   <div class="story-highlight-inner">
-                    {% if product.featured_image != blank %}
-                      <img src="{{ product.featured_image | img_url: '150x150', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
+                    {% if product.featured_media != blank %}
+                      <img src="{{ product.featured_media | img_url: '150x150', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
                     {% else %}
                       <div class="placeholder-image">
                         {{ product.title | slice: 0, 1 | upcase }}

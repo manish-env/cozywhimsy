@@ -12,6 +12,18 @@
               background-image: linear-gradient(rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }})), url({{ collection.image | img_url: 'master' }});
               background-size: cover;
               background-position: center;
+            {% endif %}
+            {% if section.settings.mobile_padding_top != blank %}
+              --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
+            {% endif %}
+            {% if section.settings.mobile_padding_bottom != blank %}
+              --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+            {% endif %}
+            {% if section.settings.mobile_margin_top != blank %}
+              --mobile-margin-top: {{ section.settings.mobile_margin_top }}px;
+            {% endif %}
+            {% if section.settings.mobile_margin_bottom != blank %}
+              --mobile-margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
             {% endif %}">
   <div class="container">
     <div class="collection-banner-content" style="text-align: {{ section.settings.text_alignment }};">
@@ -258,6 +270,15 @@
     /* Hide banner on mobile if setting is enabled */
     .mobile-banner-control.hidden-on-mobile {
       display: none;
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .collection-banner {
+      padding-top: var(--mobile-padding-top, {{ section.settings.padding_top }}px);
+      padding-bottom: var(--mobile-padding-bottom, {{ section.settings.padding_bottom }}px);
+      margin-top: var(--mobile-margin-top, 0);
+      margin-bottom: var(--mobile-margin-bottom, {{ section.settings.margin_bottom }}px);
     }
   }
 </style>
@@ -509,6 +530,42 @@
       "step": 5,
       "default": 30,
       "label": "Bottom margin (px)"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "label": "Mobile top padding (px)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "label": "Mobile bottom padding (px)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "label": "Mobile top margin (px)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "label": "Mobile bottom margin (px)",
+      "default": 20
     }
   ],
   "presets": [

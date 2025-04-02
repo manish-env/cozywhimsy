@@ -1,0 +1,875 @@
+<div class="main-search" style="
+  {% if section.settings.mobile_padding_top != blank %}
+    --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
+  {% endif %}
+  {% if section.settings.mobile_padding_bottom != blank %}
+    --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  {% endif %}
+  {% if section.settings.mobile_margin_top != blank %}
+    --mobile-margin-top: {{ section.settings.mobile_margin_top }}px;
+  {% endif %}
+  {% if section.settings.mobile_margin_bottom != blank %}
+    --mobile-margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+  {% endif %}
+">
+  <div class="container">
+    {% if search.performed %}
+      {% if search.results_count > 0 %}
+        <div class="search-results-container">
+          {% if section.settings.show_sort_by %}
+            <div class="search-sort-container">
+              <label for="SortBy">{{ 'search.sort_by' | t }}</label>
+              <select id="SortBy" class="sort-by-select" aria-label="{{ 'search.sort_by' | t }}">
+                <option value="relevance" {% if search.sort_by == 'relevance' %}selected{% endif %}>{{ 'search.sort_options.relevance' | t }}</option>
+                <option value="title-ascending" {% if search.sort_by == 'title-ascending' %}selected{% endif %}>{{ 'search.sort_options.title_ascending' | t }}</option>
+                <option value="title-descending" {% if search.sort_by == 'title-descending' %}selected{% endif %}>{{ 'search.sort_options.title_descending' | t }}</option>
+                <option value="price-ascending" {% if search.sort_by == 'price-ascending' %}selected{% endif %}>{{ 'search.sort_options.price_ascending' | t }}</option>
+                <option value="price-descending" {% if search.sort_by == 'price-descending' %}selected{% endif %}>{{ 'search.sort_options.price_descending' | t }}</option>
+                <option value="created-ascending" {% if search.sort_by == 'created-ascending' %}selected{% endif %}>{{ 'search.sort_options.date_ascending' | t }}</option>
+                <option value="created-descending" {% if search.sort_by == 'created-descending' %}selected{% endif %}>{{ 'search.sort_options.date_descending' | t }}</option>
+              </select>
+            </div>
+          {% endif %}
+          
+          {% if section.settings.show_result_type_tabs and search.types.size > 1 %}
+            <div class="search-type-tabs">
+              <button class="search-tab active" data-type="all">{{ 'search.tabs.all' | t }} ({{ search.results_count }})</button>
+              {% if search.types contains 'product' %}
+                {% assign product_count = 0 %}
+                {% for item in search.results %}
+                  {% if item.object_type == 'product' %}
+                    {% assign product_count = product_count | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+                <button class="search-tab" data-type="product">{{ 'search.tabs.products' | t }} ({{ product_count }})</button>
+              {% endif %}
+              {% if search.types contains 'article' %}
+                {% assign article_count = 0 %}
+                {% for item in search.results %}
+                  {% if item.object_type == 'article' %}
+                    {% assign article_count = article_count | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+                <button class="search-tab" data-type="article">{{ 'search.tabs.articles' | t }} ({{ article_count }})</button>
+              {% endif %}
+              {% if search.types contains 'page' %}
+                {% assign page_count = 0 %}
+                {% for item in search.results %}
+                  {% if item.object_type == 'page' %}
+                    {% assign page_count = page_count | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+                <button class="search-tab" data-type="page">{{ 'search.tabs.pages' | t }} ({{ page_count }})</button>
+              {% endif %}
+            </div>
+          {% endif %}
+          
+          <div class="search-results-grid">
+            {% for item in search.results %}
+              {% case item.object_type %}
+                {% when 'product' %}
+                  <div class="search-result-item result-product" data-type="product">
+                    <div class="result-card">
+                      <a href="{{ item.url }}" class="result-link">
+                        <div class="result-image-container">
+                          {% if item.featured_image %}
+                            <img src="{{ item.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ item.title | escape }}" class="result-image">
+                          {% else %}
+                            <div class="result-image-placeholder">
+                              <span>{{ item.title | slice: 0 | upcase }}</span>
+                            </div>
+                          {% endif %}
+                          
+                          {% if section.settings.show_product_badges %}
+                            {% if item.available == false %}
+                              <span class="product-badge sold-out">{{ 'products.product.sold_out' | t }}</span>
+                            {% elsif item.compare_at_price > item.price %}
+                              <span class="product-badge sale">{{ 'products.product.on_sale' | t }}</span>
+                            {% endif %}
+                          {% endif %}
+                        </div>
+                        
+                        <div class="result-details">
+                          <h3 class="result-title">{{ item.title }}</h3>
+                          
+                          <div class="result-price">
+                            {% if item.compare_at_price > item.price %}
+                              <span class="price-sale">{{ item.price | money }}</span>
+                              <span class="price-compare">{{ item.compare_at_price | money }}</span>
+                            {% else %}
+                              <span class="price-regular">{{ item.price | money }}</span>
+                            {% endif %}
+                          </div>
+                          
+                          {% if section.settings.show_vendor and item.vendor %}
+                            <div class="result-vendor">{{ item.vendor }}</div>
+                          {% endif %}
+                        </div>
+                      </a>
+                      
+                      {% if section.settings.show_quick_add %}
+                        <form method="post" action="/cart/add" class="quick-add-form">
+                          <input type="hidden" name="id" value="{{ item.variants.first.id }}">
+                          <input type="hidden" name="quantity" value="1">
+                          <button type="submit" class="quick-add-button" {% unless item.available %}disabled{% endunless %}>
+                            {% if item.available %}
+                              {{ 'products.product.add_to_cart' | t }}
+                            {% else %}
+                              {{ 'products.product.sold_out' | t }}
+                            {% endif %}
+                          </button>
+                        </form>
+                      {% endif %}
+                    </div>
+                  </div>
+                
+                {% when 'article' %}
+                  <div class="search-result-item result-article" data-type="article">
+                    <div class="result-card">
+                      <a href="{{ item.url }}" class="result-link">
+                        <div class="result-image-container">
+                          {% if item.image %}
+                            <img src="{{ item.image | img_url: '300x200', crop: 'center' }}" alt="{{ item.title | escape }}" class="result-image">
+                          {% else %}
+                            <div class="result-image-placeholder article-placeholder">
+                              <i class="fas fa-newspaper"></i>
+                            </div>
+                          {% endif %}
+                        </div>
+                        
+                        <div class="result-details">
+                          <h3 class="result-title">{{ item.title }}</h3>
+                          
+                          {% if section.settings.show_article_date %}
+                            <div class="result-date">{{ item.published_at | date: format: 'date' }}</div>
+                          {% endif %}
+                          
+                          {% if section.settings.show_article_excerpt and item.excerpt != blank %}
+                            <div class="result-excerpt">{{ item.excerpt | strip_html | truncatewords: 15 }}</div>
+                          {% endif %}
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                
+                {% when 'page' %}
+                  <div class="search-result-item result-page" data-type="page">
+                    <div class="result-card">
+                      <a href="{{ item.url }}" class="result-link">
+                        <div class="result-image-container page-image-container">
+                          <div class="result-image-placeholder page-placeholder">
+                            <i class="fas fa-file-alt"></i>
+                          </div>
+                        </div>
+                        
+                        <div class="result-details">
+                          <h3 class="result-title">{{ item.title }}</h3>
+                          
+                          {% if item.content != blank %}
+                            <div class="result-excerpt">{{ item.content | strip_html | truncatewords: 20 }}</div>
+                          {% endif %}
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+              {% endcase %}
+            {% endfor %}
+          </div>
+          
+          {% if paginate.pages > 1 %}
+            <div class="search-pagination">
+              {% if paginate.previous %}
+                <a href="{{ paginate.previous.url }}" class="pagination-prev">
+                  <i class="fas fa-chevron-left"></i> {{ 'general.pagination.previous' | t }}
+                </a>
+              {% endif %}
+              
+              <div class="pagination-numbers">
+                {% for part in paginate.parts %}
+                  {% if part.is_link %}
+                    <a href="{{ part.url }}" class="pagination-number">{{ part.title }}</a>
+                  {% elsif part.title == paginate.current_page %}
+                    <span class="pagination-number current">{{ part.title }}</span>
+                  {% else %}
+                    <span class="pagination-ellipsis">{{ part.title }}</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              
+              {% if paginate.next %}
+                <a href="{{ paginate.next.url }}" class="pagination-next">
+                  {{ 'general.pagination.next' | t }} <i class="fas fa-chevron-right"></i>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .main-search {
+    padding: {{ section.settings.padding_top | default: 40 }}px 0 {{ section.settings.padding_bottom | default: 60 }}px;
+    background-color: {{ section.settings.background_color }};
+    margin-top: var(--mobile-margin-top, {{ section.settings.mobile_margin_top | default: 0 }}px);
+    margin-bottom: var(--mobile-margin-bottom, {{ section.settings.mobile_margin_bottom | default: 0 }}px);
+  }
+  
+  .search-sort-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-sort-container label {
+    margin-right: 10px;
+    font-size: 14px;
+  }
+  
+  .sort-by-select {
+    padding: 8px 12px;
+    border: 1px solid {{ section.settings.input_border_color }};
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+  }
+  
+  .search-type-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid {{ section.settings.input_border_color }};
+    padding-bottom: 15px;
+    justify-content: center;
+  }
+  
+  .search-tab {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .search-tab:hover {
+    background-color: rgba({{ section.settings.accent_color | color_to_rgb | split: ',' | join: ',' }}, 0.1);
+  }
+  
+  .search-tab.active {
+    background: linear-gradient(45deg, {{ section.settings.gradient_start_color | default: '#ff9a9e' }}, {{ section.settings.gradient_end_color | default: '#ff6b9a' }});
+    color: white;
+    box-shadow: 0 4px 10px rgba({{ section.settings.accent_color | color_to_rgb | split: ',' | join: ',' }}, 0.3);
+  }
+  
+  .search-tab.active::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 2px;
+    background-color: {{ section.settings.accent_color }};
+  }
+  
+  .search-results-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 25px;
+  }
+  
+  .search-result-item {
+    transition: opacity 0.3s ease;
+  }
+  
+  .search-result-item.hidden {
+    display: none;
+  }
+  
+  .result-card {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (hover: none) {
+    .result-card:hover {
+      transform: none;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  .result-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .result-image-container {
+    position: relative;
+    padding-bottom: 100%;
+    overflow: hidden;
+  }
+  
+  .result-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .result-card:hover .result-image {
+    transform: scale(1.05);
+  }
+  
+  .result-image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #f3f3f3, #e6e6e6);
+    color: #999;
+    font-size: 36px;
+    font-weight: bold;
+  }
+  
+  .article-placeholder, .page-placeholder {
+    font-size: 24px;
+  }
+  
+  .page-image-container {
+    padding-bottom: 60%;
+  }
+  
+  .product-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+  
+  .product-badge.sold-out {
+    background-color: #999;
+    color: white;
+  }
+  
+  .product-badge.sale {
+    background: linear-gradient(45deg, {{ section.settings.sale_badge_start_color | default: '#ff6b9a' }}, {{ section.settings.sale_badge_end_color | default: '#ff8a8a' }});
+    color: white;
+    box-shadow: 0 2px 5px rgba(255, 107, 154, 0.3);
+  }
+  
+  .result-details {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .result-title {
+    font-size: 16px;
+    margin: 0 0 10px;
+    font-weight: 500;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .result-price {
+    margin-bottom: 10px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .price-sale {
+    color: {{ section.settings.sale_price_color }};
+    margin-right: 8px;
+    font-weight: 600;
+  }
+  
+  .price-compare {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+  }
+  
+  .result-vendor {
+    font-size: 13px;
+    color: #777;
+    margin-top: auto;
+  }
+  
+  .result-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  
+  .result-excerpt {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+    margin-top: 10px;
+  }
+  
+  .quick-add-form {
+    padding: 0 15px 15px;
+  }
+  
+  .quick-add-button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(45deg, {{ section.settings.button_color }}, {{ section.settings.button_hover_color }});
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba({{ section.settings.button_color | color_to_rgb | split: ',' | join: ',' }}, 0.2);
+  }
+  
+  .quick-add-button:hover {
+    background: linear-gradient(45deg, {{ section.settings.button_hover_color }}, {{ section.settings.button_color }});
+    box-shadow: 0 6px 12px rgba({{ section.settings.button_color | color_to_rgb | split: ',' | join: ',' }}, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .quick-add-button:disabled {
+    background: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  .search-pagination {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .pagination-prev, .pagination-next {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    padding: 8px 15px;
+    border: 1px solid {{ section.settings.input_border_color }};
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination-prev:hover, .pagination-next:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .pagination-numbers {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .pagination-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination-number:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .pagination-number.current {
+    background-color: {{ section.settings.accent_color }};
+    color: white;
+  }
+  
+  .pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+  }
+  
+  @media screen and (max-width: 991px) {
+    .search-results-grid {
+      grid-template-columns: repeat({{ section.settings.columns_tablet }}, 1fr);
+      gap: 20px;
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .main-search {
+      padding-top: var(--mobile-padding-top, {{ section.settings.padding_top | default: 40 }}px);
+      padding-bottom: var(--mobile-padding-bottom, {{ section.settings.padding_bottom | default: 60 }}px);
+    }
+    
+    .search-sort-container {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+    
+    .search-sort-container label {
+      margin-bottom: 8px;
+      margin-right: 0;
+    }
+    
+    .sort-by-select {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border: 1px solid {{ section.settings.input_border_color }};
+      margin-bottom: 15px;
+    }
+    
+    .search-results-grid {
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+      gap: 15px;
+    }
+    
+    .result-title {
+      font-size: 15px;
+    }
+    
+    .search-pagination {
+      margin-top: 30px;
+    }
+    
+    .pagination-prev, .pagination-next {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+    
+    .pagination-number, .pagination-ellipsis {
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+    }
+    
+    .quick-add-button {
+      padding: 8px;
+      font-size: 13px;
+    }
+    
+    .result-image-container {
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .result-details {
+      padding: 12px;
+    }
+    
+    .product-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Products per row (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 3,
+      "label": "Products per row (tablet)"
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "label": "Products per row (mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Results Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_by",
+      "label": "Show sort by options",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_result_type_tabs",
+      "label": "Show result type tabs",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_badges",
+      "label": "Show product badges (sale, sold out)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "Show quick add button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_article_date",
+      "label": "Show article date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_article_excerpt",
+      "label": "Show article excerpt",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Visual Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover color",
+      "default": "#e15c87"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_start_color",
+      "label": "Sale badge start color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_end_color",
+      "label": "Sale badge end color",
+      "default": "#ff8a8a"
+    },
+    {
+      "type": "color",
+      "id": "sale_price_color",
+      "label": "Sale price color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "gradient_start_color",
+      "label": "Gradient start color",
+      "default": "#ff9a9e"
+    },
+    {
+      "type": "color",
+      "id": "gradient_end_color",
+      "label": "Gradient end color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile top padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile bottom padding",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile top margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile bottom margin",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search Results",
+      "category": "Search"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Sort by functionality
+    const sortBySelect = document.getElementById('SortBy');
+    if (sortBySelect) {
+      sortBySelect.addEventListener('change', function() {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort_by', this.value);
+        window.location.href = url.href;
+      });
+    }
+    
+    // Result type tabs functionality
+    const searchTabs = document.querySelectorAll('.search-tab');
+    const searchResults = document.querySelectorAll('.search-result-item');
+    
+    if (searchTabs.length > 0) {
+      searchTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Update active tab
+          searchTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          const type = this.getAttribute('data-type');
+          
+          // Filter results
+          searchResults.forEach(result => {
+            if (type === 'all' || result.getAttribute('data-type') === type) {
+              result.classList.remove('hidden');
+            } else {
+              result.classList.add('hidden');
+            }
+          });
+        });
+      });
+    }
+  });
+</script>

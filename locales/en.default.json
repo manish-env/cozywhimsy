@@ -1,0 +1,53 @@
+{
+  "general": {
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search for products, articles, and more...",
+    "submit": "Search",
+    "results": {
+      "title": "Search results for \"{{ terms }}\" ({{ count }} results)"
+    },
+    "no_results": {
+      "title": "No results found for \"{{ terms }}\"",
+      "message": "Please try a different search term or browse our collections.",
+      "suggestions_title": "Try these tips:",
+      "suggestion_1": "Check your spelling",
+      "suggestion_2": "Use fewer or more general keywords",
+      "suggestion_3": "Try browsing our collections instead"
+    },
+    "filters": {
+      "all": "All",
+      "products": "Products",
+      "articles": "Articles",
+      "pages": "Pages"
+    },
+    "tabs": {
+      "all": "All",
+      "products": "Products",
+      "articles": "Articles",
+      "pages": "Pages"
+    },
+    "sort_by": "Sort by:",
+    "sort_options": {
+      "relevance": "Relevance",
+      "title_ascending": "A-Z",
+      "title_descending": "Z-A",
+      "price_ascending": "Price: Low to High",
+      "price_descending": "Price: High to Low",
+      "date_ascending": "Oldest to Newest",
+      "date_descending": "Newest to Oldest"
+    }
+  },
+  "products": {
+    "product": {
+      "sold_out": "Sold Out",
+      "on_sale": "Sale",
+      "add_to_cart": "Add to Cart"
+    }
+  }
+}

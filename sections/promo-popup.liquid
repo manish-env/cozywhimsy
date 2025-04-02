@@ -1,0 +1,636 @@
+{% if section.settings.enable_popup %}
+<div id="promo-popup" class="promo-popup {% if section.settings.show_on_mobile == false %}desktop-only{% endif %}" style="
+  --popup-bg-color: {{ section.settings.popup_bg_color }};
+  --popup-text-color: {{ section.settings.popup_text_color }};
+  --popup-accent-color: {{ section.settings.popup_accent_color }};
+  --popup-width: {{ section.settings.popup_width }}px;
+  --popup-border-radius: {{ section.settings.popup_border_radius }}px;
+">
+  <div class="popup-overlay"></div>
+  <div class="popup-content">
+    <button class="popup-close" aria-label="Close popup">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    {% if section.settings.popup_image != blank %}
+      <div class="popup-image">
+        <img src="{{ section.settings.popup_image | img_url: 'medium' }}" alt="{{ section.settings.popup_heading | escape }}">
+      </div>
+    {% endif %}
+    
+    <div class="popup-text">
+      {% if section.settings.popup_heading != blank %}
+        <h2 class="popup-heading">{{ section.settings.popup_heading }}</h2>
+      {% endif %}
+      
+      {% if section.settings.popup_subheading != blank %}
+        <p class="popup-subheading">{{ section.settings.popup_subheading }}</p>
+      {% endif %}
+      
+      {% if section.settings.popup_text != blank %}
+        <div class="popup-description">{{ section.settings.popup_text }}</div>
+      {% endif %}
+      
+      {% if section.settings.show_coupon_code and section.settings.coupon_code != blank %}
+        <div class="popup-coupon">
+          <span class="coupon-code">{{ section.settings.coupon_code }}</span>
+          <button class="copy-coupon" data-code="{{ section.settings.coupon_code }}">
+            <span class="copy-text">Copy</span>
+            <span class="copied-text">Copied!</span>
+          </button>
+        </div>
+      {% endif %}
+      
+      {% if section.settings.button_text != blank and section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="popup-button">{{ section.settings.button_text }}</a>
+      {% endif %}
+      
+      {% if section.settings.show_no_thanks_button %}
+        <button class="popup-no-thanks">{{ section.settings.no_thanks_text | default: 'No thanks' }}</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .promo-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .promo-popup.active {
+    display: flex;
+  }
+  
+  .popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  
+  .popup-content {
+    position: relative;
+    background-color: var(--popup-bg-color, #ffffff);
+    color: var(--popup-text-color, #333333);
+    max-width: var(--popup-width, 500px);
+    width: 90%;
+    border-radius: var(--popup-border-radius, 8px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--popup-text-color, #333333);
+    cursor: pointer;
+    padding: 5px;
+    z-index: 3;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  
+  .popup-close:hover {
+    opacity: 1;
+  }
+  
+  .popup-image {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .popup-image img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  
+  .popup-text {
+    padding: 25px;
+    text-align: center;
+  }
+  
+  .popup-heading {
+    font-size: 24px;
+    margin: 0 0 10px;
+    color: var(--popup-text-color, #333333);
+  }
+  
+  .popup-subheading {
+    font-size: 16px;
+    margin: 0 0 15px;
+    color: var(--popup-text-color, #333333);
+    opacity: 0.8;
+  }
+  
+  .popup-description {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .popup-coupon {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .coupon-code {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  
+  .copy-coupon {
+    background-color: var(--popup-accent-color, #ff6b9a);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .copy-coupon .copied-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--popup-accent-color, #ff6b9a);
+    transform: translateY(100%);
+    transition: transform 0.3s;
+  }
+  
+  .copy-coupon.copied .copy-text {
+    transform: translateY(-100%);
+  }
+  
+  .copy-coupon.copied .copied-text {
+    transform: translateY(0);
+  }
+  
+  .popup-button {
+    display: inline-block;
+    background-color: var(--popup-accent-color, #ff6b9a);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+  }
+  
+  .popup-button:hover {
+    background-color: var(--popup-accent-color, #ff6b9a);
+    opacity: 0.9;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .popup-no-thanks {
+    background: none;
+    border: none;
+    color: var(--popup-text-color, #333333);
+    opacity: 0.7;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+    text-decoration: underline;
+    transition: opacity 0.3s;
+  }
+  
+  .popup-no-thanks:hover {
+    opacity: 1;
+  }
+  
+  @media screen and (max-width: 767px) {
+    .desktop-only {
+      display: none !important;
+    }
+    
+    .popup-content {
+      width: 95%;
+      max-height: 80vh;
+    }
+    
+    .popup-heading {
+      font-size: 20px;
+    }
+    
+    .popup-text {
+      padding: 20px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('promo-popup');
+    if (!popup) return;
+    
+    const closeButton = popup.querySelector('.popup-close');
+    const noThanksButton = popup.querySelector('.popup-no-thanks');
+    const overlay = popup.querySelector('.popup-overlay');
+    const copyButtons = popup.querySelectorAll('.copy-coupon');
+    
+    // Function to show popup
+    function showPopup() {
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
+    }
+    
+    // Function to hide popup
+    function hidePopup() {
+      popup.classList.remove('active');
+      document.body.style.overflow = ''; // Restore scrolling
+      
+      // Set cookie to remember popup was closed
+      {% if section.settings.show_once_per_session %}
+        setCookie('popup_closed', 'true', 1); // Session cookie
+      {% endif %}
+      
+      {% if section.settings.show_once_per_days > 0 %}
+        setCookie('popup_closed', 'true', {{ section.settings.show_once_per_days }});
+      {% endif %}
+    }
+    
+    // Function to set cookie
+    function setCookie(name, value, days) {
+      let expires = '';
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toUTCString();
+      }
+      document.cookie = name + '=' + (value || '') + expires + '; path=/';
+    }
+    
+    // Function to get cookie
+    function getCookie(name) {
+      const nameEQ = name + '=';
+      const ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+    
+    // Handle copy coupon code
+    copyButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const code = this.getAttribute('data-code');
+        navigator.clipboard.writeText(code).then(() => {
+          this.classList.add('copied');
+          setTimeout(() => {
+            this.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+    
+    // Close popup when close button is clicked
+    if (closeButton) {
+      closeButton.addEventListener('click', hidePopup);
+    }
+    
+    // Close popup when "No thanks" button is clicked
+    if (noThanksButton) {
+      noThanksButton.addEventListener('click', hidePopup);
+    }
+    
+    // Close popup when overlay is clicked
+    if (overlay && {{ section.settings.close_on_overlay_click }}) {
+      overlay.addEventListener('click', hidePopup);
+    }
+    
+    // Check if popup should be shown
+    const popupClosed = getCookie('popup_closed');
+    
+    {% if section.settings.show_on_specific_pages %}
+      // Check if current page matches the specified pages
+      const currentPath = window.location.pathname;
+      const pagesToShow = [
+        {% if section.settings.show_on_homepage %}'/',{% endif %}
+        {% if section.settings.show_on_collection_pages %}'/collections',{% endif %}
+        {% if section.settings.show_on_product_pages %}'/products',{% endif %}
+        {% if section.settings.show_on_cart_page %}'/cart',{% endif %}
+      ];
+      
+      const shouldShowOnPage = pagesToShow.some(page => {
+        if (page === '/') {
+          return currentPath === '/';
+        } else {
+          return currentPath.startsWith(page);
+        }
+      });
+      
+      if (!shouldShowOnPage) {
+        return;
+      }
+    {% endif %}
+    
+    // Show popup after delay if it hasn't been closed before
+    if (!popupClosed) {
+      setTimeout(function() {
+        showPopup();
+      }, {{ section.settings.popup_delay | times: 1000 }});
+    }
+    
+    // Show popup on exit intent if enabled
+    {% if section.settings.show_on_exit_intent %}
+      if (!popupClosed) {
+        document.addEventListener('mouseleave', function(e) {
+          if (e.clientY < 0 && !popup.classList.contains('active')) {
+            showPopup();
+          }
+        });
+      }
+    {% endif %}
+    
+    // Show popup on scroll if enabled
+    {% if section.settings.show_on_scroll %}
+      if (!popupClosed) {
+        let hasShown = false;
+        window.addEventListener('scroll', function() {
+          if (!hasShown) {
+            const scrollPosition = window.scrollY;
+            const scrollThreshold = document.body.scrollHeight * ({{ section.settings.scroll_percentage }} / 100);
+            
+            if (scrollPosition > scrollThreshold) {
+              showPopup();
+              hasShown = true;
+            }
+          }
+        });
+      }
+    {% endif %}
+  });
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Promo Popup",
+  "tag": "section",
+  "class": "promo-popup-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Popup Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_popup",
+      "label": "Enable popup",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on mobile devices",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "popup_delay",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "sec",
+      "label": "Delay before showing popup",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_once_per_session",
+      "label": "Show once per session",
+      "default": true,
+      "info": "Popup will only show once per browser session"
+    },
+    {
+      "type": "range",
+      "id": "show_once_per_days",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "day",
+      "label": "Show once every X days (0 = every session)",
+      "default": 7
+    },
+    {
+      "type": "checkbox",
+      "id": "close_on_overlay_click",
+      "label": "Close when clicking outside popup",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Display Triggers"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_exit_intent",
+      "label": "Show on exit intent",
+      "default": false,
+      "info": "Show popup when cursor leaves the window (desktop only)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_scroll",
+      "label": "Show on scroll",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "scroll_percentage",
+      "min": 10,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "label": "Scroll percentage to trigger",
+      "default": 50,
+      "info": "Show popup when user scrolls to this percentage of the page"
+    },
+    {
+      "type": "header",
+      "content": "Page Targeting"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_specific_pages",
+      "label": "Show only on specific pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_homepage",
+      "label": "Show on homepage",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_collection_pages",
+      "label": "Show on collection pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_product_pages",
+      "label": "Show on product pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_cart_page",
+      "label": "Show on cart page",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Popup Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "popup_image",
+      "label": "Popup image"
+    },
+    {
+      "type": "text",
+      "id": "popup_heading",
+      "label": "Heading",
+      "default": "Special Offer!"
+    },
+    {
+      "type": "text",
+      "id": "popup_subheading",
+      "label": "Subheading",
+      "default": "Limited time offer"
+    },
+    {
+      "type": "richtext",
+      "id": "popup_text",
+      "label": "Popup text",
+      "default": "<p>Subscribe to our newsletter and get 10% off your first purchase!</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coupon_code",
+      "label": "Show coupon code",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon code",
+      "default": "WELCOME10"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_no_thanks_button",
+      "label": "Show 'No thanks' button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "no_thanks_text",
+      "label": "'No thanks' button text",
+      "default": "No thanks"
+    },
+    {
+      "type": "header",
+      "content": "Popup Styling"
+    },
+    {
+      "type": "color",
+      "id": "popup_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "popup_text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "popup_accent_color",
+      "label": "Accent color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "range",
+      "id": "popup_width",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Popup width",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "popup_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Popup",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

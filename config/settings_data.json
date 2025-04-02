@@ -231,6 +231,40 @@
           "add_to_cart_button_radius": 4,
           "button_padding": 15
         }
+      },
+      "promo-popup": {
+        "type": "promo-popup",
+        "settings": {
+          "enable_popup": true,
+          "show_on_mobile": true,
+          "popup_delay": 5,
+          "show_once_per_session": true,
+          "show_once_per_days": 7,
+          "close_on_overlay_click": true,
+          "show_on_exit_intent": false,
+          "show_on_scroll": false,
+          "scroll_percentage": 50,
+          "show_on_specific_pages": false,
+          "show_on_homepage": true,
+          "show_on_collection_pages": false,
+          "show_on_product_pages": false,
+          "show_on_cart_page": false,
+          "popup_image": "shopify://shop_images/7328455122.jpg",
+          "popup_heading": "Special Offer!",
+          "popup_subheading": "Limited time offer",
+          "popup_text": "<p>Subscribe to our newsletter and get 10% off your first purchase!</p>",
+          "show_coupon_code": true,
+          "coupon_code": "WELCOME10",
+          "button_text": "Shop Now",
+          "button_link": "",
+          "show_no_thanks_button": true,
+          "no_thanks_text": "No thanks",
+          "popup_bg_color": "#ffffff",
+          "popup_text_color": "#333333",
+          "popup_accent_color": "#ff6b9a",
+          "popup_width": 500,
+          "popup_border_radius": 8
+        }
       }
     },
     "content_for_index": []

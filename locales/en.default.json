@@ -1,30 +1,35 @@
 {
   "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close": "Close",
+      "previous": "Previous",
+      "next": "Next",
+      "play_video": "Play video"
+    },
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
     "pagination": {
       "previous": "Previous",
       "next": "Next"
+    },
+    "instagram_showcase": {
+      "view_product": "View product",
+      "view_all": "View all",
+      "shop_instagram": "Shop our Instagram"
     }
   },
   "search": {
     "title": "Search",
     "placeholder": "Search for products, articles, and more...",
     "submit": "Search",
-    "results": {
-      "title": "Search results for \"{{ terms }}\" ({{ count }} results)"
-    },
-    "no_results": {
-      "title": "No results found for \"{{ terms }}\"",
-      "message": "Please try a different search term or browse our collections.",
-      "suggestions_title": "Try these tips:",
-      "suggestion_1": "Check your spelling",
-      "suggestion_2": "Use fewer or more general keywords",
-      "suggestion_3": "Try browsing our collections instead"
-    },
-    "filters": {
-      "all": "All",
-      "products": "Products",
-      "articles": "Articles",
-      "pages": "Pages"
+    "no_results": "No results found for \"{{ terms }}\"",
+    "results_for": "Search results for \"{{ terms }}\"",
+    "results_with_count": {
+      "one": "{{ count }} result for \"{{ terms }}\"",
+      "other": "{{ count }} results for \"{{ terms }}\""
     },
     "tabs": {
       "all": "All",
@@ -41,6 +46,23 @@
       "price_descending": "Price: High to Low",
       "date_ascending": "Oldest to Newest",
       "date_descending": "Newest to Oldest"
+    },
+    "results": {
+      "title": "Search results for \"{{ terms }}\" ({{ count }} results)"
+    },
+    "no_results_info": {
+      "title": "No results found for \"{{ terms }}\"",
+      "message": "Please try a different search term or browse our collections.",
+      "suggestions_title": "Try these tips:",
+      "suggestion_1": "Check your spelling",
+      "suggestion_2": "Use fewer or more general keywords",
+      "suggestion_3": "Try browsing our collections instead"
+    },
+    "filters": {
+      "all": "All",
+      "products": "Products",
+      "articles": "Articles",
+      "pages": "Pages"
     }
   },
   "products": {

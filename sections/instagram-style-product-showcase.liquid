@@ -1,0 +1,589 @@
+{% if section.settings.title != blank %}
+  <div class="section-header">
+    <h2 class="section-title {% if section.settings.center_title %}text-center{% endif %}">{{ section.settings.title | escape }}</h2>
+    {% if section.settings.subtitle != blank %}
+      <div class="section-subtitle {% if section.settings.center_title %}text-center{% endif %}">{{ section.settings.subtitle }}</div>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="instagram-style-showcase" style="
+  {% if section.settings.mobile_padding_top != blank %}
+    --mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
+  {% endif %}
+  {% if section.settings.mobile_padding_bottom != blank %}
+    --mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  {% endif %}
+  {% if section.settings.mobile_margin_top != blank %}
+    --mobile-margin-top: {{ section.settings.mobile_margin_top }}px;
+  {% endif %}
+  {% if section.settings.mobile_margin_bottom != blank %}
+    --mobile-margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+  {% endif %}
+">
+  <div class="container">
+    <div class="story-highlights-container">
+      <div class="story-highlights-wrapper">
+        <div class="story-highlights">
+          {% if section.settings.show_collection_link %}
+            <a href="{{ section.settings.collection_link }}" class="story-highlight story-highlight-view-all">
+              <div class="story-highlight-circle">
+                <div class="story-highlight-inner">
+                  <span class="view-all-text">{{ section.settings.view_all_text }}</span>
+                </div>
+              </div>
+              <div class="story-highlight-title">{{ section.settings.view_all_label }}</div>
+            </a>
+          {% endif %}
+          
+          {% for block in section.blocks %}
+            {% if block.settings.product != blank %}
+              {% assign product = block.settings.product %}
+              <a href="{{ product.url }}" class="story-highlight" {{ block.shopify_attributes }}>
+                <div class="story-highlight-circle {% if block.settings.highlight_style == 'gradient' %}gradient-border{% elsif block.settings.highlight_style == 'custom' %}custom-border{% endif %}" style="{% if block.settings.highlight_style == 'custom' %}--border-color: {{ block.settings.border_color }};{% endif %}">
+                  <div class="story-highlight-inner">
+                    {% if product.featured_image != blank %}
+                      <img src="{{ product.featured_image | img_url: '150x150', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
+                    {% else %}
+                      <div class="placeholder-image">
+                        {{ product.title | slice: 0, 1 | upcase }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="story-highlight-title">{{ product.title }}</div>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      
+      {% if section.settings.show_navigation %}
+        <button class="story-nav story-prev" aria-label="{{ 'general.accessibility.previous' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button class="story-nav story-next" aria-label="{{ 'general.accessibility.next' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .instagram-style-showcase {
+    padding: {{ section.settings.padding_top | default: 40 }}px 0 {{ section.settings.padding_bottom | default: 40 }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-family: 'Dancing Script', cursive;
+    color: {{ section.settings.title_color }};
+  }
+  
+  .section-subtitle {
+    font-size: 16px;
+    color: {{ section.settings.subtitle_color }};
+    line-height: 1.5;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .story-highlights-container {
+    position: relative;
+    padding: 0 50px;
+  }
+  
+  .story-highlights-wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .story-highlights {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    gap: 20px;
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+  }
+  
+  .story-highlights::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+  }
+  
+  .story-highlight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    min-width: 80px;
+    transition: transform 0.3s ease;
+  }
+  
+  .story-highlight:hover {
+    transform: translateY(-5px);
+  }
+  
+  .story-highlight-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 3px;
+    background: white;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  
+  .gradient-border {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  }
+  
+  .custom-border {
+    background: var(--border-color, {{ section.settings.default_border_color }});
+  }
+  
+  .story-highlight-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+  }
+  
+  .story-highlight-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #999;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .story-highlight-title {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 5px;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: {{ section.settings.text_color }};
+  }
+  
+  .story-highlight-view-all .story-highlight-inner {
+    background: {{ section.settings.view_all_background }};
+  }
+  
+  .view-all-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: {{ section.settings.view_all_text_color }};
+  }
+  
+  .story-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+    color: {{ section.settings.navigation_color }};
+    transition: all 0.3s ease;
+  }
+  
+  .story-nav:hover {
+    background-color: {{ section.settings.navigation_color }};
+    color: white;
+  }
+  
+  .story-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .story-prev {
+    left: 0;
+  }
+  
+  .story-next {
+    right: 0;
+  }
+  
+  @media screen and (max-width: 767px) {
+    .instagram-style-showcase {
+      padding-top: var(--mobile-padding-top, {{ section.settings.padding_top | default: 40 }}px);
+      padding-bottom: var(--mobile-padding-bottom, {{ section.settings.padding_bottom | default: 40 }}px);
+      margin-top: var(--mobile-margin-top, 0);
+      margin-bottom: var(--mobile-margin-bottom, 0);
+    }
+    
+    .section-title {
+      font-size: 24px;
+    }
+    
+    .story-highlights-container {
+      padding: 0 40px;
+    }
+    
+    .story-highlight-circle {
+      width: 70px;
+      height: 70px;
+    }
+    
+    .story-highlight {
+      min-width: 70px;
+    }
+    
+    .story-highlight-title {
+      max-width: 70px;
+      font-size: 12px;
+    }
+    
+    .story-nav {
+      width: 35px;
+      height: 35px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .story-highlights-container {
+      padding: 0 30px;
+    }
+    
+    .story-highlight-circle {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .story-highlight {
+      min-width: 60px;
+    }
+    
+    .story-highlight-title {
+      max-width: 60px;
+      font-size: 11px;
+    }
+    
+    .story-nav {
+      width: 30px;
+      height: 30px;
+    }
+    
+    .view-all-text {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.story-highlights');
+    const prevButton = document.querySelector('.story-prev');
+    const nextButton = document.querySelector('.story-next');
+    
+    if (!container || !prevButton || !nextButton) return;
+    
+    // Disable prev button initially
+    prevButton.disabled = true;
+    
+    // Update button states
+    function updateButtonStates() {
+      prevButton.disabled = container.scrollLeft <= 0;
+      nextButton.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+    }
+    
+    // Scroll to next/prev items
+    function scrollNext() {
+      const scrollAmount = container.clientWidth * 0.8;
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+    
+    function scrollPrev() {
+      const scrollAmount = container.clientWidth * 0.8;
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    }
+    
+    // Add event listeners
+    nextButton.addEventListener('click', scrollNext);
+    prevButton.addEventListener('click', scrollPrev);
+    container.addEventListener('scroll', updateButtonStates);
+    
+    // Update on resize
+    window.addEventListener('resize', updateButtonStates);
+    
+    // Initial check
+    updateButtonStates();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Instagram Showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop Our Instagram"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center align heading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_link",
+      "label": "Show 'View All' link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "collection_link",
+      "label": "Collection link"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all icon text",
+      "default": "+"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "View All"
+    },
+    {
+      "type": "header",
+      "content": "Visual Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "navigation_color",
+      "label": "Navigation color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "default_border_color",
+      "label": "Default border color",
+      "default": "#e1306c"
+    },
+    {
+      "type": "color",
+      "id": "view_all_background",
+      "label": "View all background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "view_all_text_color",
+      "label": "View all text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile top padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile bottom padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile top margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile bottom margin",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "select",
+          "id": "highlight_style",
+          "label": "Highlight style",
+          "options": [
+            {
+              "value": "gradient",
+              "label": "Instagram gradient"
+            },
+            {
+              "value": "custom",
+              "label": "Custom color"
+            },
+            {
+              "value": "none",
+              "label": "No border"
+            }
+          ],
+          "default": "gradient"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border color (for custom style)",
+          "default": "#e1306c"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Showcase",
+      "category": "Products",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

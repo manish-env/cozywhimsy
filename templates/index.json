@@ -222,8 +222,6 @@
       "settings": {
         "title": "Follow Us on Instagram",
         "subtitle": "Tag us @cozywhimsy to be featured",
-        "instagram_access_token": "",
-        "instagram_post_count": 8,
         "profile_image": "shopify://shop_images/Untitled_design_1.png",
         "profile_name": "Cozy Whimsy",
         "profile_username": "cozywhimsy",
@@ -246,7 +244,15 @@
         "product_deVE66": {
           "type": "product",
           "settings": {
-            "product": "",
+            "product": "cute-cat-animal-silicone-baby-night-light",
+            "highlight_style": "gradient",
+            "border_color": "#e1306c"
+          }
+        },
+        "product_ekyAc8": {
+          "type": "product",
+          "settings": {
+            "product": "duck-night-light",
             "highlight_style": "gradient",
             "border_color": "#e1306c"
           }
@@ -254,7 +260,15 @@
         "product_NKHzWN": {
           "type": "product",
           "settings": {
-            "product": "",
+            "product": "nursery-night-lights-with-battery",
+            "highlight_style": "gradient",
+            "border_color": "#e1306c"
+          }
+        },
+        "product_AfYjNm": {
+          "type": "product",
+          "settings": {
+            "product": "usb-rechargable-capybara-night-light",
             "highlight_style": "gradient",
             "border_color": "#e1306c"
           }
@@ -286,7 +300,9 @@
       },
       "block_order": [
         "product_deVE66",
+        "product_ekyAc8",
         "product_NKHzWN",
+        "product_AfYjNm",
         "product_6mcETK",
         "product_xcWHBW",
         "product_fRKBgA"
@@ -295,8 +311,8 @@
         "title": "Shop Our Instagram",
         "subtitle": "Top 10 Sky laltern",
         "center_title": true,
-        "show_navigation": true,
-        "show_collection_link": true,
+        "show_navigation": false,
+        "show_collection_link": false,
         "collection_link": "shopify://collections/light-animals",
         "view_all_text": "+",
         "view_all_label": "View All",
@@ -315,6 +331,145 @@
         "mobile_margin_top": 0,
         "mobile_margin_bottom": 0
       }
+    },
+    "gift_finder_quiz_6bh8ki": {
+      "type": "gift-finder-quiz",
+      "blocks": {
+        "recipient_TixbeX": {
+          "type": "recipient",
+          "settings": {
+            "text": "For Her",
+            "icon": "👩",
+            "value": "her"
+          }
+        },
+        "recipient_7RM4yx": {
+          "type": "recipient",
+          "settings": {
+            "text": "For Him",
+            "icon": "👨",
+            "value": "him"
+          }
+        },
+        "recipient_VYh9nq": {
+          "type": "recipient",
+          "settings": {
+            "text": "For Kids",
+            "icon": "👶",
+            "value": "kids"
+          }
+        },
+        "recipient_EcwmxV": {
+          "type": "recipient",
+          "settings": {
+            "text": "For Friends",
+            "icon": "👯",
+            "value": "friends"
+          }
+        },
+        "occasion_eU76Wx": {
+          "type": "occasion",
+          "settings": {
+            "text": "Birthday",
+            "icon": "🎂",
+            "value": "birthday"
+          }
+        },
+        "occasion_3XbDaa": {
+          "type": "occasion",
+          "settings": {
+            "text": "Anniversary",
+            "icon": "💍",
+            "value": "anniversary"
+          }
+        },
+        "occasion_yG7bn8": {
+          "type": "occasion",
+          "settings": {
+            "text": "Holiday",
+            "icon": "🎄",
+            "value": "holiday"
+          }
+        },
+        "occasion_t3K43q": {
+          "type": "occasion",
+          "settings": {
+            "text": "Just Because",
+            "icon": "💝",
+            "value": "just-because"
+          }
+        },
+        "price_PK7AFB": {
+          "type": "price",
+          "settings": {
+            "text": "Under $25",
+            "icon": "💰",
+            "value": "under-25"
+          }
+        },
+        "price_mk9nBK": {
+          "type": "price",
+          "settings": {
+            "text": "$25 - $50",
+            "icon": "💰💰",
+            "value": "25-50"
+          }
+        },
+        "price_dcXmCX": {
+          "type": "price",
+          "settings": {
+            "text": "$50 - $100",
+            "icon": "💰💰💰",
+            "value": "50-100"
+          }
+        },
+        "price_anEnQL": {
+          "type": "price",
+          "settings": {
+            "text": "Over $100",
+            "icon": "💰💰💰💰",
+            "value": "over-100"
+          }
+        }
+      },
+      "block_order": [
+        "recipient_TixbeX",
+        "recipient_7RM4yx",
+        "recipient_VYh9nq",
+        "recipient_EcwmxV",
+        "occasion_eU76Wx",
+        "occasion_3XbDaa",
+        "occasion_yG7bn8",
+        "occasion_t3K43q",
+        "price_PK7AFB",
+        "price_mk9nBK",
+        "price_dcXmCX",
+        "price_anEnQL"
+      ],
+      "settings": {
+        "title": "Find the Perfect Gift",
+        "subtitle": "Answer a few questions to discover personalized gift recommendations",
+        "center_title": true,
+        "step_1_title": "Who are you shopping for?",
+        "step_2_title": "What's the occasion?",
+        "step_3_title": "What's your budget?",
+        "results_title": "Your Perfect Gift Recommendations",
+        "loading_text": "Finding the perfect gifts for you...",
+        "results_message": "Based on your selections, we've found some perfect gift options for you!",
+        "results_button_text": "View Your Gift Recommendations",
+        "results_collection_url": "",
+        "back_button_text": "Back",
+        "restart_button_text": "Start Over",
+        "background_color": "#f9f3f5",
+        "header_background": "#ff6b9a",
+        "header_text_color": "#ffffff",
+        "text_color": "#333333",
+        "accent_color": "#ff6b9a",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
     }
   },
   "order": [
@@ -323,6 +478,7 @@
     "featured_product_spotlight_9Jd4aF",
     "featured_products",
     "instagram_showcase",
-    "instagram_style_product_showcase_Hpgakw"
+    "instagram_style_product_showcase_Hpgakw",
+    "gift_finder_quiz_6bh8ki"
   ]
 }

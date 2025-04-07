@@ -61,6 +61,9 @@
           </div>
           <span class="icon-text">Account</span>
         </a>
+        
+        {% render 'wishlist-icon' %}
+        
         <a href="/cart" class="icon-link cart-icon" aria-label="Cart">
           <div class="icon-wrapper">
             <i class="fas fa-shopping-bag"></i>
@@ -89,6 +92,11 @@
         <span>Categories</span>
       </a>
     {% endif %}
+    <a href="{{ routes.root_url }}pages/wishlist" class="bottom-nav-item {% if request.path contains '/pages/wishlist' %}active{% endif %}">
+      <i class="fas fa-heart"></i>
+      <span>Wishlist</span>
+      <span class="bottom-nav-wishlist-count" data-wishlist-count>0</span>
+    </a>
     <a href="/account" class="bottom-nav-item {% if request.path contains '/account' %}active{% endif %}">
       <i class="fas fa-user"></i>
       <span>Account</span>

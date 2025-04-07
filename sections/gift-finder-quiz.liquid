@@ -1,0 +1,868 @@
+{% comment %}
+  Gift Finder Quiz Section for CozyWhimsy
+  Helps customers find the perfect gift through a simple quiz
+{% endcomment %}
+
+<div class="gift-finder-section section-padding" style="background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="gift-finder-wrapper">
+      <div class="gift-finder-header{% if section.settings.center_title %} text-center{% endif %}">
+        <h2 class="gift-finder-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="gift-finder-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+
+      <div class="gift-finder-quiz" id="giftFinderQuiz">
+        <div class="gift-finder-steps">
+          <div class="gift-finder-step active" data-step="1">
+            <h3 class="gift-finder-step-title">{{ section.settings.step_1_title }}</h3>
+            <div class="gift-finder-options">
+              {% for block in section.blocks %}
+                {% if block.type == 'recipient' %}
+                  <div class="gift-finder-option" data-value="{{ block.settings.value }}" {{ block.shopify_attributes }}>
+                    <div class="gift-finder-option-inner">
+                      {% if block.settings.icon != blank %}
+                        <div class="gift-finder-option-icon">{{ block.settings.icon }}</div>
+                      {% endif %}
+                      <div class="gift-finder-option-text">{{ block.settings.text }}</div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="gift-finder-step" data-step="2">
+            <h3 class="gift-finder-step-title">{{ section.settings.step_2_title }}</h3>
+            <div class="gift-finder-options">
+              {% for block in section.blocks %}
+                {% if block.type == 'occasion' %}
+                  <div class="gift-finder-option" data-value="{{ block.settings.value }}" {{ block.shopify_attributes }}>
+                    <div class="gift-finder-option-inner">
+                      {% if block.settings.icon != blank %}
+                        <div class="gift-finder-option-icon">{{ block.settings.icon }}</div>
+                      {% endif %}
+                      <div class="gift-finder-option-text">{{ block.settings.text }}</div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="gift-finder-step" data-step="3">
+            <h3 class="gift-finder-step-title">{{ section.settings.step_3_title }}</h3>
+            <div class="gift-finder-options">
+              {% for block in section.blocks %}
+                {% if block.type == 'price' %}
+                  <div class="gift-finder-option" data-value="{{ block.settings.value }}" {{ block.shopify_attributes }}>
+                    <div class="gift-finder-option-inner">
+                      {% if block.settings.icon != blank %}
+                        <div class="gift-finder-option-icon">{{ block.settings.icon }}</div>
+                      {% endif %}
+                      <div class="gift-finder-option-text">{{ block.settings.text }}</div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="gift-finder-step gift-finder-results" data-step="results">
+            <h3 class="gift-finder-step-title">{{ section.settings.results_title }}</h3>
+            <div class="gift-finder-loading">
+              <div class="gift-finder-spinner"></div>
+              <p>{{ section.settings.loading_text }}</p>
+            </div>
+            <div class="gift-finder-results-content" style="display: none;">
+              <p class="gift-finder-results-message">{{ section.settings.results_message }}</p>
+              <div class="gift-finder-results-link-container">
+                <a href="#" class="gift-finder-results-link" id="giftFinderResultsLink">
+                  {{ section.settings.results_button_text }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gift-finder-navigation">
+          <button type="button" class="gift-finder-back-button" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 8H1M1 8L8 15M1 8L8 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ section.settings.back_button_text }}
+          </button>
+          <div class="gift-finder-progress">
+            <span class="gift-finder-progress-step active" data-step="1"></span>
+            <span class="gift-finder-progress-step" data-step="2"></span>
+            <span class="gift-finder-progress-step" data-step="3"></span>
+          </div>
+          <button type="button" class="gift-finder-restart-button" style="display: none;">
+            {{ section.settings.restart_button_text }}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1V6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3.51 9.5C4.01717 10.9908 5.00696 12.2636 6.33192 13.1036C7.65687 13.9437 9.23455 14.2996 10.8061 14.1091C12.3777 13.9187 13.8265 13.1935 14.9089 12.0549C15.9913 10.9164 16.6476 9.43239 16.7691 7.85396C16.8906 6.27554 16.4695 4.70163 15.5762 3.40034C14.6829 2.09904 13.3681 1.15233 11.8563 0.698375C10.3445 0.244416 8.73257 0.309975 7.26248 0.885309C5.79239 1.46064 4.55403 2.51152 3.75 3.85" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gift-finder-section {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+  
+  .gift-finder-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  .gift-finder-header {
+    padding: 30px;
+    background-color: {{ section.settings.header_background }};
+    color: {{ section.settings.header_text_color }};
+  }
+  
+  .gift-finder-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+  }
+  
+  .gift-finder-subtitle {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .gift-finder-quiz {
+    padding: 30px;
+  }
+  
+  .gift-finder-step {
+    display: none;
+  }
+  
+  .gift-finder-step.active {
+    display: block;
+  }
+  
+  .gift-finder-step-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: {{ section.settings.text_color }};
+    text-align: center;
+  }
+  
+  .gift-finder-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .gift-finder-option {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .gift-finder-option:hover {
+    transform: translateY(-3px);
+  }
+  
+  .gift-finder-option.selected .gift-finder-option-inner {
+    border-color: {{ section.settings.accent_color }};
+    background-color: {{ section.settings.accent_color | color_modify: 'alpha', 0.05 }};
+  }
+  
+  .gift-finder-option-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    text-align: center;
+    height: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .gift-finder-option-inner:hover {
+    border-color: {{ section.settings.accent_color }};
+  }
+  
+  .gift-finder-option-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .gift-finder-option-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+  }
+  
+  .gift-finder-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .gift-finder-back-button, 
+  .gift-finder-restart-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: {{ section.settings.accent_color }};
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .gift-finder-back-button:hover,
+  .gift-finder-restart-button:hover {
+    opacity: 0.8;
+  }
+  
+  .gift-finder-back-button svg {
+    margin-right: 5px;
+  }
+  
+  .gift-finder-restart-button svg {
+    margin-left: 5px;
+  }
+  
+  .gift-finder-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .gift-finder-progress-step {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #eee;
+    transition: background-color 0.3s ease;
+  }
+  
+  .gift-finder-progress-step.active {
+    background-color: {{ section.settings.accent_color }};
+  }
+  
+  .gift-finder-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+  }
+  
+  .gift-finder-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: {{ section.settings.accent_color }};
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 15px;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .gift-finder-results-content {
+    text-align: center;
+    padding: 20px 0;
+  }
+  
+  .gift-finder-results-message {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: {{ section.settings.text_color }};
+  }
+  
+  .gift-finder-results-link-container {
+    margin-top: 20px;
+  }
+  
+  .gift-finder-results-link {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: {{ section.settings.accent_color }};
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .gift-finder-results-link:hover {
+    background-color: {{ section.settings.accent_color | color_darken: 10 }};
+    transform: translateY(-2px);
+  }
+  
+  @media screen and (max-width: 767px) {
+    .gift-finder-section {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+    }
+    
+    .gift-finder-header {
+      padding: 20px;
+    }
+    
+    .gift-finder-quiz {
+      padding: 20px;
+    }
+    
+    .gift-finder-title {
+      font-size: 24px;
+    }
+    
+    .gift-finder-options {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const quiz = document.getElementById('giftFinderQuiz');
+    if (!quiz) return;
+    
+    const steps = quiz.querySelectorAll('.gift-finder-step');
+    const options = quiz.querySelectorAll('.gift-finder-option');
+    const backButton = quiz.querySelector('.gift-finder-back-button');
+    const restartButton = quiz.querySelector('.gift-finder-restart-button');
+    const progressSteps = quiz.querySelectorAll('.gift-finder-progress-step');
+    const resultsLink = document.getElementById('giftFinderResultsLink');
+    
+    let currentStep = 1;
+    let selections = {
+      recipient: '',
+      occasion: '',
+      price: ''
+    };
+    
+    // Initialize quiz
+    showStep(currentStep);
+    
+    // Add event listeners to options
+    options.forEach(option => {
+      option.addEventListener('click', function() {
+        const step = this.closest('.gift-finder-step').dataset.step;
+        const value = this.dataset.value;
+        
+        // Remove selected class from all options in this step
+        const stepOptions = this.closest('.gift-finder-step').querySelectorAll('.gift-finder-option');
+        stepOptions.forEach(opt => opt.classList.remove('selected'));
+        
+        // Add selected class to clicked option
+        this.classList.add('selected');
+        
+        // Store selection
+        if (step === '1') {
+          selections.recipient = value;
+        } else if (step === '2') {
+          selections.occasion = value;
+        } else if (step === '3') {
+          selections.price = value;
+        }
+        
+        // Move to next step after a short delay
+        setTimeout(() => {
+          if (step === '1') {
+            showStep(2);
+          } else if (step === '2') {
+            showStep(3);
+          } else if (step === '3') {
+            showResults();
+          }
+        }, 300);
+      });
+    });
+    
+    // Back button functionality
+    backButton.addEventListener('click', function() {
+      if (currentStep > 1) {
+        showStep(currentStep - 1);
+      }
+    });
+    
+    // Restart button functionality
+    restartButton.addEventListener('click', function() {
+      resetQuiz();
+    });
+    
+    // Show specific step
+    function showStep(step) {
+      currentStep = parseInt(step);
+      
+      // Hide all steps
+      steps.forEach(s => s.classList.remove('active'));
+      
+      // Show current step
+      const currentStepElement = quiz.querySelector(`.gift-finder-step[data-step="${currentStep}"]`);
+      if (currentStepElement) {
+        currentStepElement.classList.add('active');
+      }
+      
+      // Update progress indicators
+      progressSteps.forEach(p => {
+        const stepNum = parseInt(p.dataset.step);
+        if (stepNum <= currentStep) {
+          p.classList.add('active');
+        } else {
+          p.classList.remove('active');
+        }
+      });
+      
+      // Show/hide back button
+      if (currentStep > 1 && currentStep <= 3) {
+        backButton.style.display = 'flex';
+        restartButton.style.display = 'none';
+      } else if (currentStep === 'results') {
+        backButton.style.display = 'none';
+        restartButton.style.display = 'flex';
+      } else {
+        backButton.style.display = 'none';
+        restartButton.style.display = 'none';
+      }
+    }
+    
+    // Show results
+    function showResults() {
+      // Show results step
+      steps.forEach(s => s.classList.remove('active'));
+      const resultsStep = quiz.querySelector('.gift-finder-step[data-step="results"]');
+      if (resultsStep) {
+        resultsStep.classList.add('active');
+      }
+      
+      // Hide progress indicators
+      progressSteps.forEach(p => p.classList.add('active'));
+      
+      // Show restart button
+      backButton.style.display = 'none';
+      restartButton.style.display = 'flex';
+      
+      // Simulate loading
+      setTimeout(() => {
+        const loadingElement = resultsStep.querySelector('.gift-finder-loading');
+        const resultsContent = resultsStep.querySelector('.gift-finder-results-content');
+        
+        loadingElement.style.display = 'none';
+        resultsContent.style.display = 'block';
+        
+        // Generate results URL based on selections
+        let resultsUrl = '{{ section.settings.results_collection_url }}';
+        
+        // Add query parameters based on selections
+        const params = [];
+        if (selections.recipient) params.push(`recipient=${selections.recipient}`);
+        if (selections.occasion) params.push(`occasion=${selections.occasion}`);
+        if (selections.price) params.push(`price=${selections.price}`);
+        
+        if (params.length > 0) {
+          resultsUrl += resultsUrl.includes('?') ? '&' : '?';
+          resultsUrl += params.join('&');
+        }
+        
+        // Update results link
+        if (resultsLink) {
+          resultsLink.href = resultsUrl;
+        }
+      }, 1500);
+    }
+    
+    // Reset quiz
+    function resetQuiz() {
+      // Clear selections
+      selections = {
+        recipient: '',
+        occasion: '',
+        price: ''
+      };
+      
+      // Remove selected class from all options
+      options.forEach(opt => opt.classList.remove('selected'));
+      
+      // Reset to first step
+      showStep(1);
+      
+      // Reset results step
+      const resultsStep = quiz.querySelector('.gift-finder-step[data-step="results"]');
+      if (resultsStep) {
+        const loadingElement = resultsStep.querySelector('.gift-finder-loading');
+        const resultsContent = resultsStep.querySelector('.gift-finder-results-content');
+        
+        loadingElement.style.display = 'flex';
+        resultsContent.style.display = 'none';
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Gift Finder Quiz",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Quiz Title",
+      "default": "Find the Perfect Gift"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Quiz Subtitle",
+      "default": "Answer a few questions to discover personalized gift recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center Title",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "step_1_title",
+      "label": "Step 1 Title",
+      "default": "Who are you shopping for?"
+    },
+    {
+      "type": "text",
+      "id": "step_2_title",
+      "label": "Step 2 Title",
+      "default": "What's the occasion?"
+    },
+    {
+      "type": "text",
+      "id": "step_3_title",
+      "label": "Step 3 Title",
+      "default": "What's your budget?"
+    },
+    {
+      "type": "text",
+      "id": "results_title",
+      "label": "Results Title",
+      "default": "Your Perfect Gift Recommendations"
+    },
+    {
+      "type": "text",
+      "id": "loading_text",
+      "label": "Loading Text",
+      "default": "Finding the perfect gifts for you..."
+    },
+    {
+      "type": "text",
+      "id": "results_message",
+      "label": "Results Message",
+      "default": "Based on your selections, we've found some perfect gift options for you!"
+    },
+    {
+      "type": "text",
+      "id": "results_button_text",
+      "label": "Results Button Text",
+      "default": "View Your Gift Recommendations"
+    },
+    {
+      "type": "url",
+      "id": "results_collection_url",
+      "label": "Results Collection URL",
+      "info": "Base collection URL for gift recommendations"
+    },
+    {
+      "type": "text",
+      "id": "back_button_text",
+      "label": "Back Button Text",
+      "default": "Back"
+    },
+    {
+      "type": "text",
+      "id": "restart_button_text",
+      "label": "Restart Button Text",
+      "default": "Start Over"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f9f3f5"
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Header Background Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Header Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "recipient",
+      "name": "Gift Recipient",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Option Text",
+          "default": "For Her"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Option Icon (Emoji)",
+          "default": "👩",
+          "info": "Enter a single emoji character"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Option Value",
+          "default": "her",
+          "info": "Used in URL parameters (no spaces or special characters)"
+        }
+      ]
+    },
+    {
+      "type": "occasion",
+      "name": "Gift Occasion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Option Text",
+          "default": "Birthday"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Option Icon (Emoji)",
+          "default": "🎂",
+          "info": "Enter a single emoji character"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Option Value",
+          "default": "birthday",
+          "info": "Used in URL parameters (no spaces or special characters)"
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price Range",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Option Text",
+          "default": "Under $25"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Option Icon (Emoji)",
+          "default": "💰",
+          "info": "Enter a single emoji character"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Option Value",
+          "default": "under-25",
+          "info": "Used in URL parameters (no spaces or special characters)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Finder Quiz",
+      "blocks": [
+        {
+          "type": "recipient",
+          "settings": {
+            "text": "For Her",
+            "icon": "👩",
+            "value": "her"
+          }
+        },
+        {
+          "type": "recipient",
+          "settings": {
+            "text": "For Him",
+            "icon": "👨",
+            "value": "him"
+          }
+        },
+        {
+          "type": "recipient",
+          "settings": {
+            "text": "For Kids",
+            "icon": "👶",
+            "value": "kids"
+          }
+        },
+        {
+          "type": "recipient",
+          "settings": {
+            "text": "For Friends",
+            "icon": "👯",
+            "value": "friends"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "text": "Birthday",
+            "icon": "🎂",
+            "value": "birthday"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "text": "Anniversary",
+            "icon": "💍",
+            "value": "anniversary"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "text": "Holiday",
+            "icon": "🎄",
+            "value": "holiday"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "text": "Just Because",
+            "icon": "💝",
+            "value": "just-because"
+          }
+        },
+        {
+          "type": "price",
+          "settings": {
+            "text": "Under $25",
+            "icon": "💰",
+            "value": "under-25"
+          }
+        },
+        {
+          "type": "price",
+          "settings": {
+            "text": "$25 - $50",
+            "icon": "💰💰",
+            "value": "25-50"
+          }
+        },
+        {
+          "type": "price",
+          "settings": {
+            "text": "$50 - $100",
+            "icon": "💰💰💰",
+            "value": "50-100"
+          }
+        },
+        {
+          "type": "price",
+          "settings": {
+            "text": "Over $100",
+            "icon": "💰💰💰💰",
+            "value": "over-100"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

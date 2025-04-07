@@ -1,0 +1,15 @@
+{% comment %}
+  Wishlist icon component for CozyWhimsy theme header
+  
+  Usage:
+  {% render 'wishlist-icon' %}
+{% endcomment %}
+
+<a href="{{ routes.root_url }}pages/wishlist" class="header-wishlist-link" aria-label="{{ 'wishlist.view_wishlist' | t }}">
+  <span class="wishlist-icon-wrapper">
+    <svg class="wishlist-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+    <span class="wishlist-count hidden" data-wishlist-count>0</span>
+  </span>
+</a>

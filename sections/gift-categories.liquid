@@ -1,0 +1,466 @@
+{% comment %}
+  Gift Categories Section for CozyWhimsy
+  Displays gift categories organized by recipient, occasion, or price point
+{% endcomment %}
+
+<div class="gift-categories-section section-padding">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-header{% if section.settings.center_title %} text-center{% endif %}">
+        <h2 class="section-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+        {% if section.settings.show_separator %}
+          <div class="section-separator" style="width: {{ section.settings.separator_width }}%; background-color: {{ section.settings.separator_color }}; margin-bottom: {{ section.settings.separator_margin }}px;"></div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="gift-categories-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'category' %}
+          <div class="gift-category-card" {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link }}" class="gift-category-link">
+              <div class="gift-category-image-wrapper">
+                {% if block.settings.image != blank %}
+                  <img 
+                    src="{{ block.settings.image | img_url: '400x' }}" 
+                    alt="{{ block.settings.title }}"
+                    class="gift-category-image"
+                    loading="lazy"
+                    width="400"
+                    height="400"
+                  >
+                {% else %}
+                  <div class="gift-category-placeholder">
+                    <span>{{ block.settings.title | slice: 0 }}</span>
+                  </div>
+                {% endif %}
+                
+                {% if block.settings.badge_text != blank %}
+                  <span class="gift-category-badge">{{ block.settings.badge_text }}</span>
+                {% endif %}
+              </div>
+              
+              <div class="gift-category-content">
+                <h3 class="gift-category-title">{{ block.settings.title }}</h3>
+                {% if block.settings.description != blank %}
+                  <p class="gift-category-description">{{ block.settings.description }}</p>
+                {% endif %}
+                <span class="gift-category-button">
+                  {{ block.settings.button_text | default: 'Shop Now' }}
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.4571 5.42855L8.57141 0.542847L7.62856 1.48569L10.8571 4.71426H0.571411V6.14283H10.8571L7.62856 9.37141L8.57141 10.3143L13.4571 5.42855Z" fill="currentColor"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .gift-categories-section {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    color: {{ section.settings.title_color }};
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .section-subtitle {
+    color: {{ section.settings.subtitle_color }};
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .section-separator {
+    height: 2px;
+    margin: 0 auto;
+    background-color: {{ section.settings.separator_color }};
+  }
+  
+  .gift-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  
+  .gift-category-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+  }
+  
+  .gift-category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gift-category-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .gift-category-image-wrapper {
+    position: relative;
+    padding-bottom: 75%;
+    overflow: hidden;
+  }
+  
+  .gift-category-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .gift-category-card:hover .gift-category-image {
+    transform: scale(1.05);
+  }
+  
+  .gift-category-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    font-size: 48px;
+    color: #ddd;
+  }
+  
+  .gift-category-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: {{ section.settings.badge_background }};
+    color: {{ section.settings.badge_text_color }};
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .gift-category-content {
+    padding: 20px;
+  }
+  
+  .gift-category-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: {{ section.settings.text_color }};
+    font-size: 18px;
+  }
+  
+  .gift-category-description {
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.8 }};
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .gift-category-button {
+    display: flex;
+    align-items: center;
+    color: {{ section.settings.button_color }};
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .gift-category-button svg {
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+  }
+  
+  .gift-category-card:hover .gift-category-button svg {
+    transform: translateX(3px);
+  }
+  
+  @media screen and (max-width: 991px) {
+    .gift-categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .gift-categories-section {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+    }
+    
+    .gift-categories-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .gift-category-content {
+      padding: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gift Categories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Find the Perfect Gift"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Browse our curated gift collections for every occasion"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center Title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show Separator Line",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "label": "Separator Width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "separator_margin",
+      "label": "Separator Bottom Margin",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Text Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge Background Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile Top Margin",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile Bottom Margin",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Gift Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Title",
+          "default": "Gifts for Her"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Category Description",
+          "default": "Find the perfect gift for the special woman in your life"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Category Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Category Link"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text (optional)",
+          "info": "Leave empty to hide badge"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Gifts for Her",
+            "description": "Find the perfect gift for the special woman in your life",
+            "button_text": "Shop Now"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Gifts for Him",
+            "description": "Unique gift ideas for the men in your life",
+            "button_text": "Shop Now"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Birthday Gifts",
+            "description": "Make their special day unforgettable",
+            "button_text": "Shop Now",
+            "badge_text": "Popular"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

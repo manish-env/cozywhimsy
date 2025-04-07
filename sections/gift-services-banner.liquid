@@ -1,0 +1,462 @@
+{% comment %}
+  Gift Services Banner for CozyWhimsy
+  Highlights gift-specific services like gift wrapping, personalization, etc.
+{% endcomment %}
+
+<div class="gift-services-banner section-padding" style="background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="gift-services-header{% if section.settings.center_title %} text-center{% endif %}">
+        <h2 class="gift-services-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="gift-services-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="gift-services-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'service' %}
+          <div class="gift-service-item" {{ block.shopify_attributes }}>
+            <div class="gift-service-icon">
+              {% if block.settings.icon_type == 'emoji' %}
+                <span class="gift-service-emoji">{{ block.settings.icon_emoji }}</span>
+              {% elsif block.settings.icon_type == 'image' and block.settings.icon_image != blank %}
+                <img 
+                  src="{{ block.settings.icon_image | img_url: '60x' }}" 
+                  alt="{{ block.settings.title }}"
+                  class="gift-service-image"
+                  width="60"
+                  height="60"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="gift-service-placeholder-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 12V22H4V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 7H2V12H22V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 22V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              {% endif %}
+            </div>
+            <div class="gift-service-content">
+              <h3 class="gift-service-title">{{ block.settings.title }}</h3>
+              <p class="gift-service-description">{{ block.settings.description }}</p>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.button_text != blank and section.settings.button_link != blank %}
+      <div class="gift-services-button-container{% if section.settings.center_button %} text-center{% endif %}">
+        <a href="{{ section.settings.button_link }}" class="gift-services-button">
+          {{ section.settings.button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .gift-services-banner {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+  
+  .gift-services-header {
+    margin-bottom: 30px;
+  }
+  
+  .gift-services-title {
+    color: {{ section.settings.title_color }};
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+  }
+  
+  .gift-services-subtitle {
+    color: {{ section.settings.subtitle_color }};
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .gift-services-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  
+  .gift-service-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: {{ section.settings.item_background_color }};
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .gift-service-icon {
+    flex-shrink: 0;
+    margin-right: 15px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ section.settings.icon_background_color }};
+    border-radius: 50%;
+    color: {{ section.settings.icon_color }};
+  }
+  
+  .gift-service-emoji {
+    font-size: 24px;
+  }
+  
+  .gift-service-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .gift-service-placeholder-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .gift-service-content {
+    flex-grow: 1;
+  }
+  
+  .gift-service-title {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+  }
+  
+  .gift-service-description {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.8 }};
+  }
+  
+  .gift-services-button-container {
+    margin-top: 20px;
+  }
+  
+  .gift-services-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: {{ section.settings.button_background_color }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .gift-services-button:hover {
+    background-color: {{ section.settings.button_background_color | color_darken: 10 }};
+    transform: translateY(-2px);
+  }
+  
+  @media screen and (max-width: 991px) {
+    .gift-services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .gift-services-banner {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+    }
+    
+    .gift-services-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    .gift-service-item {
+      padding: 15px;
+    }
+    
+    .gift-services-title {
+      font-size: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gift Services Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Our Gift Services"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Making gift-giving easy and memorable"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center Title",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Number of Columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f9f3f5"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Item Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon Background Color",
+      "default": "#fff0f5"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Learn More About Our Gift Services"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_button",
+      "label": "Center Button",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button Background Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile Top Margin",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile Bottom Margin",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Gift Service",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Service Title",
+          "default": "Free Gift Wrapping"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Service Description",
+          "default": "We offer complimentary gift wrapping on all orders"
+        },
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Icon Type",
+          "options": [
+            {
+              "value": "emoji",
+              "label": "Emoji"
+            },
+            {
+              "value": "image",
+              "label": "Custom Image"
+            },
+            {
+              "value": "none",
+              "label": "Default Icon"
+            }
+          ],
+          "default": "emoji"
+        },
+        {
+          "type": "text",
+          "id": "icon_emoji",
+          "label": "Icon Emoji",
+          "default": "🎁",
+          "info": "Enter a single emoji character"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "60 x 60px recommended"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Services Banner",
+      "blocks": [
+        {
+          "type": "service",
+          "settings": {
+            "title": "Free Gift Wrapping",
+            "description": "We offer complimentary gift wrapping on all orders",
+            "icon_type": "emoji",
+            "icon_emoji": "🎁"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Personalized Messages",
+            "description": "Add a handwritten note to your gift",
+            "icon_type": "emoji",
+            "icon_emoji": "✉️"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "title": "Direct Shipping",
+            "description": "Ship directly to your gift recipient",
+            "icon_type": "emoji",
+            "icon_emoji": "🚚"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

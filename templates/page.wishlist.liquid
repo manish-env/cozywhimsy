@@ -1,0 +1,219 @@
+{% comment %}
+  Wishlist page template for CozyWhimsy theme
+  Displays all items saved to the wishlist
+{% endcomment %}
+
+<div class="wishlist-page">
+  <div class="container">
+    <div class="wishlist-header">
+      <h1 class="wishlist-title">{{ page.title }}</h1>
+      
+      <div class="wishlist-actions">
+        <button type="button" class="button button-primary" data-wishlist-add-all>
+          {{ 'wishlist.add_all_to_cart' | t }}
+        </button>
+        
+        <button type="button" class="button button-secondary" data-wishlist-clear>
+          {{ 'wishlist.clear_wishlist' | t }}
+        </button>
+      </div>
+    </div>
+    
+    <div class="wishlist-content">
+      <div class="wishlist-grid" style="display: none;" data-wishlist-grid></div>
+      
+      <div class="wishlist-empty" data-wishlist-empty>
+        <div class="wishlist-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="#ddd" stroke-width="2"></path>
+          </svg>
+        </div>
+        <h2 class="wishlist-empty-title">{{ 'wishlist.empty_title' | t }}</h2>
+        <p class="wishlist-empty-text">{{ 'wishlist.empty_text' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="wishlist-empty-button">
+          {{ 'wishlist.continue_shopping' | t }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Wait for wishlist to initialize
+    if (typeof window.wishlist === 'undefined') {
+      const wishlistScript = document.createElement('script');
+      wishlistScript.src = "{{ 'wishlist.js' | asset_url }}";
+      document.head.appendChild(wishlistScript);
+      
+      wishlistScript.onload = initWishlistPage;
+    } else {
+      initWishlistPage();
+    }
+    
+    function initWishlistPage() {
+      const wishlistItems = window.wishlist.wishlistItems;
+      const wishlistGrid = document.querySelector('[data-wishlist-grid]');
+      const emptyMessage = document.querySelector('[data-wishlist-empty]');
+      
+      if (wishlistItems.length === 0) {
+        wishlistGrid.style.display = 'none';
+        emptyMessage.style.display = 'block';
+        return;
+      }
+      
+      // Show grid and hide empty message
+      wishlistGrid.style.display = 'grid';
+      emptyMessage.style.display = 'none';
+      
+      // Fetch product data for all wishlist items
+      fetchWishlistProducts(wishlistItems)
+        .then(products => {
+          renderWishlistProducts(products, wishlistGrid);
+        })
+        .catch(error => {
+          console.error('Error fetching wishlist products:', error);
+        });
+    }
+    
+    function fetchWishlistProducts(productIds) {
+      if (productIds.length === 0) return Promise.resolve([]);
+      
+      // Create a comma-separated list of product IDs
+      const idString = productIds.join(',');
+      
+      // Fetch products using the Shopify Ajax API
+      return fetch(`/products.json?ids=${idString}`)
+        .then(response => response.json())
+        .then(data => {
+          // Convert the products object to an array
+          return Object.values(data.products || {});
+        });
+    }
+    
+    function renderWishlistProducts(products, container) {
+      // Clear the container
+      container.innerHTML = '';
+      
+      // Render each product
+      products.forEach(product => {
+        const featuredImage = product.images[0]?.src || '';
+        const productUrl = `/products/${product.handle}`;
+        const title = product.title;
+        const price = product.variants[0]?.price || 0;
+        const compareAtPrice = product.variants[0]?.compare_at_price || null;
+        const variantId = product.variants[0]?.id || '';
+        
+        const productElement = document.createElement('div');
+        productElement.className = 'wishlist-item';
+        productElement.dataset.productId = product.id;
+        
+        productElement.innerHTML = `
+          <a href="${productUrl}" class="wishlist-item-image">
+            <img src="${featuredImage}" alt="${title}" loading="lazy">
+          </a>
+          <div class="wishlist-item-info">
+            <h3 class="wishlist-item-title">
+              <a href="${productUrl}">${title}</a>
+            </h3>
+            <div class="wishlist-item-price">
+              <span class="price">{{ 'products.product.price.regular_price' | t }}: ${formatMoney(price)}</span>
+              ${compareAtPrice ? `<span class="compare-at-price">${formatMoney(compareAtPrice)}</span>` : ''}
+            </div>
+            <div class="wishlist-item-actions">
+              <button type="button" class="wishlist-item-add" data-variant-id="${variantId}">
+                {{ 'products.product.add_to_cart' | t }}
+              </button>
+              <button type="button" class="wishlist-item-remove" data-wishlist-remove data-product-id="${product.id}">
+                {{ 'wishlist.remove' | t }}
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Add event listener for add to cart button
+        const addButton = productElement.querySelector('.wishlist-item-add');
+        addButton.addEventListener('click', function() {
+          const variantId = this.dataset.variantId;
+          addToCart(variantId, 1);
+        });
+        
+        container.appendChild(productElement);
+      });
+    }
+    
+    function addToCart(variantId, quantity) {
+      const button = document.querySelector(`.wishlist-item-add[data-variant-id="${variantId}"]`);
+      if (button) {
+        button.classList.add('loading');
+        button.disabled = true;
+      }
+      
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          id: variantId,
+          quantity: quantity
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status && data.status !== 200) {
+          console.error('Error adding to cart:', data.description);
+          showNotification('Error adding to cart: ' + data.description);
+        } else {
+          showNotification('{{ "products.product.added_to_cart" | t }}');
+          
+          // Open cart drawer if it exists
+          if (typeof window.openCartDrawer === 'function') {
+            window.openCartDrawer();
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        showNotification('Error adding to cart. Please try again.');
+      })
+      .finally(() => {
+        if (button) {
+          button.classList.remove('loading');
+          button.disabled = false;
+        }
+      });
+    }
+    
+    function formatMoney(cents) {
+      if (typeof cents === 'string') {
+        cents = cents.replace('.', '');
+      }
+      
+      const value = parseInt(cents || 0, 10);
+      const money = (value / 100).toFixed(2);
+      return '{{ shop.money_format }}'.replace(/{{.*}}/, money);
+    }
+    
+    function showNotification(message) {
+      // Create notification element if it doesn't exist
+      let notification = document.querySelector('.wishlist-notification');
+      
+      if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'wishlist-notification';
+        document.body.appendChild(notification);
+      }
+      
+      // Set message and show notification
+      notification.textContent = message;
+      notification.classList.add('active');
+      
+      // Hide notification after a delay
+      setTimeout(() => {
+        notification.classList.remove('active');
+      }, 3000);
+    }
+  });
+</script>

@@ -1,0 +1,682 @@
+{% comment %}
+  Gift Bundles Section for CozyWhimsy
+  Displays curated gift bundles and sets
+{% endcomment %}
+
+<div class="gift-bundles-section section-padding">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-header{% if section.settings.center_title %} text-center{% endif %}">
+        <h2 class="section-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+        {% if section.settings.show_separator %}
+          <div class="section-separator" style="width: {{ section.settings.separator_width }}%; background-color: {{ section.settings.separator_color }}; margin-bottom: {{ section.settings.separator_margin }}px;"></div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="gift-bundles-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'bundle' %}
+          <div class="gift-bundle-card" {{ block.shopify_attributes }}>
+            <div class="gift-bundle-image-wrapper">
+              {% if block.settings.image != blank %}
+                <img 
+                  src="{{ block.settings.image | img_url: '600x' }}" 
+                  alt="{{ block.settings.title }}"
+                  class="gift-bundle-image"
+                  loading="lazy"
+                  width="600"
+                  height="600"
+                >
+              {% else %}
+                <div class="gift-bundle-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 12V22H4V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 7H2V12H22V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 22V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              {% endif %}
+              
+              {% if block.settings.price_tag != blank %}
+                <div class="gift-bundle-price-tag">{{ block.settings.price_tag }}</div>
+              {% endif %}
+              
+              {% if block.settings.badge_text != blank %}
+                <div class="gift-bundle-badge">{{ block.settings.badge_text }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="gift-bundle-content">
+              <h3 class="gift-bundle-title">{{ block.settings.title }}</h3>
+              
+              {% if block.settings.description != blank %}
+                <p class="gift-bundle-description">{{ block.settings.description }}</p>
+              {% endif %}
+              
+              {% if block.settings.includes_text != blank %}
+                <div class="gift-bundle-includes">
+                  <p class="gift-bundle-includes-title">Includes:</p>
+                  <div class="gift-bundle-includes-content">{{ block.settings.includes_text }}</div>
+                </div>
+              {% endif %}
+              
+              <div class="gift-bundle-actions">
+                <a href="{{ block.settings.button_link }}" class="gift-bundle-button">
+                  {{ block.settings.button_text | default: 'View Bundle' }}
+                </a>
+                
+                {% if block.settings.show_secondary_button and block.settings.secondary_button_text != blank and block.settings.secondary_button_link != blank %}
+                  <a href="{{ block.settings.secondary_button_link }}" class="gift-bundle-secondary-button">
+                    {{ block.settings.secondary_button_text }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+    {% if section.settings.show_view_all and section.settings.view_all_link != blank %}
+      <div class="gift-bundles-view-all{% if section.settings.center_view_all %} text-center{% endif %}">
+        <a href="{{ section.settings.view_all_link }}" class="gift-bundles-view-all-link">
+          {{ section.settings.view_all_text | default: 'View All Gift Bundles' }}
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.4571 5.42855L8.57141 0.542847L7.62856 1.48569L10.8571 4.71426H0.571411V6.14283H10.8571L7.62856 9.37141L8.57141 10.3143L13.4571 5.42855Z" fill="currentColor"/>
+          </svg>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .gift-bundles-section {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+  
+  .section-header {
+    margin-bottom: 40px;
+  }
+  
+  .section-title {
+    color: {{ section.settings.title_color }};
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+  }
+  
+  .section-subtitle {
+    color: {{ section.settings.subtitle_color }};
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  
+  .section-separator {
+    height: 2px;
+    margin: 0 auto;
+    background-color: {{ section.settings.separator_color }};
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .gift-bundles-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+  
+  .gift-bundle-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .gift-bundle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .gift-bundle-image-wrapper {
+    position: relative;
+    padding-bottom: 75%;
+    overflow: hidden;
+  }
+  
+  .gift-bundle-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .gift-bundle-card:hover .gift-bundle-image {
+    transform: scale(1.05);
+  }
+  
+  .gift-bundle-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    color: #ddd;
+  }
+  
+  .gift-bundle-price-tag {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: {{ section.settings.price_tag_background }};
+    color: {{ section.settings.price_tag_color }};
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gift-bundle-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: {{ section.settings.badge_background }};
+    color: {{ section.settings.badge_text_color }};
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .gift-bundle-content {
+    padding: 25px;
+  }
+  
+  .gift-bundle-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: {{ section.settings.text_color }};
+    font-size: 20px;
+  }
+  
+  .gift-bundle-description {
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.8 }};
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .gift-bundle-includes {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: {{ section.settings.includes_background }};
+    border-radius: 8px;
+  }
+  
+  .gift-bundle-includes-title {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    color: {{ section.settings.text_color }};
+  }
+  
+  .gift-bundle-includes-content {
+    font-size: 14px;
+    line-height: 1.5;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.8 }};
+  }
+  
+  .gift-bundle-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .gift-bundle-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
+    flex-grow: 1;
+  }
+  
+  .gift-bundle-button:hover {
+    background-color: {{ section.settings.button_background | color_darken: 10 }};
+    transform: translateY(-2px);
+  }
+  
+  .gift-bundle-secondary-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: transparent;
+    color: {{ section.settings.button_background }};
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid {{ section.settings.button_background }};
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    text-align: center;
+  }
+  
+  .gift-bundle-secondary-button:hover {
+    background-color: {{ section.settings.button_background | color_modify: 'alpha', 0.1 }};
+    transform: translateY(-2px);
+  }
+  
+  .gift-bundles-view-all {
+    margin-top: 20px;
+  }
+  
+  .gift-bundles-view-all-link {
+    display: inline-flex;
+    align-items: center;
+    color: {{ section.settings.view_all_color }};
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+  
+  .gift-bundles-view-all-link svg {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+  }
+  
+  .gift-bundles-view-all-link:hover {
+    color: {{ section.settings.view_all_color | color_darken: 15 }};
+  }
+  
+  .gift-bundles-view-all-link:hover svg {
+    transform: translateX(5px);
+  }
+  
+  @media screen and (max-width: 991px) {
+    .gift-bundles-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .gift-bundles-section {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+      margin-top: {{ section.settings.mobile_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
+    }
+    
+    .gift-bundles-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .gift-bundle-content {
+      padding: 20px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gift Bundles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Curated Gift Bundles"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Thoughtfully curated gift sets for every occasion"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center Title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show Separator Line",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "label": "Separator Width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "separator_margin",
+      "label": "Separator Bottom Margin",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Bundles Per Row",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "price_tag_background",
+      "label": "Price Tag Background",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "price_tag_color",
+      "label": "Price Tag Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge Background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "includes_background",
+      "label": "Includes Box Background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button Background",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Text",
+      "default": "View All Gift Bundles"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_view_all",
+      "label": "Center View All Link",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "view_all_color",
+      "label": "View All Link Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_top",
+      "label": "Mobile Top Margin",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_margin_bottom",
+      "label": "Mobile Bottom Margin",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Gift Bundle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Bundle Title",
+          "default": "Birthday Gift Bundle"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Bundle Description",
+          "default": "The perfect gift set to celebrate a special birthday"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bundle Image"
+        },
+        {
+          "type": "text",
+          "id": "price_tag",
+          "label": "Price Tag",
+          "default": "$49.99",
+          "info": "This is display only and does not link to product pricing"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "default": "Best Seller",
+          "info": "Leave empty to hide badge"
+        },
+        {
+          "type": "textarea",
+          "id": "includes_text",
+          "label": "Includes Text",
+          "default": "• Item 1\n• Item 2\n• Item 3\n• Free gift wrapping",
+          "info": "List what's included in the bundle"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "View Bundle"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_secondary_button",
+          "label": "Show Secondary Button",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "secondary_button_text",
+          "label": "Secondary Button Text",
+          "default": "Quick Add"
+        },
+        {
+          "type": "url",
+          "id": "secondary_button_link",
+          "label": "Secondary Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Bundles",
+      "blocks": [
+        {
+          "type": "bundle",
+          "settings": {
+            "title": "Birthday Gift Bundle",
+            "description": "The perfect gift set to celebrate a special birthday",
+            "price_tag": "$49.99",
+            "badge_text": "Best Seller",
+            "includes_text": "• Item 1\n• Item 2\n• Item 3\n• Free gift wrapping",
+            "button_text": "View Bundle"
+          }
+        },
+        {
+          "type": "bundle",
+          "settings": {
+            "title": "Self-Care Gift Set",
+            "description": "A thoughtful collection for relaxation and wellness",
+            "price_tag": "$39.99",
+            "includes_text": "• Item 1\n• Item 2\n• Item 3\n• Free gift wrapping",
+            "button_text": "View Bundle"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

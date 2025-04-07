@@ -34,6 +34,10 @@
           {% endif %}
         </div>
         
+        <div class="product-actions">
+          {% render 'wishlist-button', product: product, show_text: true, button_class: 'product-wishlist-button' %}
+        </div>
+        
         {% form 'product', product %}
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
           

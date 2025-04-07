@@ -187,53 +187,26 @@
                   {% if product.featured_image != blank %}
                     <img 
                       src="{{ product.featured_image | img_url: section.settings.image_size }}" 
-                      alt="{{ product.featured_image.alt | escape }}" 
-                      class="product-image"
+                      alt="{{ product.featured_image.alt | escape }}"
                       loading="lazy"
                       width="{{ product.featured_image.width }}"
-                      height="{{ product.featured_image.height }}">
-                    
-                    {% if section.settings.show_secondary_image and product.images[1] != blank %}
-                      <img 
-                        src="{{ product.images[1] | img_url: section.settings.image_size }}" 
-                        alt="{{ product.images[1].alt | escape }}" 
-                        class="product-image-hover"
-                        loading="lazy"
-                        width="{{ product.images[1].width }}"
-                        height="{{ product.images[1].height }}">
-                    {% endif %}
+                      height="{{ product.featured_image.height }}"
+                      class="product-image {% if section.settings.enable_image_zoom %}hover-zoom{% endif %}"
+                    >
                   {% else %}
-                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-image' }}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
                   {% endif %}
                   
-                  {% if section.settings.show_badges %}
-                    <div class="product-badges">
-                      {% if section.settings.show_sale_badge and product.compare_at_price > product.price %}
-                        <span class="badge sale-badge">{{ section.settings.sale_badge_text }}</span>
-                      {% endif %}
-                      
-                      {% if section.settings.show_sold_out_badge and product.available == false %}
-                        <span class="badge sold-out-badge">{{ section.settings.sold_out_badge_text }}</span>
-                      {% endif %}
-                      
-                      {% if section.settings.show_new_badge %}
-                        {% assign days_limit = section.settings.new_badge_days | times: 86400 %}
-                        {% assign date_created = product.created_at | date: '%s' | plus: 0 %}
-                        {% assign date_now = 'now' | date: '%s' | plus: 0 %}
-                        {% assign date_limit = date_created | plus: days_limit %}
-                        {% if date_now < date_limit %}
-                          <span class="badge new-badge">{{ section.settings.new_badge_text }}</span>
-                        {% endif %}
-                      {% endif %}
-                    </div>
+                  {% if product.compare_at_price > product.price %}
+                    <div class="badge sale-badge">Sale</div>
                   {% endif %}
                   
-                  {% if section.settings.show_quick_view %}
-                    <button class="quick-view" data-product-id="{{ product.id }}" aria-label="Quick view {{ product.title }}">
-                      <i class="fas fa-eye"></i> Quick View
-                    </button>
-                  {% endif %}
+                  {% unless product.available %}
+                    <div class="badge sold-out-badge">Sold out</div>
+                  {% endunless %}
                 </div>
+                
+                {% render 'wishlist-button', product: product %}
                 
                 <div class="product-info" style="text-align: {{ section.settings.text_alignment }}; padding: {{ section.settings.card_padding }}px;">
                   {% if section.settings.show_vendor %}

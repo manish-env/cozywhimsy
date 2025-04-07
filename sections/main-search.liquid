@@ -31,39 +31,6 @@
             </div>
           {% endif %}
           
-          {% if section.settings.show_result_type_tabs and search.types.size > 1 %}
-            <div class="search-type-tabs">
-              <button class="search-tab active" data-type="all">{{ 'search.tabs.all' | t }} ({{ search.results_count }})</button>
-              {% if search.types contains 'product' %}
-                {% assign product_count = 0 %}
-                {% for item in search.results %}
-                  {% if item.object_type == 'product' %}
-                    {% assign product_count = product_count | plus: 1 %}
-                  {% endif %}
-                {% endfor %}
-                <button class="search-tab" data-type="product">{{ 'search.tabs.products' | t }} ({{ product_count }})</button>
-              {% endif %}
-              {% if search.types contains 'article' %}
-                {% assign article_count = 0 %}
-                {% for item in search.results %}
-                  {% if item.object_type == 'article' %}
-                    {% assign article_count = article_count | plus: 1 %}
-                  {% endif %}
-                {% endfor %}
-                <button class="search-tab" data-type="article">{{ 'search.tabs.articles' | t }} ({{ article_count }})</button>
-              {% endif %}
-              {% if search.types contains 'page' %}
-                {% assign page_count = 0 %}
-                {% for item in search.results %}
-                  {% if item.object_type == 'page' %}
-                    {% assign page_count = page_count | plus: 1 %}
-                  {% endif %}
-                {% endfor %}
-                <button class="search-tab" data-type="page">{{ 'search.tabs.pages' | t }} ({{ page_count }})</button>
-              {% endif %}
-            </div>
-          {% endif %}
-          
           <div class="search-results-grid">
             {% for item in search.results %}
               {% case item.object_type %}
@@ -234,49 +201,6 @@
     border-radius: 4px;
     font-size: 14px;
     background-color: white;
-  }
-  
-  .search-type-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 25px;
-    border-bottom: 1px solid {{ section.settings.input_border_color }};
-    padding-bottom: 15px;
-    justify-content: center;
-  }
-  
-  .search-tab {
-    background: none;
-    border: none;
-    padding: 8px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .search-tab:hover {
-    background-color: rgba({{ section.settings.accent_color | color_to_rgb | split: ',' | join: ',' }}, 0.1);
-  }
-  
-  .search-tab.active {
-    background: linear-gradient(45deg, {{ section.settings.gradient_start_color | default: '#ff9a9e' }}, {{ section.settings.gradient_end_color | default: '#ff6b9a' }});
-    color: white;
-    box-shadow: 0 4px 10px rgba({{ section.settings.accent_color | color_to_rgb | split: ',' | join: ',' }}, 0.3);
-  }
-  
-  .search-tab.active::before {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 2px;
-    background-color: {{ section.settings.accent_color }};
   }
   
   .search-results-grid {
@@ -663,12 +587,6 @@
     },
     {
       "type": "checkbox",
-      "id": "show_result_type_tabs",
-      "label": "Show result type tabs",
-      "default": true
-    },
-    {
-      "type": "checkbox",
       "id": "show_product_badges",
       "label": "Show product badges (sale, sold out)",
       "default": true
@@ -844,31 +762,6 @@
         const url = new URL(window.location.href);
         url.searchParams.set('sort_by', this.value);
         window.location.href = url.href;
-      });
-    }
-    
-    // Result type tabs functionality
-    const searchTabs = document.querySelectorAll('.search-tab');
-    const searchResults = document.querySelectorAll('.search-result-item');
-    
-    if (searchTabs.length > 0) {
-      searchTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          // Update active tab
-          searchTabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          
-          const type = this.getAttribute('data-type');
-          
-          // Filter results
-          searchResults.forEach(result => {
-            if (type === 'all' || result.getAttribute('data-type') === type) {
-              result.classList.remove('hidden');
-            } else {
-              result.classList.add('hidden');
-            }
-          });
-        });
       });
     }
   });

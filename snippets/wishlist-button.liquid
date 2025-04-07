@@ -1,0 +1,34 @@
+{% comment %}
+  Wishlist button component for CozyWhimsy theme
+  
+  Usage:
+  {% render 'wishlist-button', product: product %}
+  
+  Parameters:
+  - product: The product object
+  - show_text: Boolean to show text label (default: false)
+  - button_class: Additional classes for the button
+{% endcomment %}
+
+{%- assign product_id = product.id -%}
+{%- assign show_text = show_text | default: false -%}
+{%- assign button_class = button_class | default: '' -%}
+
+<button 
+  type="button" 
+  class="wishlist-button {{ button_class }}" 
+  data-wishlist-button 
+  data-product-id="{{ product_id }}" 
+  aria-label="{{ 'wishlist.add_to_wishlist' | t }}"
+  title="{{ 'wishlist.add_to_wishlist' | t }}">
+  
+  <span class="wishlist-icon">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+  </span>
+  
+  {% if show_text %}
+    <span class="wishlist-button-text">{{ 'wishlist.add_to_wishlist' | t }}</span>
+  {% endif %}
+</button>

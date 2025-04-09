@@ -11,10 +11,7 @@
   padding: 10px 0;
   position: relative;
   z-index: 10;
-}
-
-.mobile-hero-categories {
-  display: none;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .mobile-categories-nav::-webkit-scrollbar {
@@ -117,34 +114,23 @@
 }
 
 @media (max-width: 767px) {
-  /* Hide the original mobile categories in header */
-  .mobile-categories-container {
-    display: none;
-  }
-  
-  /* Show categories at the top of hero banner */
-  .mobile-hero-categories {
+  .mobile-categories-nav {
     display: block;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    padding-top: 10px;
   }
   
-  .mobile-hero-categories .mobile-categories-nav {
-    display: block;
-    background-color: transparent;
-  }
-  
-  .mobile-hero-categories .mobile-category-title {
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  }
-  
-  /* Hide the original featured categories section on mobile */
   .featured-categories {
     display: none !important;
+  }
+  
+  /* Show the mobile categories at the top */
+  .mobile-categories-container {
+    order: -1;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  /* Adjust spacing for sections that follow */
+  .mobile-categories-container + section {
+    margin-top: 0;
   }
 }

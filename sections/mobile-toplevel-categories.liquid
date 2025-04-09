@@ -1,0 +1,372 @@
+{% comment %}
+  Mobile Top-level Categories
+  A horizontal scrolling category navigation that mimics Instagram Stories
+  Only displays on mobile devices
+{% endcomment %}
+
+<section class="mobile-toplevel-categories" 
+  style="
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  "
+>
+  <div class="toplevel-categories-container">
+    <div class="toplevel-categories-wrapper">
+      <div class="toplevel-categories-list">
+        {% if section.settings.special_category_enabled %}
+          <div class="toplevel-category special-category" {{ block.shopify_attributes }}>
+            <a href="{{ section.settings.special_category_link }}" class="category-link">
+              <div class="category-image-wrapper">
+                {% if section.settings.special_category_image != blank %}
+                  <div class="category-image">
+                    <img src="{{ section.settings.special_category_image | img_url: 'small' }}" alt="{{ section.settings.special_category_title }}" loading="lazy">
+                  </div>
+                {% else %}
+                  <div class="category-image placeholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L14.4 8.09042H21L15.8 12.1596L17.8 19L12 15.5L6.2 19L8.2 12.1596L3 8.09042H9.6L12 2Z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="category-title">{{ section.settings.special_category_title | default: "Special" }}</div>
+              {% if section.settings.special_category_badge %}
+                <span class="category-badge">New</span>
+              {% endif %}
+            </a>
+          </div>
+        {% endif %}
+        
+        {% for block in section.blocks %}
+          {% if block.type == 'category' %}
+            <div class="toplevel-category" {{ block.shopify_attributes }}>
+              <a href="{% if block.settings.link != blank %}{{ block.settings.link }}{% elsif block.settings.collection != blank %}{{ block.settings.collection.url }}{% else %}#{% endif %}" class="category-link">
+                <div class="category-image-wrapper">
+                  {% if block.settings.image != blank %}
+                    <div class="category-image">
+                      <img src="{{ block.settings.image | img_url: 'small' }}" alt="{{ block.settings.title }}" loading="lazy">
+                    </div>
+                  {% elsif block.settings.collection.image != blank %}
+                    <div class="category-image">
+                      <img src="{{ block.settings.collection.image | img_url: 'small' }}" alt="{{ block.settings.collection.title }}" loading="lazy">
+                    </div>
+                  {% else %}
+                    <div class="category-image placeholder" style="background-color: {{ block.settings.background_color | default: '#f8f8f8' }};">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" fill="currentColor"/>
+                        <path d="M14.14 11.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z" fill="currentColor"/>
+                      </svg>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="category-title">{{ block.settings.title | default: block.settings.collection.title }}</div>
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+        
+        {% comment %} Placeholder categories if no blocks are added {% endcomment %}
+        {% if section.blocks.size == 0 %}
+          {% for i in (1..5) %}
+            <div class="toplevel-category">
+              <a href="#" class="category-link">
+                <div class="category-image-wrapper">
+                  <div class="category-image placeholder" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff', '#e1f0ff' %};">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" fill="currentColor"/>
+                      <path d="M14.14 11.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="category-title">Category {{ i }}</div>
+              </a>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mobile-toplevel-categories {
+    width: 100%;
+    display: none; /* Hidden by default, shown only on mobile */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .toplevel-categories-container {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .toplevel-categories-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    padding: 10px 0;
+  }
+  
+  .toplevel-categories-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .toplevel-categories-list {
+    display: flex;
+    padding: 0 10px;
+    margin: 0;
+    white-space: nowrap;
+  }
+  
+  .toplevel-category {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 8px;
+    position: relative;
+  }
+  
+  .category-image-wrapper {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    position: relative;
+    margin-bottom: 5px;
+    padding: 2px;
+  }
+  
+  /* Instagram gradient border */
+  .category-image-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .special-category .category-image-wrapper::before {
+    background: #ffd700; /* Gold color for special category */
+  }
+  
+  .category-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+  }
+  
+  .category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .category-image.placeholder {
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .category-image.placeholder svg {
+    width: 24px;
+    height: 24px;
+    color: #888;
+  }
+  
+  .category-title {
+    font-size: 12px;
+    color: #333;
+    margin: 0;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+  }
+  
+  .category-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff6b9a;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 3;
+  }
+  
+  @media screen and (max-width: 767px) {
+    .mobile-toplevel-categories {
+      display: block;
+    }
+    
+    /* Smaller screens get slightly smaller circles */
+    @media screen and (max-width: 374px) {
+      .category-image-wrapper {
+        width: 55px;
+        height: 55px;
+      }
+      
+      .category-title {
+        font-size: 11px;
+        max-width: 60px;
+      }
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Mobile Top-level Categories",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Special Category"
+    },
+    {
+      "type": "checkbox",
+      "id": "special_category_enabled",
+      "label": "Enable special category",
+      "default": true,
+      "info": "Adds a highlighted special category at the beginning"
+    },
+    {
+      "type": "text",
+      "id": "special_category_title",
+      "label": "Special category title",
+      "default": "Special"
+    },
+    {
+      "type": "url",
+      "id": "special_category_link",
+      "label": "Special category link"
+    },
+    {
+      "type": "image_picker",
+      "id": "special_category_image",
+      "label": "Special category image"
+    },
+    {
+      "type": "checkbox",
+      "id": "special_category_badge",
+      "label": "Show 'New' badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "If left blank and collection is selected, will use collection title"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "If left blank and collection is selected, will use collection image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Custom link",
+          "info": "Overrides collection link if both are provided"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color (if no image)",
+          "default": "#f8f8f8"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile Top-level Categories",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

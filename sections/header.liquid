@@ -1,16 +1,18 @@
 <header class="site-header {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}has-bottom-tabs{% endif %}">
   <div class="header-container">
+    <!-- Logo on Left -->
     <div class="logo-container">
       <a href="/" class="logo">
         {% if section.settings.logo != blank %}
-          <img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ shop.name }}">
+          <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" width="auto" height="40" loading="lazy">
         {% else %}
-          <img src="{{ 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }}">
+          <img src="{{ 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }}" width="auto" height="40" loading="lazy">
         {% endif %}
       </a>
     </div>
     
-    <div class="search-container">
+    <!-- Desktop Search (hidden on mobile) -->
+    <div class="search-container desktop-only">
       <form action="/search" method="get" class="search-form">
         <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="search-input" aria-label="Search">
         <button type="submit" class="search-button" aria-label="Submit search">
@@ -19,13 +21,16 @@
       </form>
     </div>
     
-    {% unless section.settings.hide_hamburger_menu %}
-    <div class="nav-toggle" id="navToggle">
-      <span></span>
-      <span></span>
-      <span></span>
+    <!-- Mobile Actions (right-aligned) -->
+    <div class="mobile-actions">
+      {% unless section.settings.hide_hamburger_menu %}
+      <div class="nav-toggle" id="navToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      {% endunless %}
     </div>
-    {% endunless %}
     
     <div class="header-right">
       <nav class="main-nav" id="mainNav">
@@ -59,7 +64,6 @@
           <div class="icon-wrapper">
             <i class="fas fa-user"></i>
           </div>
-          <span class="icon-text">Account</span>
         </a>
         
         {% render 'wishlist-icon' %}
@@ -69,7 +73,6 @@
             <i class="fas fa-shopping-bag"></i>
             <span class="cart-count">{{ cart.item_count }}</span>
           </div>
-          <span class="icon-text">Cart</span>
         </a>
       </div>
     </div>
@@ -82,10 +85,6 @@
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
-    <a href="/search" class="bottom-nav-item {% if request.path contains '/search' %}active{% endif %}">
-      <i class="fas fa-search"></i>
-      <span>Search</span>
-    </a>
     {% if section.settings.mobile_navbar_categories_link != blank %}
       <a href="{{ section.settings.mobile_navbar_categories_link }}" class="bottom-nav-item {% if request.path contains section.settings.mobile_navbar_categories_link %}active{% endif %}">
         <i class="fas fa-th-large"></i>
@@ -96,10 +95,6 @@
       <i class="fas fa-heart"></i>
       <span>Wishlist</span>
       <span class="bottom-nav-wishlist-count" data-wishlist-count>0</span>
-    </a>
-    <a href="/account" class="bottom-nav-item {% if request.path contains '/account' %}active{% endif %}">
-      <i class="fas fa-user"></i>
-      <span>Account</span>
     </a>
     <a href="/cart" class="bottom-nav-item {% if request.path contains '/cart' %}active{% endif %}">
       <i class="fas fa-shopping-bag"></i>
@@ -114,7 +109,7 @@
 <div class="header-spacer"></div>
 
 <style>
-  /* Bottom Tab Navbar Styles */
+  /* Critical CSS only - moved non-critical styles to theme.css */
   .mobile-bottom-navbar {
     display: none;
     position: fixed;
@@ -129,10 +124,6 @@
     transition: transform 0.3s ease;
   }
   
-  .mobile-bottom-navbar.bottom-nav-hidden {
-    transform: translateY(100%);
-  }
-  
   .bottom-nav-item {
     display: flex;
     flex-direction: column;
@@ -142,18 +133,16 @@
     text-decoration: none;
     color: {{ section.settings.header_text }};
     opacity: 0.7;
-    transition: all 0.3s ease;
     position: relative;
   }
   
   .bottom-nav-item i {
-    font-size: 20px;
-    margin-bottom: 4px;
+    font-size: 18px;
+    margin-bottom: 3px;
   }
   
   .bottom-nav-item span {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 10px;
   }
   
   .bottom-nav-item.active {
@@ -164,12 +153,12 @@
   .bottom-nav-cart-count {
     position: absolute;
     top: 0;
-    right: calc(50% - 15px);
+    right: calc(50% - 12px);
     background-color: {{ section.settings.mobile_navbar_active_color | default: '#ff6b9a' }};
     color: white;
-    font-size: 10px;
-    width: 16px;
-    height: 16px;
+    font-size: 9px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -189,47 +178,45 @@
       padding-bottom: 60px;
     }
     
-    /* Adjust search container for different navbar styles */
+    /* Redesign top navbar for mobile */
+    .site-header .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .site-header .logo-container {
+      flex: 1;
+    }
+    
+    .site-header .desktop-only {
+      display: none;
+    }
+    
+    .site-header .mobile-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    
+    .site-header .mobile-search-icon {
+      margin-right: 15px;
+    }
+    
+    .site-header .nav-toggle {
+      margin-left: 15px;
+    }
+    
+    /* Hide search container when using bottom tabs */
     {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
       .search-container {
-        display: none;
-      }
-    {% endif %}
-    
-    /* Adjust header for simplified top navbar */
-    {% if section.settings.mobile_navbar_style == 'simplified_top' %}
-      .site-header .header-container {
-        padding: 10px 15px;
-      }
-      
-      .site-header .logo img {
-        max-height: 30px;
-      }
-      
-      .site-header .search-container {
-        flex: 1;
-        margin: 0 10px;
-      }
-      
-      .site-header .header-actions .icon-text {
-        display: none;
-      }
-      
-      .site-header .header-actions .icon-wrapper {
-        margin-right: 0;
-      }
-    {% endif %}
-    
-    /* Hide main navigation when hamburger is hidden */
-    {% if section.settings.hide_hamburger_menu %}
-      .main-nav {
         display: none;
       }
     {% endif %}
   }
 </style>
 
-<script>
+<script defer>
   document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('navToggle');
     const mainNav = document.getElementById('mainNav');
@@ -256,40 +243,48 @@
       });
     });
     
-    // Sticky header and bottom navbar on scroll
+    // Sticky header and bottom navbar on scroll - use requestAnimationFrame for better performance
     let lastScrollTop = 0;
+    let ticking = false;
     
     window.addEventListener('scroll', function() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // Handle top header
-      if (scrollTop > 100) {
-        header.classList.add('sticky');
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          
+          // Handle top header
+          if (scrollTop > 100) {
+            header.classList.add('sticky');
+            
+            if (scrollTop > lastScrollTop) {
+              // Scrolling down
+              header.classList.add('hide');
+            } else {
+              // Scrolling up
+              header.classList.remove('hide');
+            }
+          } else {
+            header.classList.remove('sticky');
+            header.classList.remove('hide');
+          }
+          
+          // Handle bottom navbar visibility based on settings
+          if (bottomNavbar && bottomNavPosition === 'scroll') {
+            if (scrollTop > lastScrollTop && scrollTop > 150) {
+              // Scrolling down - hide the navbar
+              bottomNavbar.classList.add('bottom-nav-hidden');
+            } else {
+              // Scrolling up - show the navbar
+              bottomNavbar.classList.remove('bottom-nav-hidden');
+            }
+          }
+          
+          lastScrollTop = scrollTop;
+          ticking = false;
+        });
         
-        if (scrollTop > lastScrollTop) {
-          // Scrolling down
-          header.classList.add('hide');
-        } else {
-          // Scrolling up
-          header.classList.remove('hide');
-        }
-      } else {
-        header.classList.remove('sticky');
-        header.classList.remove('hide');
+        ticking = true;
       }
-      
-      // Handle bottom navbar visibility based on settings
-      if (bottomNavbar && bottomNavPosition === 'scroll') {
-        if (scrollTop > lastScrollTop && scrollTop > 150) {
-          // Scrolling down - hide the navbar
-          bottomNavbar.classList.add('bottom-nav-hidden');
-        } else {
-          // Scrolling up - show the navbar
-          bottomNavbar.classList.remove('bottom-nav-hidden');
-        }
-      }
-      
-      lastScrollTop = scrollTop;
     });
   });
 </script>

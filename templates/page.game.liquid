@@ -1,0 +1,746 @@
+{% comment %}
+  Game Tournament Page for CozyWhimsy
+  This page allows customers to participate in online game tournaments
+{% endcomment %}
+
+<div class="page-width game-tournament">
+  <div class="game-header">
+    <h1 class="game-title">{{ page.title }}</h1>
+    <p class="game-description">{{ page.content }}</p>
+  </div>
+  
+  <div class="tournament-container">
+    <div class="tournament-info">
+      <div class="tournament-status">
+        <h2>Current Tournament</h2>
+        <div class="status-badge active">Active Now</div>
+        <div class="tournament-timer" id="tournament-timer">
+          <span>Ends in: </span>
+          <span class="timer-value" id="timer-value">Loading...</span>
+        </div>
+      </div>
+      
+      <div class="tournament-prizes">
+        <h3>Prizes</h3>
+        <div class="prize-list">
+          <div class="prize-item">
+            <div class="prize-rank">1st Place</div>
+            <div class="prize-value">30% Discount Coupon</div>
+          </div>
+          <div class="prize-item">
+            <div class="prize-rank">2nd Place</div>
+            <div class="prize-value">20% Discount Coupon</div>
+          </div>
+          <div class="prize-item">
+            <div class="prize-rank">3rd Place</div>
+            <div class="prize-value">10% Discount Coupon</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tournament-rules">
+        <h3>How to Play</h3>
+        <ol class="rules-list">
+          <li>Register with your email address below</li>
+          <li>Play the game and try to get the highest score</li>
+          <li>Winners will be announced when the tournament ends</li>
+          <li>Discount coupons will be sent to winners' emails</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="game-container">
+      <div class="game-wrapper" id="game-wrapper">
+        <div class="game-loading" id="game-loading">
+          <div class="loading-spinner"></div>
+          <p>Loading game...</p>
+        </div>
+        <canvas id="game-canvas" width="400" height="400"></canvas>
+        <div class="game-controls">
+          <div class="game-score">Score: <span id="game-score">0</span></div>
+          <button id="game-start" class="button button--primary">Start Game</button>
+          <button id="game-restart" class="button button--secondary" style="display: none;">Play Again</button>
+        </div>
+      </div>
+      
+      <div class="leaderboard">
+        <h3>Leaderboard</h3>
+        <div class="leaderboard-list" id="leaderboard-list">
+          <div class="leaderboard-loading">
+            <div class="loading-spinner"></div>
+            <p>Loading scores...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="registration-form" id="registration-form">
+      <h3>Register for Tournament</h3>
+      <form id="tournament-registration">
+        <div class="form-field">
+          <label for="player-name">Your Name</label>
+          <input type="text" id="player-name" name="player-name" required>
+        </div>
+        <div class="form-field">
+          <label for="player-email">Email Address</label>
+          <input type="email" id="player-email" name="player-email" required>
+        </div>
+        <div class="form-field">
+          <button type="submit" class="button button--primary">Register & Play</button>
+        </div>
+        <p class="form-note">* Your email will only be used to notify you if you win and send your prize coupon.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-width {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .game-tournament {
+    padding: 40px 0 60px;
+  }
+  
+  .game-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .game-title {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .game-description {
+    font-size: 16px;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .tournament-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .tournament-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tournament-status h2 {
+    margin-top: 0;
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .status-badge.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .status-badge.upcoming {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+  .status-badge.ended {
+    background-color: #F44336;
+    color: white;
+  }
+  
+  .tournament-timer {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .timer-value {
+    font-weight: 700;
+    color: #ff6b9a;
+  }
+  
+  .tournament-prizes h3, 
+  .tournament-rules h3 {
+    margin-top: 0;
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .prize-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .prize-item {
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .prize-rank {
+    font-weight: 600;
+    color: #ff6b9a;
+    margin-bottom: 5px;
+  }
+  
+  .rules-list {
+    padding-left: 20px;
+    margin: 0;
+  }
+  
+  .rules-list li {
+    margin-bottom: 8px;
+  }
+  
+  .game-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+  }
+  
+  .game-wrapper {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .game-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    z-index: 2;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 107, 154, 0.2);
+    border-top-color: #ff6b9a;
+    border-radius: 50%;
+    animation: spin 0.8s infinite linear;
+    margin-bottom: 15px;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  #game-canvas {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    margin: 0 auto 20px;
+    display: block;
+    max-width: 100%;
+  }
+  
+  .game-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .game-score {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    min-width: 150px;
+  }
+  
+  .button--primary {
+    background-color: #ff6b9a;
+    color: white;
+    box-shadow: 0 4px 10px rgba(255, 107, 154, 0.2);
+  }
+  
+  .button--primary:hover {
+    background-color: #e55c8a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 107, 154, 0.25);
+  }
+  
+  .button--secondary {
+    background-color: #f5f5f5;
+    color: #555;
+  }
+  
+  .button--secondary:hover {
+    background-color: #eaeaea;
+    color: #333;
+    transform: translateY(-2px);
+  }
+  
+  .leaderboard {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .leaderboard h3 {
+    margin-top: 0;
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .leaderboard-list {
+    min-height: 300px;
+  }
+  
+  .leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .leaderboard-rank {
+    font-weight: 600;
+    color: #333;
+    width: 30px;
+  }
+  
+  .leaderboard-name {
+    flex-grow: 1;
+    padding: 0 10px;
+  }
+  
+  .leaderboard-score {
+    font-weight: 600;
+    color: #ff6b9a;
+  }
+  
+  .leaderboard-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+  }
+  
+  .registration-form {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 30px;
+  }
+  
+  .registration-form h3 {
+    margin-top: 0;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .form-field {
+    margin-bottom: 15px;
+  }
+  
+  .form-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .form-field input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  .form-field input:focus {
+    outline: none;
+    border-color: #ff6b9a;
+    box-shadow: 0 0 0 2px rgba(255, 107, 154, 0.2);
+  }
+  
+  .form-note {
+    font-size: 14px;
+    color: #888;
+    margin-top: 15px;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 991px) {
+    .tournament-info {
+      grid-template-columns: 1fr;
+    }
+    
+    .game-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .game-wrapper {
+      min-height: 400px;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .game-tournament {
+      padding: 30px 0 40px;
+    }
+    
+    .game-title {
+      font-size: 28px;
+    }
+    
+    .tournament-container {
+      gap: 20px;
+    }
+    
+    .tournament-info {
+      padding: 20px;
+    }
+    
+    .game-wrapper {
+      padding: 15px;
+      min-height: 350px;
+    }
+    
+    #game-canvas {
+      height: 300px;
+    }
+    
+    .registration-form {
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .game-title {
+      font-size: 24px;
+    }
+    
+    .game-wrapper {
+      min-height: 300px;
+    }
+    
+    #game-canvas {
+      height: 250px;
+    }
+    
+    .button {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tournament timer
+    initTournamentTimer();
+    
+    // Initialize leaderboard
+    initLeaderboard();
+    
+    // Initialize game
+    initGame();
+    
+    // Initialize registration form
+    initRegistrationForm();
+  });
+  
+  function initTournamentTimer() {
+    // Set end date (7 days from now for demo)
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 7);
+    
+    const timerElement = document.getElementById('timer-value');
+    
+    function updateTimer() {
+      const now = new Date();
+      const distance = endDate - now;
+      
+      // Time calculations
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      // Display the result
+      timerElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      
+      // If the countdown is over
+      if (distance < 0) {
+        clearInterval(timerInterval);
+        timerElement.textContent = "Tournament ended";
+        document.querySelector('.status-badge').classList.remove('active');
+        document.querySelector('.status-badge').classList.add('ended');
+        document.querySelector('.status-badge').textContent = "Ended";
+      }
+    }
+    
+    // Update timer immediately and then every second
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+  }
+  
+  function initLeaderboard() {
+    const leaderboardList = document.getElementById('leaderboard-list');
+    
+    // Demo leaderboard data
+    setTimeout(() => {
+      const demoLeaderboard = [
+        { rank: 1, name: "Sarah J.", score: 1250 },
+        { rank: 2, name: "Michael T.", score: 1120 },
+        { rank: 3, name: "Emma R.", score: 980 },
+        { rank: 4, name: "David L.", score: 875 },
+        { rank: 5, name: "Olivia P.", score: 820 },
+        { rank: 6, name: "James K.", score: 790 },
+        { rank: 7, name: "Sophia M.", score: 760 },
+        { rank: 8, name: "William B.", score: 730 },
+        { rank: 9, name: "Ava G.", score: 710 },
+        { rank: 10, name: "Noah S.", score: 690 }
+      ];
+      
+      let leaderboardHTML = '';
+      
+      demoLeaderboard.forEach(entry => {
+        leaderboardHTML += `
+          <div class="leaderboard-item">
+            <div class="leaderboard-rank">${entry.rank}</div>
+            <div class="leaderboard-name">${entry.name}</div>
+            <div class="leaderboard-score">${entry.score}</div>
+          </div>
+        `;
+      });
+      
+      leaderboardList.innerHTML = leaderboardHTML;
+    }, 1500);
+  }
+  
+  function initGame() {
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const startButton = document.getElementById('game-start');
+    const restartButton = document.getElementById('game-restart');
+    const scoreElement = document.getElementById('game-score');
+    const loadingElement = document.getElementById('game-loading');
+    
+    // Hide loading after a short delay
+    setTimeout(() => {
+      loadingElement.style.display = 'none';
+    }, 2000);
+    
+    // Game variables
+    let score = 0;
+    let gameRunning = false;
+    let gameSpeed = 5;
+    let gravity = 0.5;
+    
+    // Player object
+    const player = {
+      x: 50,
+      y: canvas.height / 2,
+      width: 30,
+      height: 30,
+      color: '#ff6b9a',
+      vy: 0,
+      jumpStrength: -10
+    };
+    
+    // Obstacles array
+    let obstacles = [];
+    
+    // Game loop
+    function gameLoop() {
+      if (!gameRunning) return;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Update player
+      player.vy += gravity;
+      player.y += player.vy;
+      
+      // Keep player within canvas
+      if (player.y + player.height > canvas.height) {
+        player.y = canvas.height - player.height;
+        player.vy = 0;
+      }
+      
+      if (player.y < 0) {
+        player.y = 0;
+        player.vy = 0;
+      }
+      
+      // Draw player
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+      
+      // Generate obstacles
+      if (Math.random() < 0.02) {
+        const height = Math.random() * (canvas.height / 2) + 50;
+        obstacles.push({
+          x: canvas.width,
+          y: canvas.height - height,
+          width: 30,
+          height: height,
+          color: '#333'
+        });
+      }
+      
+      // Update and draw obstacles
+      for (let i = 0; i < obstacles.length; i++) {
+        obstacles[i].x -= gameSpeed;
+        
+        // Draw obstacle
+        ctx.fillStyle = obstacles[i].color;
+        ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
+        
+        // Check collision
+        if (
+          player.x < obstacles[i].x + obstacles[i].width &&
+          player.x + player.width > obstacles[i].x &&
+          player.y < obstacles[i].y + obstacles[i].height &&
+          player.y + player.height > obstacles[i].y
+        ) {
+          gameOver();
+          return;
+        }
+        
+        // Remove obstacles that are off screen
+        if (obstacles[i].x + obstacles[i].width < 0) {
+          obstacles.splice(i, 1);
+          i--;
+          
+          // Increase score
+          score++;
+          scoreElement.textContent = score;
+          
+          // Increase game speed
+          if (score % 5 === 0) {
+            gameSpeed += 0.5;
+          }
+        }
+      }
+      
+      // Continue game loop
+      requestAnimationFrame(gameLoop);
+    }
+    
+    // Start game
+    function startGame() {
+      score = 0;
+      scoreElement.textContent = score;
+      obstacles = [];
+      player.y = canvas.height / 2;
+      player.vy = 0;
+      gameSpeed = 5;
+      gameRunning = true;
+      
+      startButton.style.display = 'none';
+      restartButton.style.display = 'none';
+      
+      gameLoop();
+    }
+    
+    // Game over
+    function gameOver() {
+      gameRunning = false;
+      restartButton.style.display = 'block';
+    }
+    
+    // Event listeners
+    startButton.addEventListener('click', startGame);
+    restartButton.addEventListener('click', startGame);
+    
+    // Jump on click or spacebar
+    canvas.addEventListener('click', () => {
+      if (gameRunning) {
+        player.vy = player.jumpStrength;
+      }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && gameRunning) {
+        player.vy = player.jumpStrength;
+      }
+    });
+  }
+  
+  function initRegistrationForm() {
+    const form = document.getElementById('tournament-registration');
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('player-name');
+      const emailInput = document.getElementById('player-email');
+      
+      if (!nameInput.value || !emailInput.value) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      // Here you would normally send the data to your server
+      // For demo purposes, we'll just show a success message
+      form.innerHTML = `
+        <div class="registration-success">
+          <h3>Registration Successful!</h3>
+          <p>Thank you, ${nameInput.value}! You're now registered for the tournament.</p>
+          <p>Good luck and have fun!</p>
+        </div>
+      `;
+      
+      // Show the game
+      document.getElementById('game-start').click();
+    });
+  }
+</script>

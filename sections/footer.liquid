@@ -150,6 +150,11 @@
             {% for link in section.settings.footer_bottom_menu.links %}
               <a href="{{ link.url }}" class="footer-bottom-link">{{ link.title }}</a>
             {% endfor %}
+            <a href="/pages/game" class="footer-bottom-link footer-game-link">Game Tournament</a>
+          </div>
+        {% else %}
+          <div class="footer-bottom-links">
+            <a href="/pages/game" class="footer-bottom-link footer-game-link">Game Tournament</a>
           </div>
         {% endif %}
         
@@ -514,14 +519,25 @@
   }
   
   .payment-icon {
-    width: 32px;
-    height: 20px;
-    opacity: 0.6;
-    transition: all 0.3s ease;
+    width: 38px;
+    height: auto;
+    margin: 0 5px;
   }
   
-  .payment-icon:hover {
-    opacity: 1;
+  .footer-game-link {
+    position: relative;
+    font-weight: 600;
+    color: #ff6b9a;
+    padding-left: 22px;
+  }
+  
+  .footer-game-link::before {
+    content: "🎮";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
   }
   
   @media (max-width: 991px) {

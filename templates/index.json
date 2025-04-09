@@ -554,10 +554,10 @@
         "content_title_color": "#333333",
         "content_text_color": "#666666",
         "price_color": "#ff6b9a",
-        "discount_text_color": "#4CAF50",
+        "discount_text_color": "#4caf50",
         "badge_background": "#ff6b9a",
         "badge_color": "#ffffff",
-        "custom_badge_background": "#4CAF50",
+        "custom_badge_background": "#4caf50",
         "custom_badge_color": "#ffffff",
         "button_background": "#ff6b9a",
         "button_text_color": "#ffffff",
@@ -567,6 +567,35 @@
         "view_all_link": "",
         "center_view_all": true,
         "view_all_color": "#ff6b9a",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "mood_of_the_day_PQcAUK": {
+      "type": "mood-of-the-day",
+      "settings": {
+        "title": "Cozy Mood of the Day",
+        "subtitle": "Today's vibe and product picks just for you",
+        "center_title": true,
+        "show_separator": true,
+        "separator_width": 50,
+        "separator_color": "#ff6b9a",
+        "separator_margin": 30,
+        "mood_title": "Dreamy Pastels",
+        "mood_description": "Soft, dreamy pastels to bring a touch of whimsy to your day.",
+        "product_1": "cute-cat-animal-silicone-baby-night-light",
+        "product_2": "mini-cute-panda-cool-mist-humidifier-for-room-moisture",
+        "product_3": "usb-rechargable-capybara-night-light",
+        "animation_type": "hearts",
+        "animation_color": "#ff6b9a",
+        "animation_speed": "medium",
+        "background_color": "#FFF5F7",
+        "card_background_color": "#FFF0F5",
+        "title_color": "#333333",
+        "subtitle_color": "#666666",
+        "text_color": "#333333",
+        "button_background": "#ff6b9a",
+        "button_text_color": "#ffffff",
         "padding_top": 60,
         "padding_bottom": 60
       }
@@ -580,6 +609,7 @@
     "instagram_showcase",
     "instagram_style_product_showcase_Hpgakw",
     "gift_finder_quiz_6bh8ki",
-    "product_bundles_HWQmiH"
+    "product_bundles_HWQmiH",
+    "mood_of_the_day_PQcAUK"
   ]
 }

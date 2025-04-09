@@ -3,29 +3,39 @@
   Instagram-style horizontal scrolling categories that appear at the top of the page on mobile devices
 {% endcomment %}
 
+{% assign featured_categories = section %}
+{% if section.id == null or section.id != 'featured-categories-section' %}
+  {% for section in sections %}
+    {% if section.id == 'featured-categories-section' %}
+      {% assign featured_categories = section %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
 <div class="mobile-categories-nav">
   <ul class="mobile-categories-list">
-    {% if section.settings.special_category_enabled %}
+    {% if featured_categories.settings.special_category_enabled %}
       <li class="mobile-category-item mobile-category-special">
-        <a href="{{ section.settings.special_category_link }}">
+        <a href="{{ featured_categories.settings.special_category_link }}">
           <div class="mobile-category-icon">
-            {% if section.settings.special_category_image != blank %}
-              <img src="{{ section.settings.special_category_image | img_url: 'small' }}" alt="{{ section.settings.special_category_title }}">
+            {% if featured_categories.settings.special_category_image != blank %}
+              <img src="{{ featured_categories.settings.special_category_image | img_url: 'small' }}" alt="{{ featured_categories.settings.special_category_title }}">
             {% else %}
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L14.4 8.09042H21L15.8 12.1596L17.8 19L12 15.5L6.2 19L8.2 12.1596L3 8.09042H9.6L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             {% endif %}
           </div>
-          <p class="mobile-category-title">{{ section.settings.special_category_title | default: "Special" }}</p>
-          {% if section.settings.special_category_badge %}
+          <p class="mobile-category-title">{{ featured_categories.settings.special_category_title | default: "Special" }}</p>
+          {% if featured_categories.settings.special_category_badge %}
             <span class="mobile-category-badge">New</span>
           {% endif %}
         </a>
       </li>
     {% endif %}
 
-    {% for block in section.blocks %}
+    {% for block in featured_categories.blocks %}
       {% if block.type == 'category' %}
         <li class="mobile-category-item" {{ block.shopify_attributes }}>
           <a href="{% if block.settings.collection != blank %}{{ block.settings.collection.url }}{% else %}#{% endif %}">

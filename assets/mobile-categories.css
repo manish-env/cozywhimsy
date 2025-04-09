@@ -1,6 +1,6 @@
 /* Mobile Categories Top Navigation */
 .mobile-categories-nav {
-  display: none;
+  display: block;
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -89,14 +89,6 @@
 }
 
 /* Special category styling */
-.mobile-category-special {
-  position: relative;
-}
-
-.mobile-category-special .mobile-category-icon {
-  border: 2px solid #ffd700;
-}
-
 .mobile-category-special .mobile-category-icon::before {
   background: #ffd700;
 }
@@ -114,23 +106,26 @@
 }
 
 @media (max-width: 767px) {
-  .mobile-categories-nav {
-    display: block;
-  }
-  
-  .featured-categories {
-    display: none !important;
-  }
-  
-  /* Show the mobile categories at the top */
   .mobile-categories-container {
-    order: -1;
+    display: block;
     width: 100%;
     margin-bottom: 10px;
+    order: -1;
+  }
+  
+  /* Hide the original featured categories on mobile */
+  #featured-categories-section {
+    display: none !important;
   }
   
   /* Adjust spacing for sections that follow */
   .mobile-categories-container + section {
     margin-top: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-categories-container {
+    display: none;
   }
 }

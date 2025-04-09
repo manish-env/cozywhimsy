@@ -79,6 +79,12 @@
   </div>
 </header>
 
+{% if section.settings.enable_mobile_categories %}
+<div class="mobile-categories-container">
+  {% render 'mobile-categories-nav' %}
+</div>
+{% endif %}
+
 {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
   <div class="mobile-bottom-navbar">
     <a href="/" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
@@ -393,6 +399,12 @@
       "id": "header_text",
       "label": "Text color",
       "default": "#333333"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_categories",
+      "label": "Enable mobile categories",
+      "default": false
     }
   ],
   "presets": [

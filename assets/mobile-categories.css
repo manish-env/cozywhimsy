@@ -1,0 +1,136 @@
+/* Mobile Categories Top Navigation */
+.mobile-categories-nav {
+  display: none;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  background-color: #fff;
+  padding: 10px 0;
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-categories-nav::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.mobile-categories-list {
+  display: flex;
+  padding: 0 10px;
+  margin: 0;
+  list-style: none;
+}
+
+.mobile-category-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 8px;
+}
+
+.mobile-category-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 5px;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Instagram-style gradient border */
+.mobile-category-icon::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.mobile-category-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  border-radius: 50%;
+  z-index: -1;
+  margin: 2px;
+}
+
+.mobile-category-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile-category-title {
+  font-size: 12px;
+  color: #333;
+  margin: 0;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Special category styling */
+.mobile-category-special {
+  position: relative;
+}
+
+.mobile-category-special .mobile-category-icon {
+  border: 2px solid #ffd700;
+}
+
+.mobile-category-special .mobile-category-icon::before {
+  background: #ffd700;
+}
+
+.mobile-category-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff6b9a;
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+@media (max-width: 767px) {
+  .mobile-categories-nav {
+    display: block;
+  }
+  
+  .featured-categories {
+    display: none !important;
+  }
+  
+  /* Show the mobile categories at the top */
+  .mobile-categories-container {
+    order: -1;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  /* Adjust spacing for sections that follow */
+  .mobile-categories-container + section {
+    margin-top: 0;
+  }
+}

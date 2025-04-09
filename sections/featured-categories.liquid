@@ -13,7 +13,7 @@
   {% if section.settings.mobile_margin_bottom != blank %}
     --mobile-margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
   {% endif %}
-">
+" id="featured-categories-section">
   <div class="container">
     {% if section.settings.show_banner_desktop or section.settings.show_banner_mobile %}
       <div class="category-banner {% if section.settings.show_banner_desktop == false %}desktop-hide-banner{% endif %} {% if section.settings.show_banner_mobile == false %}mobile-hide-banner{% endif %}">
@@ -137,6 +137,23 @@
         </div>
         
         <div class="mobile-categories">
+          {% if section.settings.special_category_enabled %}
+            <div class="category-card-mobile special-category">
+              <a href="{{ section.settings.special_category_link }}" class="category-img-mobile">
+                {% if section.settings.special_category_image != blank %}
+                  <div class="category-img-bg" style="background-image: url('{{ section.settings.special_category_image | img_url: 'master' }}');"></div>
+                {% else %}
+                  <div class="category-img-bg" style="background-color: #ff6b9a;"></div>
+                {% endif %}
+              </a>
+              <div class="category-content-mobile">
+                <h3>{{ section.settings.special_category_title }}</h3>
+                {% if section.settings.special_category_badge %}
+                  <span class="badge">New</span>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
           {% for block in section.blocks %}
             <div class="category-card-mobile" {{ block.shopify_attributes }}>
               {% if block.settings.collection != blank %}
@@ -663,6 +680,39 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Mobile Categories Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "special_category_enabled",
+      "label": "Enable special category",
+      "default": true,
+      "info": "Adds a highlighted special category at the beginning of the mobile navigation"
+    },
+    {
+      "type": "text",
+      "id": "special_category_title",
+      "label": "Special category title",
+      "default": "Special"
+    },
+    {
+      "type": "url",
+      "id": "special_category_link",
+      "label": "Special category link"
+    },
+    {
+      "type": "image_picker",
+      "id": "special_category_image",
+      "label": "Special category image"
+    },
+    {
+      "type": "checkbox",
+      "id": "special_category_badge",
+      "label": "Show 'New' badge",
+      "default": true
+    },
     {
       "type": "header",
       "content": "Banner Settings"

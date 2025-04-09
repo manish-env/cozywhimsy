@@ -187,6 +187,17 @@
             "badge_text": ""
           }
         },
+        "category_tzedDY": {
+          "type": "category",
+          "settings": {
+            "title": "Gifts for Her",
+            "description": "Find the perfect gift for the special woman in your life",
+            "image": "shopify://shop_images/Untitled_design_1.png",
+            "link": "",
+            "button_text": "Shop Now",
+            "badge_text": ""
+          }
+        },
         "category_T79jUc": {
           "type": "category",
           "settings": {
@@ -212,6 +223,7 @@
       },
       "block_order": [
         "category_V37cLr",
+        "category_tzedDY",
         "category_T79jUc",
         "category_4BXKAg"
       ],

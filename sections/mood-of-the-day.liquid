@@ -1,0 +1,927 @@
+{% comment %}
+  CozyWhimsy Mood of the Day Section
+  Showcases a mini moodboard with daily product picks and animated background
+{% endcomment %}
+
+<style>
+  .mood-of-the-day-section {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    color: {{ section.settings.title_color }};
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+  }
+  
+  .section-subtitle {
+    color: {{ section.settings.subtitle_color }};
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  
+  .section-separator {
+    height: 2px;
+    margin: 0 auto;
+    background-color: {{ section.settings.separator_color }};
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mood-card-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  
+  .mood-card {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin: 0 auto;
+  }
+  
+  .mood-animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .mood-card-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .mood-header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  
+  .mood-date {
+    font-size: 14px;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.7 }};
+    margin-bottom: 5px;
+  }
+  
+  .mood-title {
+    font-size: 24px;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 10px;
+  }
+  
+  .mood-description {
+    font-size: 16px;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.8 }};
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .mood-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+  }
+  
+  .mood-product-item {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .mood-product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mood-product-image {
+    width: 100%;
+    padding-bottom: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .mood-product-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .mood-product-item:hover .mood-product-image img {
+    transform: scale(1.05);
+  }
+  
+  .mood-product-info {
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .mood-product-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .mood-product-price {
+    font-size: 13px;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.7 }};
+    margin: 0;
+  }
+  
+  .mood-product-link {
+    background-color: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-top: auto;
+  }
+  
+  .mood-product-link:hover {
+    background-color: {{ section.settings.button_background | color_darken: 10 }};
+  }
+  
+  .mood-share {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .mood-share-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #E1306C;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .mood-share-button:hover {
+    background-color: #C13584;
+    transform: translateY(-2px);
+  }
+  
+  .mood-share-text {
+    display: inline-block;
+  }
+  
+  /* Animation elements */
+  .animation-element {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Responsive styles */
+  @media screen and (max-width: 767px) {
+    .mood-card {
+      padding: 20px;
+    }
+    
+    .mood-title {
+      font-size: 20px;
+    }
+    
+    .mood-description {
+      font-size: 14px;
+    }
+    
+    .mood-products {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .mood-products {
+      grid-template-columns: 1fr;
+    }
+    
+    .mood-share-text {
+      display: none;
+    }
+    
+    .mood-share-button {
+      padding: 10px;
+    }
+  }
+</style>
+
+<div class="mood-of-the-day-section" 
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+  data-animation-type="{{ section.settings.animation_type }}"
+  data-animation-color="{{ section.settings.animation_color }}"
+  data-animation-speed="{{ section.settings.animation_speed }}"
+>
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-header{% if section.settings.center_title %} text-center{% endif %}">
+        <h2 class="section-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+        {% if section.settings.show_separator %}
+          <div class="section-separator" style="width: {{ section.settings.separator_width }}%; background-color: {{ section.settings.separator_color }}; margin-bottom: {{ section.settings.separator_margin }}px;"></div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="mood-card-container">
+      <div class="mood-card" style="background-color: {{ section.settings.card_background_color }};">
+        <div class="mood-animation-container">
+          <!-- Animation elements will be inserted here via JavaScript -->
+        </div>
+        
+        <div class="mood-card-content">
+          <div class="mood-header">
+            <div class="mood-date">{{ 'now' | date: '%B %d, %Y' }}</div>
+            <h3 class="mood-title">{{ section.settings.mood_title }}</h3>
+            {% if section.settings.mood_description != blank %}
+              <p class="mood-description">{{ section.settings.mood_description }}</p>
+            {% endif %}
+          </div>
+          
+          <div class="mood-products">
+            {% if section.settings.product_1 != blank %}
+              {% assign product_1 = all_products[section.settings.product_1] %}
+              <div class="mood-product-item">
+                <div class="mood-product-image">
+                  <img src="{{ product_1.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ product_1.title }}">
+                </div>
+                <div class="mood-product-info">
+                  <p class="mood-product-title">{{ product_1.title }}</p>
+                  <p class="mood-product-price">{{ product_1.price | money }}</p>
+                </div>
+                <a href="{{ product_1.url }}" class="mood-product-link">View</a>
+              </div>
+            {% endif %}
+            
+            {% if section.settings.product_2 != blank %}
+              {% assign product_2 = all_products[section.settings.product_2] %}
+              <div class="mood-product-item">
+                <div class="mood-product-image">
+                  <img src="{{ product_2.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ product_2.title }}">
+                </div>
+                <div class="mood-product-info">
+                  <p class="mood-product-title">{{ product_2.title }}</p>
+                  <p class="mood-product-price">{{ product_2.price | money }}</p>
+                </div>
+                <a href="{{ product_2.url }}" class="mood-product-link">View</a>
+              </div>
+            {% endif %}
+            
+            {% if section.settings.product_3 != blank %}
+              {% assign product_3 = all_products[section.settings.product_3] %}
+              <div class="mood-product-item">
+                <div class="mood-product-image">
+                  <img src="{{ product_3.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ product_3.title }}">
+                </div>
+                <div class="mood-product-info">
+                  <p class="mood-product-title">{{ product_3.title }}</p>
+                  <p class="mood-product-price">{{ product_3.price | money }}</p>
+                </div>
+                <a href="{{ product_3.url }}" class="mood-product-link">View</a>
+              </div>
+            {% endif %}
+          </div>
+          
+          <div class="mood-share">
+            <button type="button" class="mood-share-button" aria-label="Share to Instagram Stories">
+              <span class="mood-share-text">Share to Instagram</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize animations
+    const moodSections = document.querySelectorAll('.mood-of-the-day-section');
+    
+    moodSections.forEach(section => {
+      const animationType = section.getAttribute('data-animation-type');
+      const animationColor = section.getAttribute('data-animation-color');
+      const animationSpeed = section.getAttribute('data-animation-speed') || 'medium';
+      const animationContainer = section.querySelector('.mood-animation-container');
+      
+      if (animationContainer && animationType) {
+        initializeAnimation(animationContainer, animationType, animationColor, animationSpeed);
+      }
+      
+      // Set up Instagram sharing
+      const shareButton = section.querySelector('.mood-share-button');
+      if (shareButton) {
+        shareButton.addEventListener('click', function() {
+          createAndShareImage(section);
+        });
+      }
+    });
+    
+    // Function to initialize different animation types
+    function initializeAnimation(container, type, color, speed) {
+      container.innerHTML = ''; // Clear any existing animations
+      
+      // Set animation speed multiplier
+      let speedMultiplier = 1;
+      if (speed === 'slow') speedMultiplier = 1.5;
+      if (speed === 'fast') speedMultiplier = 0.6;
+      
+      // Number of elements to create
+      let count = 30;
+      
+      switch(type) {
+        case 'hearts':
+          createHearts(container, count, color, speedMultiplier);
+          break;
+        case 'rain':
+          createRain(container, count, color, speedMultiplier);
+          break;
+        case 'snow':
+          createSnow(container, count, color, speedMultiplier);
+          break;
+        case 'confetti':
+          createConfetti(container, count, color, speedMultiplier);
+          break;
+        case 'bubbles':
+          createBubbles(container, count, color, speedMultiplier);
+          break;
+        default:
+          // No animation
+          break;
+      }
+    }
+    
+    // Create hearts animation
+    function createHearts(container, count, color, speedMultiplier) {
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('animation-element', 'heart');
+        heart.style.color = color;
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDuration = `${(Math.random() * 6 + 3) * speedMultiplier}s`;
+        heart.style.animationDelay = `${Math.random() * 5}s`;
+        heart.style.fontSize = `${Math.random() * 20 + 10}px`;
+        heart.innerHTML = '❤';
+        container.appendChild(heart);
+      }
+      
+      // Add heart animation styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .heart {
+          position: absolute;
+          animation: float-heart linear infinite;
+          opacity: 0;
+        }
+        @keyframes float-heart {
+          0% {
+            transform: translateY(100%) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+      `;
+      container.appendChild(style);
+    }
+    
+    // Create rain animation
+    function createRain(container, count, color, speedMultiplier) {
+      for (let i = 0; i < count; i++) {
+        const drop = document.createElement('div');
+        drop.classList.add('animation-element', 'raindrop');
+        drop.style.left = `${Math.random() * 100}%`;
+        drop.style.animationDuration = `${(Math.random() * 2 + 1) * speedMultiplier}s`;
+        drop.style.animationDelay = `${Math.random() * 5}s`;
+        drop.style.width = `${Math.random() * 2 + 1}px`;
+        drop.style.height = `${Math.random() * 15 + 10}px`;
+        drop.style.backgroundColor = color;
+        container.appendChild(drop);
+      }
+      
+      // Add rain animation styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .raindrop {
+          position: absolute;
+          top: -20px;
+          animation: rain linear infinite;
+          opacity: 0.7;
+          border-radius: 10px;
+        }
+        @keyframes rain {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.7;
+          }
+          90% {
+            opacity: 0.7;
+          }
+          100% {
+            transform: translateY(calc(100vh + 20px)) translateX(20px);
+            opacity: 0;
+          }
+        }
+      `;
+      container.appendChild(style);
+    }
+    
+    // Create snow animation
+    function createSnow(container, count, color, speedMultiplier) {
+      for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.classList.add('animation-element', 'snowflake');
+        flake.style.left = `${Math.random() * 100}%`;
+        flake.style.animationDuration = `${(Math.random() * 8 + 5) * speedMultiplier}s`;
+        flake.style.animationDelay = `${Math.random() * 5}s`;
+        flake.style.width = `${Math.random() * 8 + 4}px`;
+        flake.style.height = flake.style.width;
+        flake.style.backgroundColor = color;
+        container.appendChild(flake);
+      }
+      
+      // Add snow animation styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .snowflake {
+          position: absolute;
+          top: -20px;
+          animation: snow linear infinite;
+          opacity: 0.8;
+          border-radius: 50%;
+        }
+        @keyframes snow {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.8;
+          }
+          90% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateY(calc(100vh + 20px)) translateX(calc(20px * (Math.random() - 0.5) * 10));
+            opacity: 0;
+          }
+        }
+      `;
+      container.appendChild(style);
+    }
+    
+    // Create confetti animation
+    function createConfetti(container, count, color, speedMultiplier) {
+      const colors = [color, '#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA'];
+      
+      for (let i = 0; i < count; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('animation-element', 'confetti');
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.animationDuration = `${(Math.random() * 5 + 3) * speedMultiplier}s`;
+        confetti.style.animationDelay = `${Math.random() * 5}s`;
+        confetti.style.width = `${Math.random() * 8 + 4}px`;
+        confetti.style.height = `${Math.random() * 12 + 4}px`;
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(confetti);
+      }
+      
+      // Add confetti animation styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .confetti {
+          position: absolute;
+          top: -20px;
+          animation: confetti linear infinite;
+          opacity: 0.8;
+        }
+        @keyframes confetti {
+          0% {
+            transform: translateY(0) translateX(0) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.8;
+          }
+          90% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateY(calc(100vh + 20px)) translateX(calc(100px * (Math.random() - 0.5))) rotate(360deg);
+            opacity: 0;
+          }
+        }
+      `;
+      container.appendChild(style);
+    }
+    
+    // Create bubbles animation
+    function createBubbles(container, count, color, speedMultiplier) {
+      for (let i = 0; i < count; i++) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('animation-element', 'bubble');
+        bubble.style.left = `${Math.random() * 100}%`;
+        bubble.style.animationDuration = `${(Math.random() * 8 + 4) * speedMultiplier}s`;
+        bubble.style.animationDelay = `${Math.random() * 5}s`;
+        const size = Math.random() * 20 + 10;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.borderColor = color;
+        container.appendChild(bubble);
+      }
+      
+      // Add bubble animation styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .bubble {
+          position: absolute;
+          bottom: -50px;
+          animation: bubble linear infinite;
+          opacity: 0;
+          border-radius: 50%;
+          border: 2px solid;
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+        @keyframes bubble {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.5;
+          }
+          100% {
+            transform: translateY(-100vh) translateX(calc(50px * (Math.random() - 0.5)));
+            opacity: 0;
+          }
+        }
+      `;
+      container.appendChild(style);
+    }
+    
+    // Function to create and share image to Instagram Stories
+    function createAndShareImage(section) {
+      const moodCard = section.querySelector('.mood-card');
+      
+      // Check if html2canvas is available, if not, load it
+      if (typeof html2canvas === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+        script.onload = function() {
+          captureAndShare(moodCard);
+        };
+        document.head.appendChild(script);
+      } else {
+        captureAndShare(moodCard);
+      }
+    }
+    
+    function captureAndShare(element) {
+      // Hide share button temporarily for the screenshot
+      const shareButton = element.querySelector('.mood-share-button');
+      if (shareButton) shareButton.style.display = 'none';
+      
+      html2canvas(element, {
+        backgroundColor: null,
+        scale: 2, // Higher quality
+        logging: false,
+        allowTaint: true,
+        useCORS: true
+      }).then(canvas => {
+        // Show share button again
+        if (shareButton) shareButton.style.display = '';
+        
+        // Convert to data URL
+        const dataUrl = canvas.toDataURL('image/png');
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'cozywhimsy-mood-of-the-day.png';
+        
+        // Mobile detection
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+          // On mobile, try to use Web Share API if available
+          if (navigator.share) {
+            fetch(dataUrl)
+              .then(res => res.blob())
+              .then(blob => {
+                const file = new File([blob], 'cozywhimsy-mood.png', { type: 'image/png' });
+                navigator.share({
+                  files: [file],
+                  title: 'CozyWhimsy Mood of the Day',
+                  text: 'Check out my CozyWhimsy mood of the day!'
+                }).catch(error => {
+                  console.error('Error sharing:', error);
+                  // Fallback to download
+                  link.click();
+                });
+              });
+          } else {
+            // Fallback for mobile browsers without Web Share API
+            link.click();
+            alert('Image downloaded! You can now share it to Instagram Stories.');
+          }
+        } else {
+          // On desktop, just download the image
+          link.click();
+          alert('Image downloaded! You can now share it to Instagram Stories.');
+        }
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Mood of the Day",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Cozy Mood of the Day"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Today's vibe and product picks just for you"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center Title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show Separator Line",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Separator Width",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "range",
+      "id": "separator_margin",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Separator Bottom Margin",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Mood Card Settings"
+    },
+    {
+      "type": "text",
+      "id": "mood_title",
+      "label": "Mood Title",
+      "default": "Dreamy Pastels"
+    },
+    {
+      "type": "textarea",
+      "id": "mood_description",
+      "label": "Mood Description",
+      "default": "Soft, dreamy pastels to bring a touch of whimsy to your day."
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product 3"
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "select",
+      "id": "animation_type",
+      "label": "Animation Type",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "hearts",
+          "label": "Floating Hearts"
+        },
+        {
+          "value": "rain",
+          "label": "Gentle Rain"
+        },
+        {
+          "value": "snow",
+          "label": "Soft Snow"
+        },
+        {
+          "value": "confetti",
+          "label": "Confetti"
+        },
+        {
+          "value": "bubbles",
+          "label": "Bubbles"
+        }
+      ],
+      "default": "hearts"
+    },
+    {
+      "type": "color",
+      "id": "animation_color",
+      "label": "Animation Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "select",
+      "id": "animation_speed",
+      "label": "Animation Speed",
+      "options": [
+        {
+          "value": "slow",
+          "label": "Slow"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "fast",
+          "label": "Fast"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background",
+      "default": "#FFF5F7"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card Background",
+      "default": "#FFF0F5"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Section Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Section Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Card Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button Background",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mood of the Day",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

@@ -4,6 +4,8 @@
   Only displays on mobile devices
 {% endcomment %}
 
+{% render 'insta-story-modal' %}
+
 <section class="mobile-toplevel-categories" 
   style="
     margin-top: {{ section.settings.margin_top }}px;
@@ -18,7 +20,7 @@
       <div class="toplevel-categories-list">
         {% if section.settings.special_category_enabled %}
           <div class="toplevel-category special-category" {{ block.shopify_attributes }}>
-            <a href="{{ section.settings.special_category_link }}" class="category-link">
+            <div class="category-link" onclick="openCategoryStory('special', '{{ section.settings.special_category_title | default: 'Special' }}', '{{ section.settings.special_category_link }}', '{{ section.settings.special_category_image | img_url: 'master' }}', '{{ section.settings.special_category_video }}')">
               <div class="category-image-wrapper">
                 {% if section.settings.special_category_image != blank %}
                   <div class="category-image">
@@ -33,14 +35,14 @@
                 {% endif %}
               </div>
               <span class="category-title">{{ section.settings.special_category_title | default: "Special" }}</span>
-            </a>
+            </div>
           </div>
         {% endif %}
         
         {% for block in section.blocks %}
           {% if block.type == 'category' %}
             <div class="toplevel-category" {{ block.shopify_attributes }}>
-              <a href="{% if block.settings.link != blank %}{{ block.settings.link }}{% elsif block.settings.collection != blank %}{{ block.settings.collection.url }}{% else %}#{% endif %}" class="category-link">
+              <div class="category-link" onclick="openCategoryStory('{{ block.id }}', '{{ block.settings.title | default: block.settings.collection.title }}', '{% if block.settings.link != blank %}{{ block.settings.link }}{% elsif block.settings.collection != blank %}{{ block.settings.collection.url }}{% else %}#{% endif %}', '{% if block.settings.image != blank %}{{ block.settings.image | img_url: 'master' }}{% elsif block.settings.collection.image != blank %}{{ block.settings.collection.image | img_url: 'master' }}{% endif %}', '{{ block.settings.video_url }}')">
                 <div class="category-image-wrapper">
                   {% if block.settings.image != blank %}
                     <div class="category-image">
@@ -60,7 +62,7 @@
                   {% endif %}
                 </div>
                 <span class="category-title">{{ block.settings.title | default: block.settings.collection.title }}</span>
-              </a>
+              </div>
             </div>
           {% endif %}
         {% endfor %}
@@ -69,7 +71,7 @@
         {% if section.blocks.size == 0 %}
           {% for i in (1..5) %}
             <div class="toplevel-category">
-              <a href="#" class="category-link">
+              <div class="category-link">
                 <div class="category-image-wrapper">
                   <div class="category-image placeholder" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff', '#e1f0ff' %};">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,7 +81,7 @@
                   </div>
                 </div>
                 <span class="category-title">Category {{ i }}</span>
-              </a>
+              </div>
             </div>
           {% endfor %}
         {% endif %}
@@ -87,6 +89,51 @@
     </div>
   </div>
 </section>
+
+<script>
+  // Function to open Instagram-style story modal
+  function openCategoryStory(id, title, link, image, video) {
+    // Create story data
+    const stories = [];
+    
+    // Add video story if available
+    if (video && video !== '') {
+      stories.push({
+        type: 'video',
+        media: video,
+        title: title,
+        link: link,
+        muted: false
+      });
+    } 
+    // Add image story
+    else if (image && image !== '') {
+      stories.push({
+        type: 'image',
+        media: image,
+        title: title,
+        link: link
+      });
+    }
+    
+    // If no stories, create a default one
+    if (stories.length === 0) {
+      stories.push({
+        type: 'image',
+        media: '{{ 'placeholder-image.jpg' | asset_url }}',
+        title: title,
+        link: link
+      });
+    }
+    
+    // Open the story modal with data
+    openStoryModal({
+      id: id,
+      title: title,
+      stories: stories
+    });
+  }
+</script>
 
 <style>
   .mobile-toplevel-categories {
@@ -134,6 +181,7 @@
     flex-direction: column;
     align-items: center;
     text-decoration: none;
+    cursor: pointer;
   }
   
   .category-image-wrapper {
@@ -259,6 +307,12 @@
       "label": "Special category image"
     },
     {
+      "type": "url",
+      "id": "special_category_video",
+      "label": "Special category video URL",
+      "info": "Optional: Add a video URL to show in the story (MP4 format recommended)"
+    },
+    {
       "type": "header",
       "content": "Spacing"
     },
@@ -330,6 +384,12 @@
           "id": "image",
           "label": "Image",
           "info": "If left blank and collection is selected, will use collection image"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL",
+          "info": "Optional: Add a video URL to show in the story (MP4 format recommended)"
         },
         {
           "type": "url",

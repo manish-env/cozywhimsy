@@ -178,110 +178,14 @@
          data-columns-mobile="{{ section.settings.columns_mobile }}">
       {% paginate collection.products by section.settings.products_per_page %}
         {% for product in collection.products %}
-          <div class="product-card" 
-               data-product-id="{{ product.id }}"
-               {% if section.settings.enable_card_hover %}data-hover-effect="true"{% endif %}>
-            <div class="product-card-inner">
-              <a href="{{ product.url }}" class="product-link">
-                <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
-                  {% if product.featured_image != blank %}
-                    <img 
-                      src="{{ product.featured_image | img_url: '500x' }}" 
-                      alt="{{ product.featured_image.alt | escape }}"
-                      loading="lazy"
-                      width="500"
-                      height="500"
-                      class="product-image"
-                    >
-                    
-                    <!-- Wishlist button on product card -->
-                    <button type="button" 
-                            class="wishlist-button" 
-                            data-wishlist-button 
-                            data-product-id="{{ product.id }}" 
-                            aria-label="Add to Wishlist">
-                      <i class="far fa-heart"></i>
-                    </button>
-                    
-                    {% if product.tags contains 'new' %}
-                      <div class="badge new-badge">New</div>
-                    {% endif %}
-                    
-                    {% if product.compare_at_price > product.price %}
-                      <div class="badge sale-badge">Sale</div>
-                    {% endif %}
-                    
-                    {% unless product.available %}
-                      <div class="badge sold-out-badge">Sold out</div>
-                    {% endunless %}
-                  {% else %}
-                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                  {% endif %}
-                </div>
-                
-                {% render 'wishlist-button', product: product %}
-                
-                <div class="product-info" style="text-align: {{ section.settings.text_alignment }}; padding: {{ section.settings.card_padding }}px;">
-                  {% if section.settings.show_vendor %}
-                    <div class="product-vendor" style="color: var(--{{ section.settings.vendor_color }}, #666666);">
-                      {{ product.vendor }}
-                    </div>
-                  {% endif %}
-                  
-                  <h3 class="product-title" style="font-size: {{ section.settings.title_size }}px; font-weight: {{ section.settings.title_weight }};">
-                    {{ product.title }}
-                  </h3>
-                  
-                  {% if section.settings.show_price %}
-                    <div class="product-price">
-                      {% if product.compare_at_price > product.price %}
-                        <span class="sale-price" style="color: var(--{{ section.settings.sale_price_color }}, #ff6b9a);">{{ product.price | money }}</span>
-                        <span class="compare-price" style="color: var(--{{ section.settings.compare_price_color }}, #999999);">{{ product.compare_at_price | money }}</span>
-                      {% else %}
-                        <span class="regular-price" style="color: var(--{{ section.settings.regular_price_color }}, #333333);">{{ product.price | money }}</span>
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                  
-                  {% if section.settings.show_rating and product.metafields.reviews.rating %}
-                    <div class="product-rating">
-                      <span class="stars" style="--rating: {{ product.metafields.reviews.rating.value }}; --star-color: var(--{{ section.settings.star_color }}, #ffc107);">★★★★★</span>
-                      <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
-                    </div>
-                  {% endif %}
-                  
-                  {% if section.settings.show_description and product.description != blank %}
-                    <div class="product-description">
-                      {{ product.description | strip_html | truncatewords: section.settings.description_words }}
-                    </div>
-                  {% endif %}
-                </div>
-              </a>
-              
-              {% if section.settings.show_add_to_cart %}
-                <div class="product-actions" style="padding: {{ section.settings.button_padding }}px;">
-                  <button type="button" 
-                          class="add-to-cart-button js-add-to-cart-button" 
-                          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-                          {% unless product.available %}disabled{% endunless %}
-                          style="font-family: var(--font-heading-family, 'Poppins', sans-serif);
-                          letter-spacing: 0.05em;
-                          text-transform: uppercase;
-                          font-size: 14px;
-                          font-weight: 500;
-                          padding: 10px 20px;
-                          width: 100%;
-                          border: none;
-                          transition: all 0.3s ease;
-                          border-radius: {{ section.settings.add_to_cart_button_radius }}px;
-                          background-color: {{ section.settings.button_bg_color }};
-                          color: {{ section.settings.button_text_color }};">
-                    {% if product.available %}{{ section.settings.add_to_cart_text }}{% else %}{{ section.settings.sold_out_text }}{% endif %}
-                  </button>
-                </div>
-              {% endif %}
-            </div>
-          </div>
+          {% render 'product-card', 
+            product: product, 
+            show_rating: section.settings.show_rating,
+            show_price: section.settings.show_price,
+            show_vendor: section.settings.show_vendor,
+            show_badge: true,
+            image_ratio: section.settings.image_ratio
+          %}
         {% else %}
           <div class="empty-collection">
             <p>No products found in this collection</p>

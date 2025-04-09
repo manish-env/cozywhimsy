@@ -11,64 +11,27 @@
          data-columns-mobile="{{ section.settings.columns_mobile }}">
       {%- if recommendations.performed and recommendations.products_count > 0 -%}
         {% for product in recommendations.products %}
-          <div class="product-card">
-            {% if product.tags contains 'new' %}
-              <div class="product-badge">New</div>
-            {% elsif product.tags contains 'bestseller' %}
-              <div class="product-badge bestseller">Bestseller</div>
-            {% elsif product.compare_at_price > product.price %}
-              <div class="product-badge sale">Sale</div>
-            {% endif %}
-            
-            <a href="{{ product.url }}" class="product-img-link">
-              <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
-                <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image">
-                
-                {% if section.settings.show_secondary_image and product.images.size > 1 %}
-                  <img src="{{ product.images[1] | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image-hover">
-                {% endif %}
-              </div>
-            </a>
-            
-            <div class="product-info">
-              {% if section.settings.show_vendor %}
-                <div class="product-vendor">{{ product.vendor }}</div>
-              {% endif %}
-              
-              <h3 class="product-title">
-                <a href="{{ product.url }}">{{ product.title }}</a>
-              </h3>
-              
-              <div class="product-price">
-                {% if product.compare_at_price > product.price %}
-                  <span class="sale-price">{{ product.price | money }}</span>
-                  <span class="compare-price">{{ product.compare_at_price | money }}</span>
-                {% else %}
-                  <span class="regular-price">{{ product.price | money }}</span>
-                {% endif %}
-              </div>
-              
-              {% if section.settings.show_rating and product.metafields.reviews.rating %}
-                <div class="product-rating">
-                  <div class="stars" style="--rating: {{ product.metafields.reviews.rating.value }};">
-                    <span>★★★★★</span>
-                  </div>
-                  <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
-                </div>
-              {% endif %}
-            </div>
-          </div>
+          {% render 'product-card', 
+            product: product, 
+            show_rating: section.settings.show_rating,
+            show_price: true,
+            show_vendor: section.settings.show_vendor,
+            show_badge: true,
+            image_ratio: section.settings.image_ratio
+          %}
         {% endfor %}
       {%- else -%}
         {% for i in (1..4) %}
-          <div class="product-card placeholder">
-            <div class="product-image-container">
-              <div class="placeholder-image"></div>
-            </div>
-            <div class="product-info">
-              <h3 class="product-title">Sample Product</h3>
-              <div class="product-price">
-                <span class="regular-price">$29.99</span>
+          <div class="product-card">
+            <div class="product-card__inner">
+              <div class="product-card__image-container" style="padding-bottom: 100%;">
+                {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder' }}
+              </div>
+              <div class="product-card__content">
+                <h3 class="product-card__title">Sample Product</h3>
+                <div class="product-card__price">
+                  <span class="product-card__price--regular">$29.99</span>
+                </div>
               </div>
             </div>
           </div>

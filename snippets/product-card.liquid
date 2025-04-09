@@ -1,0 +1,84 @@
+{% comment %}
+  Product Card Snippet
+  A standardized product card design for use throughout the CozyWhimsy theme
+  
+  Usage:
+  {% render 'product-card', product: product %}
+  
+  Parameters:
+  - product: The product object to display (required)
+  - show_rating: Whether to show product rating (default: true)
+  - show_price: Whether to show product price (default: true)
+  - show_vendor: Whether to show product vendor (default: false)
+  - show_badge: Whether to show product badge (default: true)
+  - image_ratio: Aspect ratio of the product image (default: 1)
+{% endcomment %}
+
+{%- liquid
+  assign show_rating = show_rating | default: true
+  assign show_price = show_price | default: true
+  assign show_vendor = show_vendor | default: false
+  assign show_badge = show_badge | default: true
+  assign image_ratio = image_ratio | default: 1
+-%}
+
+<div class="product-card">
+  <div class="product-card__inner">
+    {% if show_badge and product.tags contains 'GIFT' %}
+      <div class="product-card__badge">
+        <span>GIFT</span>
+      </div>
+    {% endif %}
+    
+    <a href="{{ product.url | within: collection }}" class="product-card__link">
+      <div class="product-card__image-container">
+        {% if product.featured_image != blank %}
+          <img 
+            src="{{ product.featured_image | img_url: 'master' }}" 
+            alt="{{ product.title | escape }}"
+            class="product-card__image"
+            loading="lazy"
+          >
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder' }}
+        {% endif %}
+      </div>
+      
+      <div class="product-card__content">
+        {% if show_rating and product.metafields.reviews.rating.value != blank %}
+          <div class="product-card__rating">
+            <div class="rating">
+              {% assign rating_value = product.metafields.reviews.rating.value | round %}
+              {% for i in (1..5) %}
+                <span class="rating__star {% if i <= rating_value %}rating__star--full{% endif %}">★</span>
+              {% endfor %}
+            </div>
+            
+            {% if product.metafields.reviews.rating_count.value > 0 %}
+              <span class="rating-count">({{ product.metafields.reviews.rating_count.value }})</span>
+            {% endif %}
+          </div>
+        {% endif %}
+        
+        <h3 class="product-card__title">
+          {{ product.title }}
+        </h3>
+        
+        {% if show_vendor and product.vendor %}
+          <p class="product-card__vendor">{{ product.vendor }}</p>
+        {% endif %}
+        
+        {% if show_price %}
+          <div class="product-card__price">
+            {% if product.compare_at_price > product.price %}
+              <span class="product-card__price--sale">${{ product.price | money_without_currency }}</span>
+              <span class="product-card__price--compare">${{ product.compare_at_price | money_without_currency }}</span>
+            {% else %}
+              <span class="product-card__price--regular">${{ product.price | money_without_currency }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </a>
+  </div>
+</div>

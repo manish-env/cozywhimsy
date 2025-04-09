@@ -11,93 +11,14 @@
       
       {% if collection != blank and collection.products.size > 0 %}
         {% for product in collection.products limit: product_limit %}
-          <div class="product-card">
-            {% if section.settings.show_badges %}
-              {% if product.tags contains 'new' %}
-                <div class="product-badge">New</div>
-              {% elsif product.tags contains 'bestseller' %}
-                <div class="product-badge bestseller">Bestseller</div>
-              {% elsif product.compare_at_price > product.price and section.settings.show_sale_badge %}
-                <div class="product-badge sale">Sale</div>
-              {% endif %}
-            {% endif %}
-            
-            <a href="{{ product.url | within: collection }}" class="product-img-link">
-              <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio | default: 'square' }};">
-                {% if product.featured_image != blank %}
-                  <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image">
-                  
-                  {% if section.settings.show_secondary_image and product.images.size > 1 %}
-                    <img src="{{ product.images[1] | img_url: 'master' }}" alt="{{ product.title | escape }}" class="product-image-hover">
-                  {% endif %}
-                {% else %}
-                  <div class="product-img-placeholder"></div>
-                {% endif %}
-              </div>
-            </a>
-            
-            <div class="product-content">
-              {% if section.settings.show_vendor and product.vendor %}
-                <p class="product-vendor">{{ product.vendor }}</p>
-              {% endif %}
-              
-              <h3 class="product-title"><a href="{{ product.url | within: collection }}">{{ product.title }}</a></h3>
-              
-              {% if section.settings.show_rating and product.metafields.reviews.rating %}
-                <div class="product-rating">
-                  <div class="stars" style="--rating: {{ product.metafields.reviews.rating.value }};">
-                    <span>★★★★★</span>
-                  </div>
-                  <span class="rating-count">({{ product.metafields.reviews.rating_count }})</span>
-                </div>
-              {% endif %}
-              
-              {% if section.settings.show_price %}
-                <div class="product-price">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="sale-price">{{ product.price | money }}</span>
-                    <span class="compare-price">{{ product.compare_at_price | money }}</span>
-                  {% else %}
-                    <span class="regular-price">{{ product.price | money }}</span>
-                  {% endif %}
-                </div>
-              {% endif %}
-              
-              {% if section.settings.show_description and product.description != blank %}
-                <div class="product-description">
-                  {{ product.description | strip_html | truncatewords: section.settings.description_words | escape }}
-                </div>
-              {% endif %}
-              
-              <div class="product-actions">
-                {% if section.settings.show_add_to_cart %}
-                  {% if product.available %}
-                    <button class="add-to-cart" data-product-id="{{ product.id }}">
-                      {% if product.variants.size > 1 %}
-                        {{ section.settings.view_options_text | default: 'View Options' }}
-                      {% else %}
-                        {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
-                      {% endif %}
-                    </button>
-                  {% else %}
-                    <button class="add-to-cart sold-out" disabled>{{ section.settings.sold_out_text | default: 'Sold Out' }}</button>
-                  {% endif %}
-                {% endif %}
-                
-                {% if section.settings.show_wishlist %}
-                  <button class="wishlist-btn" data-product-id="{{ product.id }}" aria-label="Add to wishlist">
-                    <i class="far fa-heart"></i>
-                  </button>
-                {% endif %}
-                
-                {% if section.settings.show_quick_view %}
-                  <button class="quick-view-btn" data-product-id="{{ product.id }}" aria-label="Quick view">
-                    <i class="far fa-eye"></i>
-                  </button>
-                {% endif %}
-              </div>
-            </div>
-          </div>
+          {% render 'product-card', 
+            product: product, 
+            show_rating: section.settings.show_rating,
+            show_price: section.settings.show_price,
+            show_vendor: section.settings.show_vendor,
+            show_badge: section.settings.show_badges,
+            image_ratio: section.settings.image_ratio | default: 1
+          %}
         {% endfor %}
       {% else %}
         {% comment %} Display placeholder products if no collection is selected or collection is empty {% endcomment %}

@@ -26,53 +26,14 @@
                 {%- assign related_products_shown = related_products_shown | plus: 1 -%}
                 {%- assign related_products = related_products | append: related_product.id | append: ',' -%}
                 
-                <div class="product-card">
-                  {% if related_product.tags contains 'new' %}
-                    <div class="product-badge">New</div>
-                  {% elsif related_product.tags contains 'bestseller' %}
-                    <div class="product-badge bestseller">Bestseller</div>
-                  {% elsif related_product.compare_at_price > related_product.price %}
-                    <div class="product-badge sale">Sale</div>
-                  {% endif %}
-                  
-                  <a href="{{ related_product.url }}" class="product-img-link">
-                    <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
-                      <img src="{{ related_product.featured_image | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image">
-                      
-                      {% if section.settings.show_secondary_image and related_product.images.size > 1 %}
-                        <img src="{{ related_product.images[1] | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image-hover">
-                      {% endif %}
-                    </div>
-                  </a>
-                  
-                  <div class="product-info">
-                    {% if section.settings.show_vendor %}
-                      <div class="product-vendor">{{ related_product.vendor }}</div>
-                    {% endif %}
-                    
-                    <h3 class="product-title">
-                      <a href="{{ related_product.url }}">{{ related_product.title }}</a>
-                    </h3>
-                    
-                    <div class="product-price">
-                      {% if related_product.compare_at_price > related_product.price %}
-                        <span class="sale-price">{{ related_product.price | money }}</span>
-                        <span class="compare-price">{{ related_product.compare_at_price | money }}</span>
-                      {% else %}
-                        <span class="regular-price">{{ related_product.price | money }}</span>
-                      {% endif %}
-                    </div>
-                    
-                    {% if section.settings.show_rating and related_product.metafields.reviews.rating %}
-                      <div class="product-rating">
-                        <div class="stars" style="--rating: {{ related_product.metafields.reviews.rating.value }};">
-                          <span>★★★★★</span>
-                        </div>
-                        <span class="rating-count">({{ related_product.metafields.reviews.rating_count }})</span>
-                      </div>
-                    {% endif %}
-                  </div>
-                </div>
+                {% render 'product-card', 
+                  product: related_product, 
+                  show_rating: section.settings.show_rating,
+                  show_price: true,
+                  show_vendor: section.settings.show_vendor,
+                  show_badge: true,
+                  image_ratio: section.settings.image_ratio
+                %}
               {%- endunless -%}
             {%- endif -%}
           {%- endfor -%}
@@ -91,53 +52,14 @@
               {%- assign related_products_shown = related_products_shown | plus: 1 -%}
               {%- assign related_products = related_products | append: related_product.id | append: ',' -%}
               
-              <div class="product-card">
-                {% if related_product.tags contains 'new' %}
-                  <div class="product-badge">New</div>
-                {% elsif related_product.tags contains 'bestseller' %}
-                  <div class="product-badge bestseller">Bestseller</div>
-                {% elsif related_product.compare_at_price > related_product.price %}
-                  <div class="product-badge sale">Sale</div>
-                {% endif %}
-                
-                <a href="{{ related_product.url }}" class="product-img-link">
-                  <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
-                    <img src="{{ related_product.featured_image | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image">
-                    
-                    {% if section.settings.show_secondary_image and related_product.images.size > 1 %}
-                      <img src="{{ related_product.images[1] | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image-hover">
-                    {% endif %}
-                  </div>
-                </a>
-                
-                <div class="product-info">
-                  {% if section.settings.show_vendor %}
-                    <div class="product-vendor">{{ related_product.vendor }}</div>
-                  {% endif %}
-                  
-                  <h3 class="product-title">
-                    <a href="{{ related_product.url }}">{{ related_product.title }}</a>
-                  </h3>
-                  
-                  <div class="product-price">
-                    {% if related_product.compare_at_price > related_product.price %}
-                      <span class="sale-price">{{ related_product.price | money }}</span>
-                      <span class="compare-price">{{ related_product.compare_at_price | money }}</span>
-                    {% else %}
-                      <span class="regular-price">{{ related_product.price | money }}</span>
-                    {% endif %}
-                  </div>
-                  
-                  {% if section.settings.show_rating and related_product.metafields.reviews.rating %}
-                    <div class="product-rating">
-                      <div class="stars" style="--rating: {{ related_product.metafields.reviews.rating.value }};">
-                        <span>★★★★★</span>
-                      </div>
-                      <span class="rating-count">({{ related_product.metafields.reviews.rating_count }})</span>
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
+              {% render 'product-card', 
+                product: related_product, 
+                show_rating: section.settings.show_rating,
+                show_price: true,
+                show_vendor: section.settings.show_vendor,
+                show_badge: true,
+                image_ratio: section.settings.image_ratio
+              %}
             {%- endunless -%}
           {%- endif -%}
         {%- endfor -%}
@@ -156,53 +78,14 @@
               {%- assign related_products_shown = related_products_shown | plus: 1 -%}
               {%- assign related_products = related_products | append: related_product.id | append: ',' -%}
               
-              <div class="product-card">
-                {% if related_product.tags contains 'new' %}
-                  <div class="product-badge">New</div>
-                {% elsif related_product.tags contains 'bestseller' %}
-                  <div class="product-badge bestseller">Bestseller</div>
-                {% elsif related_product.compare_at_price > related_product.price %}
-                  <div class="product-badge sale">Sale</div>
-                {% endif %}
-                
-                <a href="{{ related_product.url }}" class="product-img-link">
-                  <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
-                    <img src="{{ related_product.featured_image | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image">
-                    
-                    {% if section.settings.show_secondary_image and related_product.images.size > 1 %}
-                      <img src="{{ related_product.images[1] | img_url: 'master' }}" alt="{{ related_product.title | escape }}" class="product-image-hover">
-                    {% endif %}
-                  </div>
-                </a>
-                
-                <div class="product-info">
-                  {% if section.settings.show_vendor %}
-                    <div class="product-vendor">{{ related_product.vendor }}</div>
-                  {% endif %}
-                  
-                  <h3 class="product-title">
-                    <a href="{{ related_product.url }}">{{ related_product.title }}</a>
-                  </h3>
-                  
-                  <div class="product-price">
-                    {% if related_product.compare_at_price > related_product.price %}
-                      <span class="sale-price">{{ related_product.price | money }}</span>
-                      <span class="compare-price">{{ related_product.compare_at_price | money }}</span>
-                    {% else %}
-                      <span class="regular-price">{{ related_product.price | money }}</span>
-                    {% endif %}
-                  </div>
-                  
-                  {% if section.settings.show_rating and related_product.metafields.reviews.rating %}
-                    <div class="product-rating">
-                      <div class="stars" style="--rating: {{ related_product.metafields.reviews.rating.value }};">
-                        <span>★★★★★</span>
-                      </div>
-                      <span class="rating-count">({{ related_product.metafields.reviews.rating_count }})</span>
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
+              {% render 'product-card', 
+                product: related_product, 
+                show_rating: section.settings.show_rating,
+                show_price: true,
+                show_vendor: section.settings.show_vendor,
+                show_badge: true,
+                image_ratio: section.settings.image_ratio
+              %}
             {%- endunless -%}
           {%- endif -%}
         {%- endfor -%}

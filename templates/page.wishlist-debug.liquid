@@ -1,0 +1,179 @@
+{% comment %}
+  Wishlist Debug Page for CozyWhimsy theme
+  Displays diagnostic information about the wishlist
+{% endcomment %}
+
+<div class="page-width">
+  <h1>Wishlist Debug Information</h1>
+  
+  <div class="debug-section">
+    <h2>Wishlist Items in LocalStorage</h2>
+    <pre id="localStorage-data">Loading...</pre>
+  </div>
+  
+  <div class="debug-section">
+    <h2>Wishlist Object</h2>
+    <pre id="wishlist-object">Loading...</pre>
+  </div>
+  
+  <div class="debug-section">
+    <h2>Try to Fetch Products</h2>
+    <div id="fetch-results">Loading...</div>
+  </div>
+</div>
+
+<style>
+  .page-width {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .debug-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  pre {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  .product-test {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .product-test h3 {
+    margin-top: 0;
+  }
+  
+  .success {
+    color: green;
+  }
+  
+  .error {
+    color: red;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Display localStorage data
+    const localStorageData = document.getElementById('localStorage-data');
+    try {
+      const wishlistData = localStorage.getItem('cozywhimsy_wishlist');
+      if (wishlistData) {
+        const parsedData = JSON.parse(wishlistData);
+        localStorageData.textContent = JSON.stringify(parsedData, null, 2);
+      } else {
+        localStorageData.textContent = 'No wishlist data found in localStorage';
+      }
+    } catch (e) {
+      localStorageData.textContent = 'Error reading localStorage: ' + e.message;
+    }
+    
+    // Wait for wishlist to initialize
+    setTimeout(function() {
+      // Display wishlist object
+      const wishlistObjectElem = document.getElementById('wishlist-object');
+      if (window.wishlist) {
+        wishlistObjectElem.textContent = 'Wishlist found!\n\n' +
+          'wishlistItems: ' + JSON.stringify(window.wishlist.wishlistItems, null, 2) + '\n\n' +
+          'isLoggedIn: ' + window.wishlist.isLoggedIn + '\n\n' +
+          'Methods: ' + Object.getOwnPropertyNames(Object.getPrototypeOf(window.wishlist)).join(', ');
+      } else {
+        wishlistObjectElem.textContent = 'Wishlist object not found';
+      }
+      
+      // Try to fetch products
+      const fetchResults = document.getElementById('fetch-results');
+      fetchResults.innerHTML = '';
+      
+      // Get wishlist items
+      let wishlistItems = [];
+      try {
+        if (window.wishlist && window.wishlist.wishlistItems) {
+          wishlistItems = window.wishlist.wishlistItems;
+        } else {
+          const storedWishlist = localStorage.getItem('cozywhimsy_wishlist');
+          if (storedWishlist) {
+            wishlistItems = JSON.parse(storedWishlist);
+          }
+        }
+      } catch (e) {
+        fetchResults.innerHTML += '<div class="error">Error getting wishlist items: ' + e.message + '</div>';
+      }
+      
+      if (wishlistItems.length === 0) {
+        fetchResults.innerHTML = '<div>No wishlist items found to test</div>';
+        return;
+      }
+      
+      // Try different fetch methods for each product
+      wishlistItems.forEach(productId => {
+        const productTest = document.createElement('div');
+        productTest.className = 'product-test';
+        productTest.innerHTML = `<h3>Testing product: ${productId}</h3>`;
+        fetchResults.appendChild(productTest);
+        
+        // Method 1: Try /products/[handle].js
+        fetch(`/products/${productId}.js`)
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            productTest.innerHTML += `<div class="success">Method 1 (/products/${productId}.js) SUCCESS: ${data.title}</div>`;
+          })
+          .catch(error => {
+            productTest.innerHTML += `<div class="error">Method 1 (/products/${productId}.js) FAILED: ${error.message}</div>`;
+            
+            // Method 2: Try /products/[handle]
+            fetch(`/products/${productId}`)
+              .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.text();
+              })
+              .then(html => {
+                const titleMatch = html.match(/<h1[^>]*class="[^"]*product__title[^"]*"[^>]*>(.*?)<\/h1>/);
+                if (titleMatch && titleMatch[1]) {
+                  productTest.innerHTML += `<div class="success">Method 2 (/products/${productId}) SUCCESS: Found title "${titleMatch[1]}"</div>`;
+                } else {
+                  throw new Error('Could not extract product title from HTML');
+                }
+              })
+              .catch(error => {
+                productTest.innerHTML += `<div class="error">Method 2 (/products/${productId}) FAILED: ${error.message}</div>`;
+                
+                // Method 3: Try search API
+                fetch(`/search/suggest.json?q=${productId}&resources[type]=product`)
+                  .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                  })
+                  .then(data => {
+                    if (data.resources && data.resources.products && data.resources.products.length > 0) {
+                      productTest.innerHTML += `<div class="success">Method 3 (search API) SUCCESS: Found "${data.resources.products[0].title}"</div>`;
+                    } else {
+                      throw new Error('No products found in search results');
+                    }
+                  })
+                  .catch(error => {
+                    productTest.innerHTML += `<div class="error">Method 3 (search API) FAILED: ${error.message}</div>`;
+                  });
+              });
+          });
+      });
+    }, 500);
+  });
+</script>

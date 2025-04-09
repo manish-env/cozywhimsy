@@ -221,28 +221,22 @@ class Wishlist {
   }
 
   /**
+   * Get all wishlist items
+   * @return {Array} Array of product IDs in the wishlist
+   */
+  getItems() {
+    return this.wishlistItems;
+  }
+
+  /**
    * Clear all items from the wishlist
    */
   clearWishlist() {
-    if (confirm('Are you sure you want to clear your wishlist?')) {
-      this.wishlistItems = [];
-      this.saveWishlist();
-      this.updateWishlistButtons();
-      this.updateWishlistCount();
-      this.showNotification('Wishlist cleared');
-      
-      // If on wishlist page, update the UI
-      const wishlistGrid = document.querySelector('[data-wishlist-grid]');
-      const emptyMessage = document.querySelector('[data-wishlist-empty]');
-      
-      if (wishlistGrid) {
-        wishlistGrid.style.display = 'none';
-      }
-      
-      if (emptyMessage) {
-        emptyMessage.style.display = 'block';
-      }
-    }
+    this.wishlistItems = [];
+    this.saveWishlist();
+    this.updateWishlistButtons();
+    this.updateWishlistCount();
+    this.showNotification('Wishlist cleared');
   }
 
   /**

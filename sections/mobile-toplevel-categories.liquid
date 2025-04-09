@@ -1,5 +1,5 @@
 {% comment %}
-  Mobile Top-level Categories
+  Mobile Categories
   A horizontal scrolling category navigation that mimics Instagram Stories
   Only displays on mobile devices
 {% endcomment %}
@@ -32,10 +32,7 @@
                   </div>
                 {% endif %}
               </div>
-              <div class="category-title">{{ section.settings.special_category_title | default: "Special" }}</div>
-              {% if section.settings.special_category_badge %}
-                <span class="category-badge">New</span>
-              {% endif %}
+              <span class="category-title">{{ section.settings.special_category_title | default: "Special" }}</span>
             </a>
           </div>
         {% endif %}
@@ -62,7 +59,7 @@
                     </div>
                   {% endif %}
                 </div>
-                <div class="category-title">{{ block.settings.title | default: block.settings.collection.title }}</div>
+                <span class="category-title">{{ block.settings.title | default: block.settings.collection.title }}</span>
               </a>
             </div>
           {% endif %}
@@ -81,7 +78,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="category-title">Category {{ i }}</div>
+                <span class="category-title">Category {{ i }}</span>
               </a>
             </div>
           {% endfor %}
@@ -130,6 +127,13 @@
     align-items: center;
     margin: 0 8px;
     position: relative;
+  }
+  
+  .category-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
   }
   
   .category-image-wrapper {
@@ -194,25 +198,13 @@
   .category-title {
     font-size: 12px;
     color: #333;
-    margin: 0;
+    margin: 5px 0 0;
     max-width: 70px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
-  }
-  
-  .category-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: #ff6b9a;
-    color: white;
-    font-size: 10px;
-    padding: 2px 5px;
-    border-radius: 10px;
-    font-weight: bold;
-    z-index: 3;
+    display: block;
   }
   
   @media screen and (max-width: 767px) {
@@ -238,8 +230,6 @@
 {% schema %}
 {
   "name": "Mobile Categories",
-  "tag": "section",
-  "class": "section",
   "settings": [
     {
       "type": "header",
@@ -267,12 +257,6 @@
       "type": "image_picker",
       "id": "special_category_image",
       "label": "Special category image"
-    },
-    {
-      "type": "checkbox",
-      "id": "special_category_badge",
-      "label": "Show 'New' badge",
-      "default": true
     },
     {
       "type": "header",

@@ -27,15 +27,9 @@
 <body>
   {% section 'header' %}
   
-  {% if request.path == '/pages/wishlist' %}
-    <main role="main" id="MainContent">
-      {% section 'wishlist' %}
-    </main>
-  {% else %}
-    <main role="main" id="MainContent">
-      {{ content_for_layout }}
-    </main>
-  {% endif %}
+  <main role="main" id="MainContent">
+    {{ content_for_layout }}
+  </main>
   
   {% section 'footer' %}
   {% section 'promo-popup' %}

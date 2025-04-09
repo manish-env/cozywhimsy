@@ -14,6 +14,8 @@ class GameTournament {
     this.playerData = {
       name: '',
       email: '',
+      orderNumber: '',
+      instagramHandle: '',
       registered: false
     };
     
@@ -112,8 +114,10 @@ class GameTournament {
     
     const nameInput = document.getElementById('player-name');
     const emailInput = document.getElementById('player-email');
+    const orderNumberInput = document.getElementById('player-order-number');
+    const instagramHandleInput = document.getElementById('player-instagram-handle');
     
-    if (!nameInput.value || !emailInput.value) {
+    if (!nameInput.value || !emailInput.value || !orderNumberInput.value || !instagramHandleInput.value) {
       this.showNotification('Please fill in all fields', 'error');
       return;
     }
@@ -122,6 +126,8 @@ class GameTournament {
     this.playerData = {
       name: nameInput.value,
       email: emailInput.value,
+      orderNumber: orderNumberInput.value,
+      instagramHandle: instagramHandleInput.value,
       registered: true,
       registeredAt: new Date().toISOString()
     };

@@ -5,7 +5,7 @@
 
 <div class="page-width game-tournament">
   <div class="game-header">
-    <h1 class="game-title">{{ page.title }}</h1>
+    <h1 class="game-title">Jackroo Tournament</h1>
     <p class="game-description">{{ page.content }}</p>
   </div>
   
@@ -21,30 +21,40 @@
       </div>
       
       <div class="tournament-prizes">
-        <h3>Prizes</h3>
+        <h3>Prize Pool</h3>
         <div class="prize-list">
-          <div class="prize-item">
-            <div class="prize-rank">1st Place</div>
-            <div class="prize-value">30% Discount Coupon</div>
+          <div class="prize-item prize-item-rare">
+            <div class="prize-icon">🏆</div>
+            <div class="prize-content">
+              <div class="prize-rank">1st Place</div>
+              <div class="prize-value">Rare Chest</div>
+            </div>
           </div>
-          <div class="prize-item">
-            <div class="prize-rank">2nd Place</div>
-            <div class="prize-value">20% Discount Coupon</div>
+          <div class="prize-item prize-item-advanced">
+            <div class="prize-icon">🥈</div>
+            <div class="prize-content">
+              <div class="prize-rank">2nd Place</div>
+              <div class="prize-value">Advanced Chest</div>
+            </div>
           </div>
-          <div class="prize-item">
-            <div class="prize-rank">3rd Place</div>
-            <div class="prize-value">10% Discount Coupon</div>
+          <div class="prize-item prize-item-normal">
+            <div class="prize-icon">🥉</div>
+            <div class="prize-content">
+              <div class="prize-rank">3rd Place</div>
+              <div class="prize-value">Normal Chest</div>
+            </div>
           </div>
         </div>
       </div>
       
       <div class="tournament-rules">
-        <h3>How to Play</h3>
+        <h3>How to Participate</h3>
         <ol class="rules-list">
+          <li>Purchase any product from our store</li>
+          <li>Follow us on <a href="{{ section.settings.instagram_link | default: 'https://instagram.com' }}" target="_blank" class="instagram-link">Instagram</a></li>
           <li>Register with your email address below</li>
           <li>Play the game and try to get the highest score</li>
           <li>Winners will be announced when the tournament ends</li>
-          <li>Discount coupons will be sent to winners' emails</li>
         </ol>
       </div>
     </div>
@@ -75,7 +85,7 @@
     </div>
     
     <div class="registration-form" id="registration-form">
-      <h3>Register for Tournament</h3>
+      <h3>Register for Jackroo Tournament</h3>
       <form id="tournament-registration">
         <div class="form-field">
           <label for="player-name">Your Name</label>
@@ -86,9 +96,17 @@
           <input type="email" id="player-email" name="player-email" required>
         </div>
         <div class="form-field">
+          <label for="player-order-number">Order Number</label>
+          <input type="text" id="player-order-number" name="player-order-number" placeholder="From your purchase confirmation email" required>
+        </div>
+        <div class="form-field">
+          <label for="player-instagram-handle">Instagram Username</label>
+          <input type="text" id="player-instagram-handle" name="player-instagram-handle" placeholder="@yourusername" required>
+        </div>
+        <div class="form-field">
           <button type="submit" class="button button--primary">Register & Play</button>
         </div>
-        <p class="form-note">* Your email will only be used to notify you if you win and send your prize coupon.</p>
+        <p class="form-note">* We'll verify your purchase and Instagram follow before awarding prizes.</p>
       </form>
     </div>
   </div>
@@ -198,11 +216,34 @@
     padding: 10px 15px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+  }
+  
+  .prize-item-rare {
+    border: 2px solid #ff6b9a;
+  }
+  
+  .prize-item-advanced {
+    border: 2px solid #2196F3;
+  }
+  
+  .prize-item-normal {
+    border: 2px solid #4CAF50;
+  }
+  
+  .prize-icon {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .prize-content {
+    flex-grow: 1;
   }
   
   .prize-rank {
     font-weight: 600;
-    color: #ff6b9a;
+    color: #333;
     margin-bottom: 5px;
   }
   
@@ -723,8 +764,10 @@
       
       const nameInput = document.getElementById('player-name');
       const emailInput = document.getElementById('player-email');
+      const orderNumberInput = document.getElementById('player-order-number');
+      const instagramHandleInput = document.getElementById('player-instagram-handle');
       
-      if (!nameInput.value || !emailInput.value) {
+      if (!nameInput.value || !emailInput.value || !orderNumberInput.value || !instagramHandleInput.value) {
         alert('Please fill in all fields');
         return;
       }

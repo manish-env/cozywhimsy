@@ -275,6 +275,7 @@
         },
         "product_6mcETK": {
           "type": "product",
+          "disabled": true,
           "settings": {
             "product": "",
             "highlight_style": "gradient",
@@ -307,6 +308,7 @@
         "product_xcWHBW",
         "product_fRKBgA"
       ],
+      "disabled": true,
       "settings": {
         "title": "Shop Our Instagram",
         "subtitle": "Top 10 Sky laltern",
@@ -446,6 +448,7 @@
         "price_dcXmCX",
         "price_anEnQL"
       ],
+      "disabled": true,
       "settings": {
         "title": "Find the Perfect Gift",
         "subtitle": "Answer a few questions to discover personalized gift recommendations",
@@ -470,6 +473,103 @@
         "mobile_padding_top": 40,
         "mobile_padding_bottom": 40
       }
+    },
+    "product_bundles_HWQmiH": {
+      "type": "product-bundles",
+      "blocks": {
+        "bundle_HfzWMb": {
+          "type": "bundle",
+          "settings": {
+            "title": "Cute Lamps",
+            "description": "A curated collection of our best products at a special price.",
+            "image": "shopify://shop_images/8469716006.jpg",
+            "product_1": "cute-cat-animal-silicone-baby-night-light",
+            "product_2": "duck-night-light",
+            "product_3": "usb-rechargable-capybara-night-light",
+            "product_4": "",
+            "discount_percentage": 15,
+            "badge_text": "Limited Edition",
+            "button_text": "Add Bundle to Cart",
+            "show_secondary_button": false,
+            "secondary_button_text": "Learn More",
+            "secondary_button_link": ""
+          }
+        },
+        "bundle_E3dHUE": {
+          "type": "bundle",
+          "settings": {
+            "title": "Go Green & Cute",
+            "description": "A curated collection of our best products at a special price.",
+            "image": "shopify://shop_images/81Ct8MBqq-L._AC_UF350_350_QL80.jpg",
+            "product_1": "",
+            "product_2": "",
+            "product_3": "",
+            "product_4": "",
+            "discount_percentage": 15,
+            "badge_text": "Limited Edition",
+            "button_text": "Add Bundle to Cart",
+            "show_secondary_button": false,
+            "secondary_button_text": "Learn More",
+            "secondary_button_link": ""
+          }
+        },
+        "bundle_raFRa6": {
+          "type": "bundle",
+          "settings": {
+            "title": "Cozy Summer",
+            "description": "A curated collection of our best products at a special price.",
+            "image": "shopify://shop_images/5232121618.jpg",
+            "product_1": "cute-cat-couple-printed-ceramic-milk-mug-300ml-white-mug-for-cat-lovers-romantic-gift-for-him-her",
+            "product_2": "mini-cute-panda-cool-mist-humidifier-for-room-moisture",
+            "product_3": "electric-portable-mini-juicer-bottle",
+            "product_4": "",
+            "discount_percentage": 15,
+            "badge_text": "Limited Edition",
+            "button_text": "Add Bundle to Cart",
+            "show_secondary_button": false,
+            "secondary_button_text": "Learn More",
+            "secondary_button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "bundle_HfzWMb",
+        "bundle_E3dHUE",
+        "bundle_raFRa6"
+      ],
+      "settings": {
+        "title": "Shop Our Bundles",
+        "subtitle": "Save more when you buy our curated product bundles",
+        "center_title": true,
+        "show_separator": true,
+        "separator_width": 50,
+        "separator_color": "#ff6b9a",
+        "separator_margin": 30,
+        "columns_desktop": 3,
+        "columns_tablet": 2,
+        "columns_mobile": 1,
+        "background_color": "#ffffff",
+        "title_color": "#333333",
+        "subtitle_color": "#666666",
+        "content_title_color": "#333333",
+        "content_text_color": "#666666",
+        "price_color": "#ff6b9a",
+        "discount_text_color": "#4CAF50",
+        "badge_background": "#ff6b9a",
+        "badge_color": "#ffffff",
+        "custom_badge_background": "#4CAF50",
+        "custom_badge_color": "#ffffff",
+        "button_background": "#ff6b9a",
+        "button_text_color": "#ffffff",
+        "secondary_button_color": "#666666",
+        "show_view_all": true,
+        "view_all_text": "View All Bundles",
+        "view_all_link": "",
+        "center_view_all": true,
+        "view_all_color": "#ff6b9a",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
@@ -479,6 +579,7 @@
     "featured_products",
     "instagram_showcase",
     "instagram_style_product_showcase_Hpgakw",
-    "gift_finder_quiz_6bh8ki"
+    "gift_finder_quiz_6bh8ki",
+    "product_bundles_HWQmiH"
   ]
 }

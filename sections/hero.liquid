@@ -15,6 +15,11 @@
     --mobile-margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
   {% endif %}
 ">
+  <!-- Mobile Categories Navigation at top of hero banner -->
+  <div class="mobile-hero-categories">
+    {% render 'mobile-categories-nav' %}
+  </div>
+  
   <div class="hero-wrapper">
     <div class="hero-content">
       <h1>{{ section.settings.heading | escape }}</h1>

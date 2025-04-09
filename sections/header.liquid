@@ -79,12 +79,11 @@
   </div>
 </header>
 
-{% comment %}
-  Mobile Categories Navigation - Instagram-style categories at the top of the page on mobile
-{% endcomment %}
+{% if section.settings.enable_mobile_categories %}
 <div class="mobile-categories-container">
   {% render 'mobile-categories-nav' %}
 </div>
+{% endif %}
 
 {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
   <div class="mobile-bottom-navbar">

@@ -186,24 +186,37 @@
                 <div class="product-image-container" style="--image-ratio: {{ section.settings.image_ratio }};">
                   {% if product.featured_image != blank %}
                     <img 
-                      src="{{ product.featured_image | img_url: section.settings.image_size }}" 
+                      src="{{ product.featured_image | img_url: '500x' }}" 
                       alt="{{ product.featured_image.alt | escape }}"
                       loading="lazy"
-                      width="{{ product.featured_image.width }}"
-                      height="{{ product.featured_image.height }}"
-                      class="product-image {% if section.settings.enable_image_zoom %}hover-zoom{% endif %}"
+                      width="500"
+                      height="500"
+                      class="product-image"
                     >
+                    
+                    <!-- Wishlist button on product card -->
+                    <button type="button" 
+                            class="wishlist-button" 
+                            data-wishlist-button 
+                            data-product-id="{{ product.id }}" 
+                            aria-label="Add to Wishlist">
+                      <i class="far fa-heart"></i>
+                    </button>
+                    
+                    {% if product.tags contains 'new' %}
+                      <div class="badge new-badge">New</div>
+                    {% endif %}
+                    
+                    {% if product.compare_at_price > product.price %}
+                      <div class="badge sale-badge">Sale</div>
+                    {% endif %}
+                    
+                    {% unless product.available %}
+                      <div class="badge sold-out-badge">Sold out</div>
+                    {% endunless %}
                   {% else %}
                     {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
                   {% endif %}
-                  
-                  {% if product.compare_at_price > product.price %}
-                    <div class="badge sale-badge">Sale</div>
-                  {% endif %}
-                  
-                  {% unless product.available %}
-                    <div class="badge sold-out-badge">Sold out</div>
-                  {% endunless %}
                 </div>
                 
                 {% render 'wishlist-button', product: product %}

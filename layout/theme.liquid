@@ -27,12 +27,17 @@
 <body>
   {% section 'header' %}
   
-  <main role="main" id="MainContent">
-    {{ content_for_layout }}
-  </main>
+  {% if request.path == '/pages/wishlist' %}
+    <main role="main" id="MainContent">
+      {% section 'wishlist' %}
+    </main>
+  {% else %}
+    <main role="main" id="MainContent">
+      {{ content_for_layout }}
+    </main>
+  {% endif %}
   
   {% section 'footer' %}
-  
   {% section 'promo-popup' %}
   {% section 'whatsapp-chat' %}
   
@@ -41,5 +46,8 @@
   
   <!-- Swiper.js Script -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  
+  <!-- Wishlist Script -->
+  <script src="{{ 'wishlist.js' | asset_url }}" defer></script>
 </body>
 </html>

@@ -151,8 +151,8 @@ class Wishlist {
           
           // Check if wishlist is empty after removal
           if (this.wishlistItems.length === 0) {
-            const wishlistGrid = document.querySelector('.wishlist-grid');
-            const emptyMessage = document.querySelector('.wishlist-empty');
+            const wishlistGrid = document.querySelector('[data-wishlist-grid]');
+            const emptyMessage = document.querySelector('[data-wishlist-empty]');
             
             if (wishlistGrid) {
               wishlistGrid.style.display = 'none';
@@ -193,10 +193,16 @@ class Wishlist {
       button.setAttribute('aria-label', ariaLabel);
       button.setAttribute('title', ariaLabel);
       
-      // Update icon if it exists
-      const icon = button.querySelector('.wishlist-icon');
+      // Update Font Awesome icon if it exists
+      const icon = button.querySelector('i');
       if (icon) {
-        icon.classList.toggle('filled', isInWishlist);
+        if (isInWishlist) {
+          icon.classList.remove('far');
+          icon.classList.add('fas');
+        } else {
+          icon.classList.remove('fas');
+          icon.classList.add('far');
+        }
       }
     });
   }
@@ -226,8 +232,8 @@ class Wishlist {
       this.showNotification('Wishlist cleared');
       
       // If on wishlist page, update the UI
-      const wishlistGrid = document.querySelector('.wishlist-grid');
-      const emptyMessage = document.querySelector('.wishlist-empty');
+      const wishlistGrid = document.querySelector('[data-wishlist-grid]');
+      const emptyMessage = document.querySelector('[data-wishlist-empty]');
       
       if (wishlistGrid) {
         wishlistGrid.style.display = 'none';

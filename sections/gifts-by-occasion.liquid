@@ -1,0 +1,582 @@
+{% comment %}
+  Gifts by Occasion Section for CozyWhimsy
+  A simple, minimalistic section to showcase gift categories by occasion
+{% endcomment %}
+
+<div class="gifts-by-occasion-section" 
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-header{% if section.settings.center_title %} text-center{% endif %}">
+        <h2 class="section-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+        {% if section.settings.show_separator %}
+          <div class="section-separator" style="width: {{ section.settings.separator_width }}%; background-color: {{ section.settings.separator_color }}; margin-bottom: {{ section.settings.separator_margin }}px;"></div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="occasion-categories">
+      {% for block in section.blocks %}
+        {% if block.type == 'occasion' %}
+          <div class="occasion-item" {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link }}" class="occasion-link">
+              <div class="occasion-icon-wrapper">
+                {% if block.settings.custom_icon != blank %}
+                  <img 
+                    src="{{ block.settings.custom_icon | img_url: 'master' }}" 
+                    alt="{{ block.settings.title }}"
+                    class="occasion-custom-icon"
+                    loading="lazy"
+                    width="60"
+                    height="60"
+                  >
+                {% else %}
+                  <div class="occasion-icon">
+                    {% case block.settings.icon %}
+                      {% when 'birthday' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 10V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M22 10H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 10V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 10C12 10 12 6 12 5C12 3.34315 10.6569 2 9 2C7.34315 2 6 3.34315 6 5C6 6 6 10 6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M18 10C18 10 18 6 18 5C18 3.34315 16.6569 2 15 2C13.3431 2 12 3.34315 12 5C12 6 12 10 12 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'wedding' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M14.5 3C14.5 4.38071 13.3807 5.5 12 5.5C10.6193 5.5 9.5 4.38071 9.5 3C9.5 1.61929 10.6193 0.5 12 0.5C13.3807 0.5 14.5 1.61929 14.5 3Z" stroke="currentColor" stroke-width="1.5"/>
+                          <path d="M7 10.5H17L16.5 22.5H7.5L7 10.5Z" stroke="currentColor" stroke-width="1.5"/>
+                          <path d="M17 10.5C17 8.5 14.5 7 12 7C9.5 7 7 8.5 7 10.5" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                      {% when 'baby' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 16C15.866 16 19 12.866 19 9C19 5.13401 15.866 2 12 2C8.13401 2 5 5.13401 5 9C5 12.866 8.13401 16 12 16Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 16V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M8 19H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M9 9H9.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M15 9H15.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'anniversary' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M19.5 12.572L12 19.5L4.5 12.572C1.9 10.172 1.9 6.172 4.5 3.772C7.1 1.372 11.4 1.372 14 3.772C16.6 1.372 20.9 1.372 23.5 3.772C26.1 6.172 26.1 10.172 23.5 12.572" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'graduation' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'housewarming' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M3 9.5L12 2L21 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M19 13V22H5V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M10 22V16H14V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'holiday' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 2L14.4 8.09042H21L15.8 12.1596L17.8 19L12 15.5L6.2 19L8.2 12.1596L3 8.09042H9.6L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'thank_you' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'valentines' %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7563 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.0621 22.0329 6.39464C21.7563 5.72718 21.351 5.12075 20.84 4.61V4.61Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% else %}
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 12V22H4V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M22 7H2V12H22V7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 22V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    {% endcase %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="occasion-title">{{ block.settings.title }}</div>
+              {% if block.settings.show_count and block.settings.count != blank %}
+                <div class="occasion-count">{{ block.settings.count }}</div>
+              {% endif %}
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .gifts-by-occasion-section {
+    position: relative;
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .section-title {
+    color: {{ section.settings.title_color }};
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+  }
+  
+  .section-subtitle {
+    color: {{ section.settings.subtitle_color }};
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  
+  .section-separator {
+    height: 2px;
+    margin: 0 auto;
+    background-color: {{ section.settings.separator_color }};
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .occasion-categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: {{ section.settings.gap }}px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  .occasion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc((100% / {{ section.settings.columns_desktop }}) - {{ section.settings.gap }}px);
+    min-width: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .occasion-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .occasion-link:hover {
+    transform: translateY(-5px);
+  }
+  
+  .occasion-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ section.settings.icon_background }};
+    border-radius: {{ section.settings.icon_shape }};
+    margin-bottom: 10px;
+    color: {{ section.settings.icon_color }};
+    transition: all 0.3s ease;
+  }
+  
+  .occasion-link:hover .occasion-icon-wrapper {
+    background-color: {{ section.settings.icon_background | color_darken: 5 }};
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .occasion-custom-icon {
+    max-width: 60%;
+    max-height: 60%;
+    object-fit: contain;
+  }
+  
+  .occasion-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+  
+  .occasion-count {
+    font-size: 12px;
+    color: {{ section.settings.count_color }};
+  }
+  
+  @media screen and (max-width: 991px) {
+    .occasion-item {
+      width: calc((100% / {{ section.settings.columns_tablet }}) - {{ section.settings.gap }}px);
+    }
+    
+    .occasion-icon-wrapper {
+      width: 70px;
+      height: 70px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .occasion-item {
+      width: calc((100% / {{ section.settings.columns_mobile }}) - {{ section.settings.gap }}px);
+    }
+    
+    .occasion-icon-wrapper {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .occasion-title {
+      font-size: 14px;
+    }
+    
+    .section-title {
+      font-size: 22px;
+    }
+    
+    .section-subtitle {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gifts by Occasion",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Find the Perfect Gift"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Shop by occasion for thoughtful gifts they'll love"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_title",
+      "label": "Center Title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show Separator Line",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Separator Width",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "range",
+      "id": "separator_margin",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Separator Bottom Margin",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Grid Settings"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Columns on Desktop",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on Tablet",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 2,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on Mobile",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Items",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Icon Settings"
+    },
+    {
+      "type": "select",
+      "id": "icon_shape",
+      "label": "Icon Shape",
+      "options": [
+        {
+          "value": "50%",
+          "label": "Circle"
+        },
+        {
+          "value": "12px",
+          "label": "Rounded Square"
+        },
+        {
+          "value": "0",
+          "label": "Square"
+        }
+      ],
+      "default": "50%"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Category Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "count_color",
+      "label": "Count Text Color",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "occasion",
+      "name": "Gift Occasion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Occasion Title",
+          "default": "Birthday"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "birthday",
+              "label": "Birthday"
+            },
+            {
+              "value": "wedding",
+              "label": "Wedding"
+            },
+            {
+              "value": "baby",
+              "label": "Baby"
+            },
+            {
+              "value": "anniversary",
+              "label": "Anniversary"
+            },
+            {
+              "value": "graduation",
+              "label": "Graduation"
+            },
+            {
+              "value": "housewarming",
+              "label": "Housewarming"
+            },
+            {
+              "value": "holiday",
+              "label": "Holiday"
+            },
+            {
+              "value": "thank_you",
+              "label": "Thank You"
+            },
+            {
+              "value": "valentines",
+              "label": "Valentine's Day"
+            },
+            {
+              "value": "gift",
+              "label": "Gift (Default)"
+            }
+          ],
+          "default": "gift"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom Icon (Optional)",
+          "info": "Will override the selected icon if provided"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_count",
+          "label": "Show Item Count",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "count",
+          "label": "Item Count Text",
+          "info": "Example: '24 items' or 'Shop Now'"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gifts by Occasion",
+      "category": "Gift",
+      "blocks": [
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Birthday",
+            "icon": "birthday"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Wedding",
+            "icon": "wedding"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Baby",
+            "icon": "baby"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Graduation",
+            "icon": "graduation"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Anniversary",
+            "icon": "anniversary"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

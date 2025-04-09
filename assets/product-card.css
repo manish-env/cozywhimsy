@@ -163,4 +163,32 @@
   .product-card__content {
     padding: 10px;
   }
+  
+  /* Ensure product cards are 50% width on mobile (2 per row) */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  
+  .product-card {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .product-card__title {
+    font-size: 13px;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+  
+  .product-card__price {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .product-card__content {
+    padding: 8px;
+  }
 }

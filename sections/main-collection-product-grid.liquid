@@ -208,7 +208,20 @@
   }
   
   .product-container {
-    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+  }
+  
+  @media (max-width: 767px) {
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
   }
   
   .collection-toolbar {

@@ -56,6 +56,15 @@
     "featured_categories": {
       "type": "featured-categories",
       "blocks": {
+        "category_aRYck9": {
+          "type": "category",
+          "settings": {
+            "title": "Go Green",
+            "collection": "frontpage",
+            "image": "shopify://shop_images/81Ct8MBqq-L._AC_UF350_350_QL80.jpg",
+            "button_text": "Shop Now"
+          }
+        },
         "category_En9jVE": {
           "type": "category",
           "settings": {
@@ -91,12 +100,17 @@
         }
       },
       "block_order": [
+        "category_aRYck9",
         "category_En9jVE",
         "category_WQQnD9",
         "category_1",
         "category_2"
       ],
       "settings": {
+        "special_category_enabled": true,
+        "special_category_title": "Special",
+        "special_category_link": "",
+        "special_category_badge": true,
         "show_banner_desktop": false,
         "show_banner_mobile": false,
         "banner_image": "shopify://shop_images/A_little_Cozy_a_little_whimsy.png",

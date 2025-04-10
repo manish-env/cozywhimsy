@@ -124,8 +124,8 @@
       <span>Profile</span>
     </a>
     
-    <a href="https://wa.me/{{ section.settings.whatsapp_number | default: '919876543210' }}" class="bottom-nav-item" target="_blank" rel="noopener">
-      <div class="nav-icon-container whatsapp-icon">
+    <a href="https://wa.me/{{ section.settings.whatsapp_number | default: '919876543210' }}" class="bottom-nav-item whatsapp-nav-item" target="_blank" rel="noopener">
+      <div class="nav-icon-container">
         <i class="fab fa-whatsapp"></i>
       </div>
       <span>Chat</span>
@@ -171,8 +171,8 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 4px;
-    background: linear-gradient(45deg, #f9f9f9, #ffffff);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background: linear-gradient(45deg, #fff0f6, #fff5f9);
+    box-shadow: 0 2px 5px rgba(255, 107, 154, 0.08);
     transition: all 0.3s ease;
   }
   
@@ -203,27 +203,47 @@
   }
   
   /* WhatsApp specific styling */
-  .whatsapp-icon {
+  .whatsapp-nav-item .nav-icon-container {
     background: linear-gradient(45deg, #e9ffef, #f0fff4);
   }
   
-  .bottom-nav-item:nth-child(4).active .nav-icon-container {
+  .whatsapp-nav-item i {
+    color: #25D366;
+  }
+  
+  .whatsapp-nav-item.active .nav-icon-container {
     background: linear-gradient(45deg, #dcf8e6, #e8fff0);
     box-shadow: 0 3px 8px rgba(37, 211, 102, 0.15);
   }
   
-  .bottom-nav-item:nth-child(4) i {
+  .whatsapp-nav-item.active i,
+  .whatsapp-nav-item:hover i {
     color: #25D366;
+  }
+  
+  .whatsapp-nav-item.active span,
+  .whatsapp-nav-item:hover span {
+    color: #25D366;
+  }
+  
+  /* Remove nth-child selectors */
+  .bottom-nav-item:nth-child(4) .nav-icon-container {
+    background: none;
+  }
+  
+  .bottom-nav-item:nth-child(4).active .nav-icon-container {
+    background: none;
+    box-shadow: none;
   }
   
   .bottom-nav-item:nth-child(4).active i,
   .bottom-nav-item:nth-child(4):hover i {
-    color: #25D366;
+    color: inherit;
   }
   
   .bottom-nav-item:nth-child(4).active span,
   .bottom-nav-item:nth-child(4):hover span {
-    color: #25D366;
+    color: inherit;
   }
   
   /* Mobile Icons in Header */

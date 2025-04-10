@@ -185,8 +185,8 @@
   }
   
   .category-image-wrapper {
-    width: 75px;
-    height: 75px;
+    width: {{ section.settings.circle_size | default: 75 }}px;
+    height: {{ section.settings.circle_size | default: 75 }}px;
     border-radius: 50%;
     position: relative;
     margin-bottom: 5px;
@@ -274,8 +274,8 @@
     }
     
     .category-image-wrapper {
-      width: 70px;
-      height: 70px;
+      width: {{ section.settings.circle_size | default: 70 }}px;
+      height: {{ section.settings.circle_size | default: 70 }}px;
       max-width: 100%;
       margin: 0 auto 5px;
     }
@@ -284,8 +284,8 @@
   /* Smaller screens get slightly smaller circles */
   @media screen and (max-width: 374px) {
     .category-image-wrapper {
-      width: 60px;
-      height: 60px;
+      width: {{ section.settings.circle_size | default: 60 }}px;
+      height: {{ section.settings.circle_size | default: 60 }}px;
     }
     
     .category-title {
@@ -381,6 +381,16 @@
       "id": "background_color",
       "label": "Background color",
       "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "circle_size",
+      "min": 40,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "label": "Circle size",
+      "default": 75
     }
   ],
   "blocks": [

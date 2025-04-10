@@ -80,7 +80,8 @@
         "margin_bottom": -39,
         "padding_top": 0,
         "padding_bottom": 10,
-        "background_color": "#ffffff"
+        "background_color": "#ffffff",
+        "circle_size": 80
       }
     },
     "hero": {
@@ -123,7 +124,7 @@
         "mobile_margin_bottom": 0,
         "mobile_image_size": "600x",
         "mobile_image_position": "center center",
-        "mobile_overlay_opacity": 60,
+        "mobile_overlay_opacity": 0,
         "mobile_fallback_bg": "#f8f8f8",
         "mobile_slide_delay": 5000
       }

@@ -186,8 +186,8 @@
   }
   
   .category-image-wrapper {
-    width: {{ section.settings.circle_size | default: 75 }}px;
-    height: {{ section.settings.circle_size | default: 75 }}px;
+    width: {{ section.settings.circle_size }}px;
+    height: {{ section.settings.circle_size }}px;
     border-radius: 50%;
     position: relative;
     margin-bottom: 5px;
@@ -274,20 +274,19 @@
       flex-wrap: nowrap;
       justify-content: flex-start;
       padding-left: 15px;
-      padding-right: calc(25% - 15px);
     }
     
     .toplevel-category {
-      width: 20%;
-      padding: 0;
-      margin-right: 5%;
-      box-sizing: border-box;
       flex: 0 0 auto;
+      padding: 0;
+      margin-right: {{ section.settings.circle_spacing }}px;
+      box-sizing: border-box;
+      text-align: center;
     }
     
     .category-image-wrapper {
-      width: {{ section.settings.circle_size | default: 70 }}px;
-      height: {{ section.settings.circle_size | default: 70 }}px;
+      width: {{ section.settings.circle_size }}px;
+      height: {{ section.settings.circle_size }}px;
       max-width: 100%;
       margin: 0 auto 5px;
     }
@@ -296,8 +295,8 @@
   /* Smaller screens get slightly smaller circles */
   @media screen and (max-width: 374px) {
     .category-image-wrapper {
-      width: {{ section.settings.circle_size | default: 60 }}px;
-      height: {{ section.settings.circle_size | default: 60 }}px;
+      width: {{ section.settings.circle_size }}px;
+      height: {{ section.settings.circle_size }}px;
     }
     
     .category-title {
@@ -399,10 +398,20 @@
       "id": "circle_size",
       "min": 40,
       "max": 120,
-      "step": 1,
+      "step": 5,
       "unit": "px",
       "label": "Circle size",
       "default": 75
+    },
+    {
+      "type": "range",
+      "id": "circle_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Space between circles",
+      "default": 15
     }
   ],
   "blocks": [

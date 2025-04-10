@@ -146,6 +146,7 @@
   .toplevel-categories-container {
     width: 100%;
     overflow: hidden;
+    padding: 0;
   }
   
   .toplevel-categories-wrapper {
@@ -260,20 +261,28 @@
       display: block;
     }
     
+    .toplevel-categories-container {
+      padding: 0;
+    }
+    
+    .toplevel-categories-wrapper {
+      padding: 10px 0;
+    }
+    
     .toplevel-categories-list {
       display: flex;
       flex-wrap: nowrap;
       justify-content: flex-start;
+      padding-left: 15px;
+      padding-right: calc(25% - 15px);
     }
     
     .toplevel-category {
-      width: 25%;
+      width: 20%;
       padding: 0;
-      margin: 0;
+      margin-right: 5%;
       box-sizing: border-box;
       flex: 0 0 auto;
-      display: flex;
-      justify-content: center;
     }
     
     .category-image-wrapper {

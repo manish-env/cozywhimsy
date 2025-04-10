@@ -80,8 +80,7 @@
         "margin_bottom": -39,
         "padding_top": 0,
         "padding_bottom": 10,
-        "background_color": "#ffffff",
-        "circle_size": 85
+        "background_color": "#ffffff"
       }
     },
     "hero": {
@@ -110,10 +109,11 @@
         "secondary_button_link": "",
         "secondary_button_text": "Explore Collections",
         "image": "shopify://shop_images/5531344064.jpg",
-        "primary_caption": "New Arrivals",
         "secondary_image": "shopify://shop_images/5089441490.jpg",
+        "primary_caption": "New Arrivals",
         "secondary_caption": "Featured Collection",
         "mobile_hero_style": "carousel",
+        "mobile_image": "shopify://shop_images/1x1-13BDAY-banner-sale-common-02-1744218202.webp",
         "mobile_banner_height": 450,
         "padding_top": 0,
         "padding_bottom": 0,

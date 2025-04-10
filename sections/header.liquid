@@ -104,16 +104,32 @@
 {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
   <div class="mobile-bottom-navbar">
     <a href="/" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
-      <i class="fas fa-home"></i>
+      <div class="nav-icon-container">
+        <i class="fas fa-home"></i>
+      </div>
       <span>Home</span>
     </a>
-    {% if section.settings.mobile_navbar_categories_link != blank %}
-      <a href="{{ section.settings.mobile_navbar_categories_link }}" class="bottom-nav-item {% if request.path contains section.settings.mobile_navbar_categories_link %}active{% endif %}">
-        <i class="fas fa-th-large"></i>
-        <span>Categories</span>
-      </a>
-    {% endif %}
-    <!-- Wishlist icon removed from bottom bar -->
+    
+    <a href="/search" class="bottom-nav-item {% if request.path contains '/search' %}active{% endif %}">
+      <div class="nav-icon-container">
+        <i class="fas fa-search"></i>
+      </div>
+      <span>Search</span>
+    </a>
+    
+    <a href="/account" class="bottom-nav-item {% if request.path contains '/account' %}active{% endif %}">
+      <div class="nav-icon-container">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <span>Profile</span>
+    </a>
+    
+    <a href="https://wa.me/{{ section.settings.whatsapp_number | default: '919876543210' }}" class="bottom-nav-item" target="_blank" rel="noopener">
+      <div class="nav-icon-container whatsapp-icon">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <span>Chat</span>
+    </a>
   </div>
 {% endif %}
 
@@ -127,11 +143,11 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: {{ section.settings.header_bg }};
+    background-color: #fff;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     padding: 5px 0;
-    transition: transform 0.3s ease;
+    border-top: 1px solid #f0f0f0;
   }
   
   .bottom-nav-item {
@@ -140,39 +156,74 @@
     align-items: center;
     justify-content: center;
     flex: 1;
+    padding: 8px 0;
     text-decoration: none;
-    color: {{ section.settings.header_text }};
-    opacity: 0.7;
+    color: #777;
     position: relative;
+    transition: all 0.3s ease;
   }
   
-  .bottom-nav-item i {
-    font-size: 18px;
-    margin-bottom: 3px;
-  }
-  
-  .bottom-nav-item span {
-    font-size: 10px;
-  }
-  
-  .bottom-nav-item.active {
-    opacity: 1;
-    color: {{ section.settings.mobile_navbar_active_color | default: '#ff6b9a' }};
-  }
-  
-  .bottom-nav-cart-count {
-    position: absolute;
-    top: 0;
-    right: calc(50% - 12px);
-    background-color: {{ section.settings.mobile_navbar_active_color | default: '#ff6b9a' }};
-    color: white;
-    font-size: 9px;
-    width: 14px;
-    height: 14px;
+  .nav-icon-container {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 4px;
+    background: linear-gradient(45deg, #f9f9f9, #ffffff);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .bottom-nav-item i {
+    font-size: 20px;
+    color: #777;
+    transition: color 0.3s ease;
+  }
+  
+  .bottom-nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+  }
+  
+  .bottom-nav-item.active .nav-icon-container {
+    background: linear-gradient(45deg, #ffeff5, #fff0f6);
+    box-shadow: 0 3px 8px rgba(255, 107, 154, 0.15);
+  }
+  
+  .bottom-nav-item.active i,
+  .bottom-nav-item:hover i {
+    color: #ff6b9a;
+  }
+  
+  .bottom-nav-item.active span,
+  .bottom-nav-item:hover span {
+    color: #ff6b9a;
+  }
+  
+  /* WhatsApp specific styling */
+  .whatsapp-icon {
+    background: linear-gradient(45deg, #e9ffef, #f0fff4);
+  }
+  
+  .bottom-nav-item:nth-child(4).active .nav-icon-container {
+    background: linear-gradient(45deg, #dcf8e6, #e8fff0);
+    box-shadow: 0 3px 8px rgba(37, 211, 102, 0.15);
+  }
+  
+  .bottom-nav-item:nth-child(4) i {
+    color: #25D366;
+  }
+  
+  .bottom-nav-item:nth-child(4).active i,
+  .bottom-nav-item:nth-child(4):hover i {
+    color: #25D366;
+  }
+  
+  .bottom-nav-item:nth-child(4).active span,
+  .bottom-nav-item:nth-child(4):hover span {
+    color: #25D366;
   }
   
   /* Mobile Icons in Header */
@@ -453,6 +504,13 @@
       "id": "header_text_color",
       "label": "Text color",
       "default": "#333333"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number",
+      "info": "Enter your WhatsApp number with country code (e.g., 911234567890)",
+      "placeholder": "911234567890"
     },
     {
       "type": "checkbox",

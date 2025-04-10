@@ -30,6 +30,22 @@
         <span></span>
       </div>
       {% endunless %}
+      
+      <!-- Mobile Wishlist Icon -->
+      <a href="{{ routes.root_url }}pages/wishlist" class="mobile-wishlist-icon" aria-label="Wishlist">
+        <div class="icon-wrapper">
+          <i class="fas fa-heart"></i>
+          <span class="mobile-wishlist-count" data-wishlist-count>0</span>
+        </div>
+      </a>
+      
+      <!-- Mobile Cart Icon -->
+      <a href="/cart" class="mobile-cart-icon" aria-label="Cart">
+        <div class="icon-wrapper">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="mobile-cart-count">{{ cart.item_count }}</span>
+        </div>
+      </a>
     </div>
     
     <div class="header-right">
@@ -97,18 +113,7 @@
         <span>Categories</span>
       </a>
     {% endif %}
-    <a href="{{ routes.root_url }}pages/wishlist" class="bottom-nav-item {% if request.path contains '/pages/wishlist' %}active{% endif %}">
-      <i class="fas fa-heart"></i>
-      <span>Wishlist</span>
-      <span class="bottom-nav-wishlist-count" data-wishlist-count>0</span>
-    </a>
-    <a href="/cart" class="bottom-nav-item {% if request.path contains '/cart' %}active{% endif %}">
-      <i class="fas fa-shopping-bag"></i>
-      <span>Cart</span>
-      {% if cart.item_count > 0 %}
-        <span class="bottom-nav-cart-count">{{ cart.item_count }}</span>
-      {% endif %}
-    </a>
+    <!-- Wishlist icon removed from bottom bar -->
   </div>
 {% endif %}
 
@@ -122,7 +127,6 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 60px;
     background-color: {{ section.settings.header_bg }};
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -171,54 +175,98 @@
     justify-content: center;
   }
   
+  /* Mobile Icons in Header */
+  .mobile-cart-icon,
+  .mobile-wishlist-icon {
+    display: none;
+    position: relative;
+    margin-left: 15px;
+    color: #ff6b9a;
+    text-decoration: none;
+  }
+  
+  .mobile-cart-icon .icon-wrapper,
+  .mobile-wishlist-icon .icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .mobile-cart-icon i,
+  .mobile-wishlist-icon i {
+    font-size: 20px;
+  }
+  
+  .mobile-cart-count,
+  .mobile-wishlist-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: {{ section.settings.accent_color | default: '#e1306c' }};
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   @media (max-width: 767px) {
     .site-header.has-bottom-tabs .header-actions {
       display: none;
     }
     
+    .site-header.has-bottom-tabs {
+      padding-bottom: 0;
+    }
+    
     .mobile-bottom-navbar {
       display: flex;
-    }
-    
-    body {
-      padding-bottom: 60px;
-    }
-    
-    /* Redesign top navbar for mobile */
-    .site-header .header-container {
-      display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
+      padding: 8px 0;
     }
     
-    .site-header .logo-container {
-      flex: 1;
+    .header-container {
+      padding: 10px 15px;
     }
     
-    .site-header .desktop-only {
+    .desktop-only {
       display: none;
     }
     
-    .site-header .mobile-actions {
+    .mobile-actions {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
     }
     
-    .site-header .mobile-search-icon {
-      margin-right: 15px;
+    .nav-toggle {
+      display: block;
     }
     
-    .site-header .nav-toggle {
-      margin-left: 15px;
+    .main-nav {
+      display: none;
     }
     
-    /* Hide search container when using bottom tabs */
-    {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
-      .search-container {
+    {% if section.settings.hide_hamburger_menu %}
+      .nav-toggle {
         display: none;
       }
     {% endif %}
+    
+    .mobile-cart-icon,
+    .mobile-wishlist-icon {
+      display: block;
+    }
+    
+    .header-actions .cart-icon,
+    .header-actions .wishlist-icon {
+      display: none;
+    }
   }
 </style>
 
@@ -397,6 +445,12 @@
     {
       "type": "color",
       "id": "header_text",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
       "label": "Text color",
       "default": "#333333"
     },

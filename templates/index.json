@@ -72,16 +72,17 @@
         "category_DbtxYQ"
       ],
       "settings": {
-        "special_category_enabled": false,
+        "special_category_enabled": true,
         "special_category_title": "Special",
         "special_category_link": "",
+        "special_category_image": "shopify://shop_images/Untitled_design_1.png",
         "special_category_video": "",
         "margin_top": 10,
         "margin_bottom": -39,
         "padding_top": 0,
         "padding_bottom": 10,
         "background_color": "#ffffff",
-        "circle_size": 80
+        "circle_size": 70
       }
     },
     "hero": {

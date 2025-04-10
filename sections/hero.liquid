@@ -15,7 +15,7 @@
     --mobile-margin-bottom: {{ section.settings.mobile_margin_bottom }}px;
   {% endif %}
 ">
-  <div class="hero-wrapper">
+  <div class="hero-wrapper desktop-only">
     <div class="hero-content">
       <h1>{{ section.settings.heading | escape }}</h1>
       <p>{{ section.settings.subheading | escape }}</p>
@@ -80,20 +80,6 @@
               {% endif %}
             >
             <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
-            
-            {% if section.settings.show_mobile_text %}
-            <div class="mobile-slide-content">
-              <h2>{{ section.settings.heading }}</h2>
-              {% if section.settings.show_mobile_subtext %}
-              <p>{{ section.settings.subheading }}</p>
-              {% endif %}
-              {% if section.settings.show_mobile_button and section.settings.button_link != blank %}
-                <a href="{{ section.settings.button_link }}" class="mobile-slide-btn">
-                  {{ section.settings.button_text }}
-                </a>
-              {% endif %}
-            </div>
-            {% endif %}
           </div>
         </div>
         {% elsif section.settings.image != blank %}
@@ -107,20 +93,6 @@
               {% endif %}
             >
             <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
-            
-            {% if section.settings.show_mobile_text %}
-            <div class="mobile-slide-content">
-              <h2>{{ section.settings.heading }}</h2>
-              {% if section.settings.show_mobile_subtext %}
-              <p>{{ section.settings.subheading }}</p>
-              {% endif %}
-              {% if section.settings.show_mobile_button and section.settings.button_link != blank %}
-                <a href="{{ section.settings.button_link }}" class="mobile-slide-btn">
-                  {{ section.settings.button_text }}
-                </a>
-              {% endif %}
-            </div>
-            {% endif %}
           </div>
         </div>
         {% endif %}
@@ -137,17 +109,6 @@
               {% endif %}
             >
             <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
-            
-            {% if section.settings.show_mobile_text %}
-            <div class="mobile-slide-content">
-              <h2>{{ section.settings.secondary_caption | default: 'Featured Collection' }}</h2>
-              {% if section.settings.show_mobile_button and section.settings.secondary_button_link != blank %}
-                <a href="{{ section.settings.secondary_button_link }}" class="mobile-slide-btn">
-                  {{ section.settings.secondary_button_text }}
-                </a>
-              {% endif %}
-            </div>
-            {% endif %}
           </div>
         </div>
         {% elsif section.settings.secondary_image != blank %}
@@ -161,17 +122,6 @@
               {% endif %}
             >
             <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
-            
-            {% if section.settings.show_mobile_text %}
-            <div class="mobile-slide-content">
-              <h2>{{ section.settings.secondary_caption | default: 'Featured Collection' }}</h2>
-              {% if section.settings.show_mobile_button and section.settings.secondary_button_link != blank %}
-                <a href="{{ section.settings.secondary_button_link }}" class="mobile-slide-btn">
-                  {{ section.settings.secondary_button_text }}
-                </a>
-              {% endif %}
-            </div>
-            {% endif %}
           </div>
         </div>
         {% endif %}
@@ -201,17 +151,6 @@
                   <div class="placeholder-image"></div>
                 {% endif %}
                 <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
-                
-                {% if section.settings.show_mobile_text %}
-                <div class="mobile-slide-content">
-                  <h2>{{ block.settings.slide_caption }}</h2>
-                  {% if section.settings.show_mobile_button and block.settings.slide_button_link != blank %}
-                    <a href="{{ block.settings.slide_button_link }}" class="mobile-slide-btn">
-                      {{ block.settings.slide_button_text | default: 'Shop Now' }}
-                    </a>
-                  {% endif %}
-                </div>
-                {% endif %}
               </div>
             </div>
           {% endif %}
@@ -244,6 +183,16 @@
   gap: 30px;
   position: relative;
   z-index: 2;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+@media screen and (max-width: 767px) {
+  .desktop-only {
+    display: none;
+  }
 }
 
 .hero-content {
@@ -627,127 +576,6 @@
     transform: none;
   }
 }
-
-/* Mobile hero carousel styling */
-@media screen and (max-width: 767px) {
-  .mobile-hero-carousel {
-    height: 100%;
-    width: 100%;
-    position: relative;
-  }
-  
-  .mobile-hero-swiper {
-    height: 100%;
-    border-radius: 0;
-    overflow: hidden;
-  }
-  
-  .swiper-slide {
-    height: 100%;
-    position: relative;
-  }
-  
-  .mobile-slide-bg {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .mobile-slide-bg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .mobile-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.65);
-  }
-  
-  .mobile-slide-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 25px 20px;
-    text-align: center;
-    z-index: 2;
-  }
-  
-  .mobile-slide-content h2 {
-    color: #fff;
-    font-size: 28px;
-    margin-bottom: 10px;
-    font-weight: 700;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    font-family: 'Quicksand', sans-serif;
-  }
-  
-  .mobile-slide-content p {
-    color: #fff;
-    font-size: 15px;
-    margin-bottom: 15px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  }
-  
-  .mobile-slide-btn {
-    display: inline-block;
-    background: linear-gradient(45deg, #e1306c, #f77737);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    border: none;
-    margin-top: 5px;
-  }
-  
-  .mobile-slide-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Pagination styling */
-  .swiper-pagination {
-    bottom: 10px !important;
-  }
-  
-  .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.6);
-    opacity: 0.7;
-  }
-  
-  .swiper-pagination-bullet-active {
-    background: #fff;
-    opacity: 1;
-  }
-}
-
-@media screen and (max-width: 479px) {
-  .mobile-slide-content h2 {
-    font-size: 24px;
-  }
-  
-  .mobile-slide-content p {
-    font-size: 14px;
-    padding: 0 10px;
-  }
-  
-  .mobile-slide-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-}
 {% endif %}
 </style>
 
@@ -879,27 +707,6 @@
         }
       ],
       "default": "carousel"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_mobile_text",
-      "label": "Show text on mobile banner",
-      "default": true,
-      "info": "Enable to show headings on mobile banner slides"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_mobile_subtext",
-      "label": "Show subheading on mobile banner",
-      "default": true,
-      "info": "Enable to show subheading text on mobile banner"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_mobile_button",
-      "label": "Show buttons on mobile banner",
-      "default": true,
-      "info": "Enable to show call-to-action buttons on mobile banner"
     },
     {
       "type": "image_picker",

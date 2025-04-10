@@ -69,47 +69,77 @@
     <div class="swiper mobile-hero-swiper">
       <div class="swiper-wrapper">
         <!-- First Slide -->
+        {% if section.settings.mobile_image != blank %}
         <div class="swiper-slide">
           <div class="mobile-slide-bg">
-            {% if section.settings.image != blank %}
-              <img 
-                src="{{ section.settings.image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
-                alt="{{ section.settings.heading }}"
-                {% if section.settings.mobile_image_position != blank %}
-                  style="object-position: {{ section.settings.mobile_image_position }};"
-                {% endif %}
-              >
-            {% else %}
-              <div class="placeholder-image"></div>
-            {% endif %}
+            <img 
+              src="{{ section.settings.mobile_image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
+              alt="{{ section.settings.heading }}"
+              {% if section.settings.mobile_image_position != blank %}
+                style="object-position: {{ section.settings.mobile_image_position }};"
+              {% endif %}
+            >
             <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
           </div>
         </div>
+        {% elsif section.settings.image != blank %}
+        <div class="swiper-slide">
+          <div class="mobile-slide-bg">
+            <img 
+              src="{{ section.settings.image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
+              alt="{{ section.settings.heading }}"
+              {% if section.settings.mobile_image_position != blank %}
+                style="object-position: {{ section.settings.mobile_image_position }};"
+              {% endif %}
+            >
+            <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
+          </div>
+        </div>
+        {% endif %}
         
         <!-- Second Slide -->
+        {% if section.settings.mobile_secondary_image != blank %}
         <div class="swiper-slide">
           <div class="mobile-slide-bg">
-            {% if section.settings.secondary_image != blank %}
-              <img 
-                src="{{ section.settings.secondary_image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
-                alt="{{ section.settings.heading }}"
-                {% if section.settings.mobile_image_position != blank %}
-                  style="object-position: {{ section.settings.mobile_image_position }};"
-                {% endif %}
-              >
-            {% else %}
-              <div class="placeholder-image"></div>
-            {% endif %}
+            <img 
+              src="{{ section.settings.mobile_secondary_image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
+              alt="{{ section.settings.secondary_caption | default: 'Featured Collection' }}"
+              {% if section.settings.mobile_image_position != blank %}
+                style="object-position: {{ section.settings.mobile_image_position }};"
+              {% endif %}
+            >
             <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
           </div>
         </div>
+        {% elsif section.settings.secondary_image != blank %}
+        <div class="swiper-slide">
+          <div class="mobile-slide-bg">
+            <img 
+              src="{{ section.settings.secondary_image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
+              alt="{{ section.settings.heading }}"
+              {% if section.settings.mobile_image_position != blank %}
+                style="object-position: {{ section.settings.mobile_image_position }};"
+              {% endif %}
+            >
+            <div class="mobile-overlay" style="opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }}"></div>
+          </div>
+        </div>
+        {% endif %}
         
         <!-- Additional slides from section settings -->
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
             <div class="swiper-slide">
               <div class="mobile-slide-bg">
-                {% if block.settings.slide_image != blank %}
+                {% if block.settings.mobile_slide_image != blank %}
+                  <img 
+                    src="{{ block.settings.mobile_slide_image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
+                    alt="{{ block.settings.slide_caption }}"
+                    {% if section.settings.mobile_image_position != blank %}
+                      style="object-position: {{ section.settings.mobile_image_position }};"
+                    {% endif %}
+                  >
+                {% elsif block.settings.slide_image != blank %}
                   <img 
                     src="{{ block.settings.slide_image | img_url: section.settings.mobile_image_size | default: 'master' }}" 
                     alt="{{ block.settings.slide_caption }}"
@@ -603,12 +633,12 @@
     {
       "type": "url",
       "id": "button_link",
-      "label": "Primary button link"
+      "label": "Button link"
     },
     {
       "type": "text",
       "id": "button_text",
-      "label": "Primary button text",
+      "label": "Button text",
       "default": "Shop Now"
     },
     {
@@ -620,23 +650,23 @@
       "type": "text",
       "id": "secondary_button_text",
       "label": "Secondary button text",
-      "default": "Explore Collections"
+      "default": "Learn More"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Primary hero image"
+      "label": "Primary image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "secondary_image",
+      "label": "Secondary image (desktop)"
     },
     {
       "type": "text",
       "id": "primary_caption",
       "label": "Primary image caption",
       "default": "New Arrivals"
-    },
-    {
-      "type": "image_picker",
-      "id": "secondary_image",
-      "label": "Secondary hero image"
     },
     {
       "type": "text",
@@ -646,36 +676,48 @@
     },
     {
       "type": "header",
-      "content": "Mobile Display Settings"
+      "content": "Mobile Settings"
     },
     {
       "type": "select",
       "id": "mobile_hero_style",
-      "label": "Mobile Hero Style",
+      "label": "Mobile hero style",
       "options": [
         {
           "value": "carousel",
-          "label": "Carousel (Slideshow)"
+          "label": "Image Carousel"
         },
         {
           "value": "static",
-          "label": "Static (First Image Only)"
+          "label": "Static Banner"
         },
         {
           "value": "hidden",
-          "label": "Hide Banner (Text Only)"
+          "label": "Hide Images (Text Only)"
         }
       ],
       "default": "carousel"
     },
     {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Primary image (mobile)",
+      "info": "If not set, will use desktop primary image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_secondary_image",
+      "label": "Secondary image (mobile)",
+      "info": "If not set, will use desktop secondary image"
+    },
+    {
       "type": "range",
       "id": "mobile_banner_height",
       "min": 200,
-      "max": 800,
+      "max": 600,
       "step": 10,
       "unit": "px",
-      "label": "Mobile Banner Height",
+      "label": "Mobile banner height",
       "default": 450
     },
     {
@@ -833,8 +875,14 @@
       "settings": [
         {
           "type": "image_picker",
+          "id": "mobile_slide_image",
+          "label": "Slide Image (mobile)",
+          "info": "If not set, will use desktop slide image"
+        },
+        {
+          "type": "image_picker",
           "id": "slide_image",
-          "label": "Slide Image"
+          "label": "Slide Image (desktop)"
         },
         {
           "type": "text",

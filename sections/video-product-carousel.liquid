@@ -52,15 +52,22 @@
               </div>
               
               <div class="product-info">
-                <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
-                
-                <div class="product-price-container">
-                  <span class="product-price">₹{{ price | money_without_currency }}</span>
-                  
-                  {% if compare_price > price %}
-                    <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                    <span class="product-discount">{{ discount_percentage }}% Off</span>
-                  {% endif %}
+                <div class="product-header">
+                  <div class="product-image">
+                    <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}">
+                  </div>
+                  <div class="product-details">
+                    <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                    
+                    <div class="product-price-container">
+                      <span class="product-price">₹{{ price | money_without_currency }}</span>
+                      
+                      {% if compare_price > price %}
+                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                        <span class="product-discount">{{ discount_percentage }}% Off</span>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
                 
                 {% if product.available %}
@@ -68,7 +75,7 @@
                     <input type="hidden" name="id" value="{{ current_variant.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <button type="submit" class="buy-now-button">
-                      {{ block.settings.button_text | default: 'BUY NOW' }}
+                      Buy Now
                     </button>
                   </form>
                 {% else %}
@@ -116,15 +123,22 @@
               </div>
               
               <div class="product-info">
-                <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
-                
-                <div class="product-price-container">
-                  <span class="product-price">₹{{ price | money_without_currency }}</span>
-                  
-                  {% if compare_price > price %}
-                    <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                    <span class="product-discount">{{ discount_percentage }}% Off</span>
-                  {% endif %}
+                <div class="product-header">
+                  <div class="product-image">
+                    <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}">
+                  </div>
+                  <div class="product-details">
+                    <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                    
+                    <div class="product-price-container">
+                      <span class="product-price">₹{{ price | money_without_currency }}</span>
+                      
+                      {% if compare_price > price %}
+                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                        <span class="product-discount">{{ discount_percentage }}% Off</span>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
                 
                 {% if product.available %}
@@ -132,7 +146,7 @@
                     <input type="hidden" name="id" value="{{ current_variant.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <button type="submit" class="buy-now-button">
-                      {{ block.settings.button_text | default: 'BUY NOW' }}
+                      Buy Now
                     </button>
                   </form>
                 {% else %}
@@ -170,21 +184,28 @@
             </div>
             
             <div class="product-info">
-              <h3 class="product-title">{{ block.settings.title }}</h3>
-              
-              <div class="product-price-container">
-                {% if block.settings.price_text != blank %}
-                  <span class="product-price">{{ block.settings.price_text }}</span>
-                {% else %}
-                  <span class="product-price">₹{{ price | money_without_currency }}</span>
-                {% endif %}
-                
-                {% if block.settings.compare_price_text != blank %}
-                  <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
-                  {% if block.settings.discount_text != blank %}
-                    <span class="product-discount">{{ block.settings.discount_text }}</span>
-                  {% endif %}
-                {% endif %}
+              <div class="product-header">
+                <div class="product-image">
+                  <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}">
+                </div>
+                <div class="product-details">
+                  <h3 class="product-title">{{ block.settings.title }}</h3>
+                  
+                  <div class="product-price-container">
+                    {% if block.settings.price_text != blank %}
+                      <span class="product-price">{{ block.settings.price_text }}</span>
+                    {% else %}
+                      <span class="product-price">₹{{ price | money_without_currency }}</span>
+                    {% endif %}
+                    
+                    {% if block.settings.compare_price_text != blank %}
+                      <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
+                      {% if block.settings.discount_text != blank %}
+                        <span class="product-discount">{{ block.settings.discount_text }}</span>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
               </div>
               
               {% if block.settings.button_url != blank %}
@@ -262,6 +283,29 @@
     padding: 15px;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .product-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .product-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-details {
     flex-grow: 1;
   }
   

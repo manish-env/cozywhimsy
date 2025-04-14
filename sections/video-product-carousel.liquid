@@ -1,0 +1,712 @@
+{% comment %}
+  Video Product Carousel Section
+  
+  A horizontal scrollable carousel of product videos with Instagram-style layout
+  and direct "Buy Now" buttons.
+{% endcomment %}
+
+<div class="video-product-carousel" id="video-product-carousel-{{ section.id }}">
+  <div class="section-header">
+    <h2 class="section-title">{{ section.settings.title }}</h2>
+    {% if section.settings.subtitle != blank %}
+      <div class="section-subtitle">{{ section.settings.subtitle }}</div>
+    {% endif %}
+    
+    {% if section.settings.show_view_all and section.settings.collection != blank %}
+      <a href="{{ section.settings.collection.url }}" class="view-all-link">
+        {{ section.settings.view_all_text }}
+        <i class="fas fa-chevron-right"></i>
+      </a>
+    {% endif %}
+  </div>
+  
+  <div class="video-carousel-container">
+    <button class="carousel-nav carousel-prev" aria-label="Previous">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <div class="video-carousel-track">
+      {% for block in section.blocks %}
+        {% if block.type == 'product_video' %}
+          {% assign product = block.settings.product %}
+          {% if product != blank %}
+            {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+            {% assign compare_price = current_variant.compare_at_price %}
+            {% assign price = current_variant.price %}
+            {% assign discount_percentage = 0 %}
+            
+            {% if compare_price > price %}
+              {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
+            {% endif %}
+            
+            <div class="video-product-item" {{ block.shopify_attributes }}>
+              <div class="video-container">
+                {% if block.settings.video_url != blank %}
+                  <div class="video-wrapper">
+                    <video class="product-video" muted loop playsinline poster="{{ block.settings.poster_image | img_url: 'large' }}">
+                      <source src="{{ block.settings.video_url }}" type="video/mp4">
+                    </video>
+                    
+                    <div class="video-controls">
+                      <button class="video-play-pause" aria-label="Play/Pause">
+                        <i class="fas fa-play"></i>
+                      </button>
+                      <div class="video-sound-toggle" aria-label="Toggle Sound">
+                        <i class="fas fa-volume-mute"></i>
+                      </div>
+                    </div>
+                    
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% elsif block.settings.poster_image != blank %}
+                  <div class="image-wrapper">
+                    <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  <div class="image-wrapper">
+                    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+                
+                <div class="video-social-icons">
+                  <button class="social-icon like-button" aria-label="Like">
+                    <i class="fas fa-heart"></i>
+                  </button>
+                  <button class="social-icon comment-button" aria-label="Comment">
+                    <i class="fas fa-comment"></i>
+                  </button>
+                  <button class="social-icon share-button" aria-label="Share">
+                    <i class="fas fa-share"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-thumbnail">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">
+                      {{ product.title | slice: 0, 1 | upcase }}
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="product-details">
+                  <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                  
+                  <div class="product-price-container">
+                    <span class="product-price">₹{{ price | money_without_currency }}</span>
+                    
+                    {% if compare_price > price %}
+                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                      <span class="product-discount">{{ discount_percentage }}% OFF</span>
+                    {% endif %}
+                  </div>
+                </div>
+                
+                <div class="product-actions">
+                  {% if product.available %}
+                    {% if block.settings.button_style == 'buy_now' %}
+                      <form method="post" action="/cart/add">
+                        <input type="hidden" name="id" value="{{ current_variant.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="buy-now-button">
+                          {{ block.settings.button_text | default: 'BUY NOW' }}
+                        </button>
+                      </form>
+                    {% elsif block.settings.button_style == 'out_of_stock' %}
+                      <div class="out-of-stock-label">
+                        {{ block.settings.button_text | default: 'OUT OF STOCK' }}
+                      </div>
+                    {% else %}
+                      <a href="{{ product.url }}" class="view-product-button">
+                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                      </a>
+                    {% endif %}
+                  {% else %}
+                    <div class="out-of-stock-label">
+                      {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+    <button class="carousel-nav carousel-next" aria-label="Next">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
+
+<style>
+  .video-product-carousel {
+    padding: 40px 0;
+    overflow: hidden;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 0 15px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+  }
+  
+  .section-subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+  }
+  
+  .view-all-link {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ff6b9a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .view-all-link i {
+    margin-left: 5px;
+    font-size: 12px;
+  }
+  
+  .view-all-link:hover {
+    color: #e1306c;
+  }
+  
+  .video-carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+  }
+  
+  .carousel-nav:hover {
+    background-color: #fff;
+  }
+  
+  .carousel-prev {
+    left: 10px;
+  }
+  
+  .carousel-next {
+    right: 10px;
+  }
+  
+  .video-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 10px 5px;
+    margin: 0 -5px;
+  }
+  
+  .video-carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .video-product-item {
+    flex: 0 0 auto;
+    width: 300px;
+    margin: 0 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .video-product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 177.78%; /* 16:9 Aspect Ratio */
+    background-color: #f0f0f0;
+  }
+  
+  .video-wrapper, .image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .product-video, .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .video-controls {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .video-play-pause, .video-sound-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .video-play-pause:hover, .video-sound-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .video-views {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .video-social-icons {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .like-button.active {
+    color: #ff6b9a;
+  }
+  
+  .product-info {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .product-thumbnail {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    border: 2px solid #f0f0f0;
+  }
+  
+  .product-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #777;
+  }
+  
+  .product-details {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .product-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 5px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .product-price-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .product-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .product-compare-price {
+    font-size: 12px;
+    color: #999;
+    text-decoration: line-through;
+  }
+  
+  .product-discount {
+    font-size: 12px;
+    font-weight: 600;
+    color: #ff6b9a;
+  }
+  
+  .product-actions {
+    margin-left: 10px;
+  }
+  
+  .buy-now-button, .view-product-button {
+    display: inline-block;
+    background-color: #ff6b9a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+  
+  .buy-now-button:hover, .view-product-button:hover {
+    background-color: #e1306c;
+  }
+  
+  .out-of-stock-label {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #777;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  @media screen and (max-width: 767px) {
+    .video-product-item {
+      width: 250px;
+    }
+    
+    .section-title {
+      font-size: 20px;
+    }
+    
+    .product-info {
+      flex-wrap: wrap;
+    }
+    
+    .product-actions {
+      margin-left: 0;
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    .buy-now-button, .view-product-button, .out-of-stock-label {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('video-product-carousel-{{ section.id }}');
+    if (!carousel) return;
+    
+    const track = carousel.querySelector('.video-carousel-track');
+    const prevBtn = carousel.querySelector('.carousel-prev');
+    const nextBtn = carousel.querySelector('.carousel-next');
+    const items = carousel.querySelectorAll('.video-product-item');
+    
+    if (!track || !prevBtn || !nextBtn || items.length === 0) return;
+    
+    // Handle navigation
+    prevBtn.addEventListener('click', () => {
+      const itemWidth = items[0].offsetWidth + 20; // width + margin
+      track.scrollBy({ left: -itemWidth * 2, behavior: 'smooth' });
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      const itemWidth = items[0].offsetWidth + 20; // width + margin
+      track.scrollBy({ left: itemWidth * 2, behavior: 'smooth' });
+    });
+    
+    // Handle videos
+    const videos = carousel.querySelectorAll('.product-video');
+    const playPauseBtns = carousel.querySelectorAll('.video-play-pause');
+    const soundToggles = carousel.querySelectorAll('.video-sound-toggle');
+    
+    // Initialize Intersection Observer for videos
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        const playPauseBtn = video.parentElement.querySelector('.video-play-pause');
+        
+        if (entry.isIntersecting) {
+          // Autoplay when in view
+          video.play().catch(e => console.log('Autoplay prevented:', e));
+          if (playPauseBtn) {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          }
+        } else {
+          // Pause when out of view
+          video.pause();
+          if (playPauseBtn) {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+          }
+        }
+      });
+    }, { threshold: 0.6 });
+    
+    videos.forEach(video => {
+      videoObserver.observe(video);
+    });
+    
+    // Play/Pause buttons
+    playPauseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const video = btn.closest('.video-wrapper').querySelector('video');
+        
+        if (video.paused) {
+          video.play();
+          btn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+          video.pause();
+          btn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+      });
+    });
+    
+    // Sound toggle buttons
+    soundToggles.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const video = btn.closest('.video-wrapper').querySelector('video');
+        
+        if (video.muted) {
+          video.muted = false;
+          btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        } else {
+          video.muted = true;
+          btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        }
+      });
+    });
+    
+    // Like buttons
+    const likeButtons = carousel.querySelectorAll('.like-button');
+    
+    likeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Video Product Carousel",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "#LITCLUB"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Text",
+      "default": "View All"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_video",
+      "name": "Product Video",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Title (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL (MP4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "poster_image",
+          "label": "Poster Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_views",
+          "label": "Show Views Count",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "views_count",
+          "label": "Views Count",
+          "default": "1.2K"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button Style",
+          "options": [
+            {
+              "value": "buy_now",
+              "label": "Buy Now"
+            },
+            {
+              "value": "view_details",
+              "label": "View Details"
+            },
+            {
+              "value": "out_of_stock",
+              "label": "Out of Stock"
+            }
+          ],
+          "default": "buy_now"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "BUY NOW"
+        },
+        {
+          "type": "text",
+          "id": "sold_out_text",
+          "label": "Sold Out Text",
+          "default": "SOLD OUT"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Product Carousel",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "product_video"
+        },
+        {
+          "type": "product_video"
+        },
+        {
+          "type": "product_video"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

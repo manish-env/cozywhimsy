@@ -73,16 +73,15 @@
                 {% else %}
                   <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
                 {% endif %}
+                <div class="category-title-overlay">
+                  <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
+                </div>
               </a>
-              <div class="category-content">
-                <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
-                <a href="{{ block.settings.collection.url }}" class="category-link">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
-              </div>
             {% else %}
-              <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
-              <div class="category-content">
-                <h3>{{ block.settings.title | default: "Category Name" }}</h3>
-                <a href="#" class="category-link">{{ block.settings.button_text | default: "Explore" }} <i class="fas fa-arrow-right"></i></a>
+              <div class="category-img" style="background-color: {{ block.settings.background_color }};">
+                <div class="category-title-overlay">
+                  <h3>{{ block.settings.title | default: "Category Name" }}</h3>
+                </div>
               </div>
             {% endif %}
           </div>
@@ -91,10 +90,10 @@
         {% comment %} Display placeholder categories if no blocks are added {% endcomment %}
         {% for i in (1..4) %}
           <div class="category-card">
-            <div class="category-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};"></div>
-            <div class="category-content">
-              <h3>Sample Category {{ i }}</h3>
-              <a href="#" class="category-link">Explore <i class="fas fa-arrow-right"></i></a>
+            <div class="category-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};">
+              <div class="category-title-overlay">
+                <h3>Sample Category {{ i }}</h3>
+              </div>
             </div>
           </div>
         {% endfor %}
@@ -266,8 +265,8 @@
   /* Desktop Grid Styles */
   .category-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 25px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
     margin-top: 20px;
   }
   
@@ -289,57 +288,53 @@
   
   .category-img-link {
     display: block;
-    height: 200px;
+    height: 350px;
     overflow: hidden;
+    position: relative;
   }
   
   .category-img {
     width: 100%;
-    height: 200px;
+    height: 100%;
     background-size: cover;
     background-position: center;
     transition: all 0.5s ease;
-    position: relative;
   }
   
-  .category-content {
-    padding: 20px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  .category-img:hover {
+    transform: scale(1.05);
   }
   
-  .category-content h3 {
-    margin: 0 0 15px;
+  .category-title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .category-title-overlay h3 {
+    margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: #333;
   }
   
-  .category-link {
-    display: inline-flex;
-    align-items: center;
-    color: #ff6b9a;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 15px;
-    margin-top: auto;
-    transition: all 0.3s ease;
+  .category-card:hover .category-title-overlay {
+    background-color: rgba(255, 255, 255, 0.95);
   }
   
-  .category-link i {
-    margin-left: 6px;
-    font-size: 14px;
-    transition: transform 0.3s ease;
-  }
-  
-  .category-link:hover {
-    color: #e1306c;
-  }
-  
-  .category-link:hover i {
-    transform: translateX(4px);
+  @media screen and (max-width: 991px) {
+    .category-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .category-img-link {
+      height: 300px;
+    }
   }
   
   /* Mobile Category Grid Styles */

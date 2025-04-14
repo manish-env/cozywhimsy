@@ -5,352 +5,354 @@
   and direct "Buy Now" buttons.
 {% endcomment %}
 
-<div class="video-product-carousel" id="video-product-carousel-{{ section.id }}">
-  <div class="section-header">
-    <h2 class="section-title">{{ section.settings.title }}</h2>
-    {% if section.settings.subtitle != blank %}
-      <div class="section-subtitle">{{ section.settings.subtitle }}</div>
-    {% endif %}
-    
-    {% if section.settings.show_view_all and section.settings.view_all_url != blank %}
-      <a href="{{ section.settings.view_all_url }}" class="view-all-link">
-        {{ section.settings.view_all_text }}
-        <i class="fas fa-chevron-right"></i>
-      </a>
-    {% endif %}
-  </div>
-  
-  <div class="video-carousel-container">
-    <button class="carousel-nav carousel-prev" aria-label="Previous">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    
-    <div class="video-carousel-track">
-      {% for block in section.blocks %}
-        {% if block.type == 'product_video' %}
-          {% assign product = block.settings.product %}
-          {% if product != blank %}
-            {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
-            {% assign compare_price = current_variant.compare_at_price %}
-            {% assign price = current_variant.price %}
-            {% assign discount_percentage = 0 %}
-            
-            {% if compare_price > price %}
-              {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
-            {% endif %}
-            
-            <div class="video-product-item" {{ block.shopify_attributes }}>
-              <div class="video-container">
-                {% if block.settings.video_url != blank %}
-                  <div class="video-wrapper">
-                    <video class="product-video" muted loop playsinline autoplay poster="{{ block.settings.poster_image | img_url: 'large' }}">
-                      <source src="{{ block.settings.video_url }}" type="video/mp4">
-                    </video>
-                    
-                    {% if block.settings.show_views %}
-                      <div class="video-views">
-                        {{ block.settings.views_count | default: '1.2K' }} Views
-                      </div>
-                    {% endif %}
-                  </div>
-                {% elsif block.settings.poster_image != blank %}
-                  <div class="image-wrapper">
-                    <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
-                    {% if block.settings.show_views %}
-                      <div class="video-views">
-                        {{ block.settings.views_count | default: '1.2K' }} Views
-                      </div>
-                    {% endif %}
-                  </div>
-                {% else %}
-                  <div class="image-wrapper">
-                    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
-                    {% if block.settings.show_views %}
-                      <div class="video-views">
-                        {{ block.settings.views_count | default: '1.2K' }} Views
-                      </div>
-                    {% endif %}
-                  </div>
-                {% endif %}
-              </div>
-              
-              <div class="product-info">
-                <div class="product-thumbnail">
-                  {% if product.featured_image %}
-                    <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
-                  {% else %}
-                    <div class="placeholder-image">
-                      {{ product.title | slice: 0, 1 | upcase }}
-                    </div>
-                  {% endif %}
-                </div>
-                
-                <div class="product-details">
-                  <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
-                  
-                  <div class="product-price-container">
-                    <span class="product-price">₹{{ price | money_without_currency }}</span>
-                    
-                    {% if compare_price > price %}
-                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                      <span class="product-discount">{{ discount_percentage }}% OFF</span>
-                    {% endif %}
-                  </div>
-                </div>
-                
-                <div class="product-actions">
-                  {% if product.available %}
-                    {% if block.settings.button_style == 'buy_now' %}
-                      <form method="post" action="/cart/add">
-                        <input type="hidden" name="id" value="{{ current_variant.id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="buy-now-button">
-                          {{ block.settings.button_text | default: 'BUY NOW' }}
-                        </button>
-                      </form>
-                    {% elsif block.settings.button_style == 'out_of_stock' %}
-                      <div class="out-of-stock-label">
-                        {{ block.settings.button_text | default: 'OUT OF STOCK' }}
-                      </div>
-                    {% else %}
-                      <a href="{{ product.url }}" class="view-product-button">
-                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
-                      </a>
-                    {% endif %}
-                  {% else %}
-                    <div class="out-of-stock-label">
-                      {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        {% elsif block.type == 'video_slot' %}
-          {% assign product = block.settings.product %}
-          {% if product != blank %}
-            {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
-            {% assign compare_price = current_variant.compare_at_price %}
-            {% assign price = current_variant.price %}
-            {% assign discount_percentage = 0 %}
-            
-            {% if compare_price > price %}
-              {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
-            {% endif %}
-            
-            <div class="video-product-item" {{ block.shopify_attributes }}>
-              <div class="video-container">
-                {% if block.settings.video_url != blank %}
-                  <div class="video-wrapper">
-                    <video class="product-video" muted loop playsinline autoplay poster="{{ block.settings.poster_image | img_url: 'large' }}">
-                      <source src="{{ block.settings.video_url }}" type="video/mp4">
-                    </video>
-                    
-                    {% if block.settings.show_views %}
-                      <div class="video-views">
-                        {{ block.settings.views_count | default: '1.2K' }} Views
-                      </div>
-                    {% endif %}
-                  </div>
-                {% elsif block.settings.poster_image != blank %}
-                  <div class="image-wrapper">
-                    <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
-                    {% if block.settings.show_views %}
-                      <div class="video-views">
-                        {{ block.settings.views_count | default: '1.2K' }} Views
-                      </div>
-                    {% endif %}
-                  </div>
-                {% else %}
-                  <div class="image-wrapper">
-                    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
-                    {% if block.settings.show_views %}
-                      <div class="video-views">
-                        {{ block.settings.views_count | default: '1.2K' }} Views
-                      </div>
-                    {% endif %}
-                  </div>
-                {% endif %}
-              </div>
-              
-              <div class="product-info">
-                <div class="product-thumbnail">
-                  {% if product.featured_image %}
-                    <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
-                  {% else %}
-                    <div class="placeholder-image">
-                      {{ product.title | slice: 0, 1 | upcase }}
-                    </div>
-                  {% endif %}
-                </div>
-                
-                <div class="product-details">
-                  <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
-                  
-                  <div class="product-price-container">
-                    <span class="product-price">₹{{ price | money_without_currency }}</span>
-                    
-                    {% if compare_price > price %}
-                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                      <span class="product-discount">{{ discount_percentage }}% OFF</span>
-                    {% endif %}
-                  </div>
-                </div>
-                
-                <div class="product-actions">
-                  {% if product.available %}
-                    {% if block.settings.button_style == 'buy_now' %}
-                      <form method="post" action="/cart/add">
-                        <input type="hidden" name="id" value="{{ current_variant.id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="buy-now-button">
-                          {{ block.settings.button_text | default: 'BUY NOW' }}
-                        </button>
-                      </form>
-                    {% elsif block.settings.button_style == 'out_of_stock' %}
-                      <div class="out-of-stock-label">
-                        {{ block.settings.button_text | default: 'OUT OF STOCK' }}
-                      </div>
-                    {% else %}
-                      <a href="{{ product.url }}" class="view-product-button">
-                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
-                      </a>
-                    {% endif %}
-                  {% else %}
-                    <div class="out-of-stock-label">
-                      {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        {% elsif block.type == 'custom_video' %}
-          {% assign product = block.settings.product %}
-          <div class="video-product-item" {{ block.shopify_attributes }}>
-            <div class="video-container">
-              {% if block.settings.video_url != blank %}
-                <div class="video-wrapper">
-                  <video class="product-video" muted loop playsinline autoplay poster="{{ block.settings.poster_image | img_url: 'large' }}">
-                    <source src="{{ block.settings.video_url }}" type="video/mp4">
-                  </video>
-                  
-                  {% if block.settings.show_views %}
-                    <div class="video-views">
-                      {{ block.settings.views_count | default: '1.2K' }} Views
-                    </div>
-                  {% endif %}
-                </div>
-              {% elsif block.settings.poster_image != blank %}
-                <div class="image-wrapper">
-                  <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ block.settings.title }}" loading="lazy">
-                  {% if block.settings.show_views %}
-                    <div class="video-views">
-                      {{ block.settings.views_count | default: '1.2K' }} Views
-                    </div>
-                  {% endif %}
-                </div>
-              {% else %}
-                <div class="image-wrapper">
-                  <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
-                  {% if block.settings.show_views %}
-                    <div class="video-views">
-                      {{ block.settings.views_count | default: '1.2K' }} Views
-                    </div>
-                  {% endif %}
-                </div>
-              {% endif %}
-            </div>
-            
-            <div class="product-info">
-              <div class="product-thumbnail">
-                {% if product.featured_image %}
-                  <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
-                {% else %}
-                  <div class="placeholder-image">
-                    {{ product.title | slice: 0, 1 | upcase }}
-                  </div>
-                {% endif %}
-              </div>
-              
-              <div class="product-details">
-                <h3 class="product-title">{{ block.settings.title }}</h3>
-                
-                <div class="product-price-container">
-                  {% if block.settings.price_text != blank %}
-                    <span class="product-price">{{ block.settings.price_text }}</span>
-                  {% else %}
-                    {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
-                    {% assign price = current_variant.price %}
-                    <span class="product-price">₹{{ price | money_without_currency }}</span>
-                  {% endif %}
-                  
-                  {% if block.settings.compare_price_text != blank %}
-                    <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
-                  {% else %}
-                    {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
-                    {% assign compare_price = current_variant.compare_at_price %}
-                    {% if compare_price > price %}
-                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                    {% endif %}
-                  {% endif %}
-                  
-                  {% if block.settings.discount_text != blank %}
-                    <span class="product-discount">{{ block.settings.discount_text }}</span>
-                  {% else %}
-                    {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
-                    {% assign compare_price = current_variant.compare_at_price %}
-                    {% assign price = current_variant.price %}
-                    {% assign discount_percentage = 0 %}
-                    
-                    {% if compare_price > price %}
-                      {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
-                      <span class="product-discount">{{ discount_percentage }}% OFF</span>
-                    {% endif %}
-                  {% endif %}
-                </div>
-              </div>
-              
-              <div class="product-actions">
-                {% if product.available %}
-                  {% if block.settings.button_style == 'buy_now' %}
-                    <form method="post" action="/cart/add">
-                      <input type="hidden" name="id" value="{{ product.selected_variant.id }}">
-                      <input type="hidden" name="quantity" value="1">
-                      <button type="submit" class="buy-now-button">
-                        {{ block.settings.button_text | default: 'BUY NOW' }}
-                      </button>
-                    </form>
-                  {% elsif block.settings.button_style == 'out_of_stock' %}
-                    <div class="out-of-stock-label">
-                      {{ block.settings.button_text | default: 'OUT OF STOCK' }}
-                    </div>
-                  {% else %}
-                    {% if block.settings.button_url != blank %}
-                      <a href="{{ block.settings.button_url }}" class="view-product-button">
-                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
-                      </a>
-                    {% else %}
-                      <a href="{{ product.url }}" class="view-product-button">
-                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
-                      </a>
-                    {% endif %}
-                  {% endif %}
-                {% else %}
-                  <div class="out-of-stock-label">
-                    {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+<div class="page-width">
+  <div class="video-product-carousel" id="video-product-carousel-{{ section.id }}">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <div class="section-subtitle">{{ section.settings.subtitle }}</div>
+      {% endif %}
+      
+      {% if section.settings.show_view_all and section.settings.view_all_url != blank %}
+        <a href="{{ section.settings.view_all_url }}" class="view-all-link">
+          {{ section.settings.view_all_text }}
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      {% endif %}
     </div>
     
-    <button class="carousel-nav carousel-next" aria-label="Next">
-      <i class="fas fa-chevron-right"></i>
-    </button>
+    <div class="video-carousel-container">
+      <button class="carousel-nav carousel-prev" aria-label="Previous">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="video-carousel-track">
+        {% for block in section.blocks %}
+          {% if block.type == 'product_video' %}
+            {% assign product = block.settings.product %}
+            {% if product != blank %}
+              {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+              {% assign compare_price = current_variant.compare_at_price %}
+              {% assign price = current_variant.price %}
+              {% assign discount_percentage = 0 %}
+              
+              {% if compare_price > price %}
+                {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
+              {% endif %}
+              
+              <div class="video-product-item" {{ block.shopify_attributes }}>
+                <div class="video-container">
+                  {% if block.settings.video_url != blank %}
+                    <div class="video-wrapper">
+                      <video class="product-video" muted loop playsinline autoplay poster="{{ block.settings.poster_image | img_url: 'large' }}">
+                        <source src="{{ block.settings.video_url }}" type="video/mp4">
+                      </video>
+                      
+                      {% if block.settings.show_views %}
+                        <div class="video-views">
+                          {{ block.settings.views_count | default: '1.2K' }} Views
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% elsif block.settings.poster_image != blank %}
+                    <div class="image-wrapper">
+                      <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                      {% if block.settings.show_views %}
+                        <div class="video-views">
+                          {{ block.settings.views_count | default: '1.2K' }} Views
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                    <div class="image-wrapper">
+                      <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                      {% if block.settings.show_views %}
+                        <div class="video-views">
+                          {{ block.settings.views_count | default: '1.2K' }} Views
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="product-info">
+                  <div class="product-thumbnail">
+                    {% if product.featured_image %}
+                      <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
+                    {% else %}
+                      <div class="placeholder-image">
+                        {{ product.title | slice: 0, 1 | upcase }}
+                      </div>
+                    {% endif %}
+                  </div>
+                  
+                  <div class="product-details">
+                    <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                    
+                    <div class="product-price-container">
+                      <span class="product-price">₹{{ price | money_without_currency }}</span>
+                      
+                      {% if compare_price > price %}
+                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                        <span class="product-discount">{{ discount_percentage }}% OFF</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  
+                  <div class="product-actions">
+                    {% if product.available %}
+                      {% if block.settings.button_style == 'buy_now' %}
+                        <form method="post" action="/cart/add">
+                          <input type="hidden" name="id" value="{{ current_variant.id }}">
+                          <input type="hidden" name="quantity" value="1">
+                          <button type="submit" class="buy-now-button">
+                            {{ block.settings.button_text | default: 'BUY NOW' }}
+                          </button>
+                        </form>
+                      {% elsif block.settings.button_style == 'out_of_stock' %}
+                        <div class="out-of-stock-label">
+                          {{ block.settings.button_text | default: 'OUT OF STOCK' }}
+                        </div>
+                      {% else %}
+                        <a href="{{ product.url }}" class="view-product-button">
+                          {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                        </a>
+                      {% endif %}
+                    {% else %}
+                      <div class="out-of-stock-label">
+                        {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% elsif block.type == 'video_slot' %}
+            {% assign product = block.settings.product %}
+            {% if product != blank %}
+              {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+              {% assign compare_price = current_variant.compare_at_price %}
+              {% assign price = current_variant.price %}
+              {% assign discount_percentage = 0 %}
+              
+              {% if compare_price > price %}
+                {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
+              {% endif %}
+              
+              <div class="video-product-item" {{ block.shopify_attributes }}>
+                <div class="video-container">
+                  {% if block.settings.video_url != blank %}
+                    <div class="video-wrapper">
+                      <video class="product-video" muted loop playsinline autoplay poster="{{ block.settings.poster_image | img_url: 'large' }}">
+                        <source src="{{ block.settings.video_url }}" type="video/mp4">
+                      </video>
+                      
+                      {% if block.settings.show_views %}
+                        <div class="video-views">
+                          {{ block.settings.views_count | default: '1.2K' }} Views
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% elsif block.settings.poster_image != blank %}
+                    <div class="image-wrapper">
+                      <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                      {% if block.settings.show_views %}
+                        <div class="video-views">
+                          {{ block.settings.views_count | default: '1.2K' }} Views
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                    <div class="image-wrapper">
+                      <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                      {% if block.settings.show_views %}
+                        <div class="video-views">
+                          {{ block.settings.views_count | default: '1.2K' }} Views
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="product-info">
+                  <div class="product-thumbnail">
+                    {% if product.featured_image %}
+                      <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
+                    {% else %}
+                      <div class="placeholder-image">
+                        {{ product.title | slice: 0, 1 | upcase }}
+                      </div>
+                    {% endif %}
+                  </div>
+                  
+                  <div class="product-details">
+                    <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                    
+                    <div class="product-price-container">
+                      <span class="product-price">₹{{ price | money_without_currency }}</span>
+                      
+                      {% if compare_price > price %}
+                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                        <span class="product-discount">{{ discount_percentage }}% OFF</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  
+                  <div class="product-actions">
+                    {% if product.available %}
+                      {% if block.settings.button_style == 'buy_now' %}
+                        <form method="post" action="/cart/add">
+                          <input type="hidden" name="id" value="{{ current_variant.id }}">
+                          <input type="hidden" name="quantity" value="1">
+                          <button type="submit" class="buy-now-button">
+                            {{ block.settings.button_text | default: 'BUY NOW' }}
+                          </button>
+                        </form>
+                      {% elsif block.settings.button_style == 'out_of_stock' %}
+                        <div class="out-of-stock-label">
+                          {{ block.settings.button_text | default: 'OUT OF STOCK' }}
+                        </div>
+                      {% else %}
+                        <a href="{{ product.url }}" class="view-product-button">
+                          {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                        </a>
+                      {% endif %}
+                    {% else %}
+                      <div class="out-of-stock-label">
+                        {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% elsif block.type == 'custom_video' %}
+            {% assign product = block.settings.product %}
+            <div class="video-product-item" {{ block.shopify_attributes }}>
+              <div class="video-container">
+                {% if block.settings.video_url != blank %}
+                  <div class="video-wrapper">
+                    <video class="product-video" muted loop playsinline autoplay poster="{{ block.settings.poster_image | img_url: 'large' }}">
+                      <source src="{{ block.settings.video_url }}" type="video/mp4">
+                    </video>
+                    
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% elsif block.settings.poster_image != blank %}
+                  <div class="image-wrapper">
+                    <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ block.settings.title }}" loading="lazy">
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  <div class="image-wrapper">
+                    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="product-info">
+                <div class="product-thumbnail">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">
+                      {{ product.title | slice: 0, 1 | upcase }}
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="product-details">
+                  <h3 class="product-title">{{ block.settings.title }}</h3>
+                  
+                  <div class="product-price-container">
+                    {% if block.settings.price_text != blank %}
+                      <span class="product-price">{{ block.settings.price_text }}</span>
+                    {% else %}
+                      {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+                      {% assign price = current_variant.price %}
+                      <span class="product-price">₹{{ price | money_without_currency }}</span>
+                    {% endif %}
+                    
+                    {% if block.settings.compare_price_text != blank %}
+                      <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
+                    {% else %}
+                      {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+                      {% assign compare_price = current_variant.compare_at_price %}
+                      {% if compare_price > price %}
+                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                      {% endif %}
+                    {% endif %}
+                    
+                    {% if block.settings.discount_text != blank %}
+                      <span class="product-discount">{{ block.settings.discount_text }}</span>
+                    {% else %}
+                      {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+                      {% assign compare_price = current_variant.compare_at_price %}
+                      {% assign price = current_variant.price %}
+                      {% assign discount_percentage = 0 %}
+                      
+                      {% if compare_price > price %}
+                        {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
+                        <span class="product-discount">{{ discount_percentage }}% OFF</span>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+                
+                <div class="product-actions">
+                  {% if product.available %}
+                    {% if block.settings.button_style == 'buy_now' %}
+                      <form method="post" action="/cart/add">
+                        <input type="hidden" name="id" value="{{ product.selected_variant.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="buy-now-button">
+                          {{ block.settings.button_text | default: 'BUY NOW' }}
+                        </button>
+                      </form>
+                    {% elsif block.settings.button_style == 'out_of_stock' %}
+                      <div class="out-of-stock-label">
+                        {{ block.settings.button_text | default: 'OUT OF STOCK' }}
+                      </div>
+                    {% else %}
+                      {% if block.settings.button_url != blank %}
+                        <a href="{{ block.settings.button_url }}" class="view-product-button">
+                          {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                        </a>
+                      {% else %}
+                        <a href="{{ product.url }}" class="view-product-button">
+                          {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                        </a>
+                      {% endif %}
+                    {% endif %}
+                  {% else %}
+                    <div class="out-of-stock-label">
+                      {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+      <button class="carousel-nav carousel-next" aria-label="Next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
   </div>
 </div>
 

@@ -13,9 +13,13 @@
       <div class="story-header-content">
         <div class="story-user">
           <div class="story-user-avatar">
-            <img src="{{ settings.logo | img_url: 'small' }}" alt="{{ shop.name }}">
+            <div class="avatar-media-container">
+              <!-- Profile image or video will be inserted here -->
+            </div>
           </div>
-          <div class="story-user-name">{{ shop.name }}</div>
+          <div class="story-user-name">
+            <!-- Category name will be inserted here -->
+          </div>
         </div>
         <button class="story-close-btn" onclick="closeStoryModal()">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,15 +108,26 @@
   }
   
   .story-user-avatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     overflow: hidden;
     margin-right: 8px;
-    border: 2px solid white;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    padding: 2px;
   }
   
-  .story-user-avatar img {
+  .avatar-media-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  .avatar-media-container img,
+  .avatar-media-container video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -195,7 +210,8 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    z-index: 2;
+    z-index: 4;
+    pointer-events: none;
   }
   
   .story-shop-now-btn {
@@ -212,18 +228,11 @@
     text-decoration: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease;
-    animation: pulseButton 2s infinite;
-  }
-  
-  @keyframes pulseButton {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    pointer-events: auto;
   }
   
   .story-shop-now-btn:hover {
-    transform: scale(1.1);
-    animation: none;
+    transform: scale(1.05);
   }
   
   .story-shop-now-btn span {
@@ -237,7 +246,7 @@
     top: 0;
     height: 100%;
     width: 50%;
-    z-index: 3;
+    z-index: 2;
     cursor: pointer;
   }
   
@@ -316,9 +325,13 @@
     const story = storyData[index];
     const contentContainer = document.querySelector('.insta-story-content');
     const shopNowBtn = document.querySelector('.story-shop-now-btn');
+    const avatarContainer = document.querySelector('.avatar-media-container');
+    const userNameElement = document.querySelector('.story-user-name');
     
     // Clear previous content
     contentContainer.innerHTML = '';
+    avatarContainer.innerHTML = '';
+    userNameElement.textContent = '';
     
     // Reset progress bar
     const progressBar = document.querySelector('.story-progress-inner');
@@ -374,6 +387,29 @@
       }, 5000);
     }
     
+    // Update avatar
+    if (story.avatar) {
+      if (story.avatar.type === 'video') {
+        const avatarVideo = document.createElement('video');
+        avatarVideo.src = story.avatar.media;
+        avatarVideo.autoplay = true;
+        avatarVideo.muted = true;
+        avatarVideo.playsInline = true;
+        avatarVideo.loop = true;
+        avatarContainer.appendChild(avatarVideo);
+      } else {
+        const avatarImage = document.createElement('img');
+        avatarImage.src = story.avatar.media;
+        avatarImage.alt = story.title || '';
+        avatarContainer.appendChild(avatarImage);
+      }
+    }
+    
+    // Update user name
+    if (story.title) {
+      userNameElement.textContent = story.title;
+    }
+    
     // Update shop now button
     if (story.link) {
       shopNowBtn.href = story.link;
@@ -412,11 +448,19 @@
     // Create navigation areas
     const prevNav = document.createElement('div');
     prevNav.className = 'story-nav-prev';
-    prevNav.addEventListener('click', prevStory);
+    prevNav.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      prevStory();
+    });
     
     const nextNav = document.createElement('div');
     nextNav.className = 'story-nav-next';
-    nextNav.addEventListener('click', nextStory);
+    nextNav.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      nextStory();
+    });
     
     contentContainer.appendChild(prevNav);
     contentContainer.appendChild(nextNav);

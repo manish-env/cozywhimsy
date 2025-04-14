@@ -20,7 +20,7 @@
       <div class="toplevel-categories-list">
         {% if section.settings.special_category_enabled %}
           <div class="toplevel-category special-category" {{ block.shopify_attributes }}>
-            <div class="category-link" onclick="openCategoryStory('special', '{{ section.settings.special_category_title | default: 'Special' }}', '{{ section.settings.special_category_link }}', '{{ section.settings.special_category_image | img_url: 'master' }}', '{{ section.settings.special_category_video }}')">
+            <div class="category-link" onclick="openCategoryStory('special', '{{ section.settings.special_category_title | default: 'Special' }}', '{{ section.settings.special_category_link }}', '{{ section.settings.special_category_image | img_url: 'master' }}', '{{ section.settings.special_category_video }}', '{{ section.settings.special_category_profile | img_url: 'master' }}', '{{ section.settings.special_category_profile_video }}')">
               <div class="category-image-wrapper">
                 {% if section.settings.special_category_image != blank %}
                   <div class="category-image">
@@ -42,7 +42,7 @@
         {% for block in section.blocks %}
           {% if block.type == 'category' %}
             <div class="toplevel-category" {{ block.shopify_attributes }}>
-              <div class="category-link" onclick="openCategoryStory('{{ block.id }}', '{{ block.settings.title | default: block.settings.collection.title }}', '{% if block.settings.link != blank %}{{ block.settings.link }}{% elsif block.settings.collection != blank %}{{ block.settings.collection.url }}{% else %}#{% endif %}', '{% if block.settings.image != blank %}{{ block.settings.image | img_url: 'master' }}{% elsif block.settings.collection.image != blank %}{{ block.settings.collection.image | img_url: 'master' }}{% endif %}', '{{ block.settings.video_url }}')">
+              <div class="category-link" onclick="openCategoryStory('{{ block.id }}', '{{ block.settings.title | default: block.settings.collection.title }}', '{% if block.settings.link != blank %}{{ block.settings.link }}{% elsif block.settings.collection != blank %}{{ block.settings.collection.url }}{% else %}#{% endif %}', '{% if block.settings.image != blank %}{{ block.settings.image | img_url: 'master' }}{% elsif block.settings.collection.image != blank %}{{ block.settings.collection.image | img_url: 'master' }}{% endif %}', '{{ block.settings.video_url }}', '{% if block.settings.profile_image != blank %}{{ block.settings.profile_image | img_url: 'master' }}{% endif %}', '{% if block.settings.profile_video != blank %}{{ block.settings.profile_video }}{% endif %}')">
                 <div class="category-image-wrapper">
                   {% if block.settings.image != blank %}
                     <div class="category-image">
@@ -92,9 +92,23 @@
 
 <script>
   // Function to open Instagram-style story modal
-  function openCategoryStory(id, title, link, image, video) {
+  function openCategoryStory(id, title, link, image, video, profileImage, profileVideo) {
     // Create story data
     const stories = [];
+    
+    // Create avatar data
+    let avatar = null;
+    if (profileVideo && profileVideo !== '') {
+      avatar = {
+        type: 'video',
+        media: profileVideo
+      };
+    } else if (profileImage && profileImage !== '') {
+      avatar = {
+        type: 'image',
+        media: profileImage
+      };
+    }
     
     // Add video story if available
     if (video && video !== '') {
@@ -103,7 +117,8 @@
         media: video,
         title: title,
         link: link,
-        muted: false
+        muted: false,
+        avatar: avatar
       });
     } 
     // Add image story
@@ -112,7 +127,8 @@
         type: 'image',
         media: image,
         title: title,
-        link: link
+        link: link,
+        avatar: avatar
       });
     }
     
@@ -122,7 +138,8 @@
         type: 'image',
         media: '{{ 'placeholder-image.jpg' | asset_url }}',
         title: title,
-        link: link
+        link: link,
+        avatar: avatar
       });
     }
     
@@ -344,6 +361,18 @@
       "info": "Optional: Add a video URL to show in the story (MP4 format recommended)"
     },
     {
+      "type": "image_picker",
+      "id": "special_category_profile",
+      "label": "Special category profile picture",
+      "info": "Profile picture shown in the story header"
+    },
+    {
+      "type": "url",
+      "id": "special_category_profile_video",
+      "label": "Special category profile video",
+      "info": "Optional: Video for profile picture (will autoplay and loop)"
+    },
+    {
       "type": "header",
       "content": "Spacing"
     },
@@ -441,6 +470,18 @@
           "id": "video_url",
           "label": "Video URL",
           "info": "Optional: Add a video URL to show in the story (MP4 format recommended)"
+        },
+        {
+          "type": "image_picker",
+          "id": "profile_image",
+          "label": "Profile picture",
+          "info": "Profile picture shown in the story header"
+        },
+        {
+          "type": "url",
+          "id": "profile_video",
+          "label": "Profile video",
+          "info": "Optional: Video for profile picture (will autoplay and loop)"
         },
         {
           "type": "url",

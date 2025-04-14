@@ -34,40 +34,33 @@
                   </video>
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                   {% endif %}
                 {% elsif block.settings.poster_image != blank %}
                   <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                   {% endif %}
                 {% else %}
                   <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                   {% endif %}
                 {% endif %}
               </div>
               
               <div class="product-info">
-                <div class="product-header">
-                  <div class="product-image">
-                    <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}">
-                  </div>
-                  <div class="product-details">
-                    <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
-                    
-                    <div class="product-price-container">
-                      <span class="product-price">₹{{ price | money_without_currency }}</span>
-                      
-                      {% if compare_price > price %}
-                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                        <span class="product-discount">{{ discount_percentage }}% Off</span>
-                      {% endif %}
-                    </div>
-                  </div>
+                <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                
+                <div class="product-price-container">
+                  <span class="product-price">₹{{ price | money_without_currency }}</span>
+                  
+                  {% if compare_price > price %}
+                    <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                    <span class="product-discount">{{ discount_percentage }}% Off</span>
+                  {% endif %}
                 </div>
                 
                 {% if product.available %}
@@ -105,40 +98,33 @@
                   </video>
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                   {% endif %}
                 {% elsif block.settings.poster_image != blank %}
                   <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                   {% endif %}
                 {% else %}
                   <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                   {% endif %}
                 {% endif %}
               </div>
               
               <div class="product-info">
-                <div class="product-header">
-                  <div class="product-image">
-                    <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}">
-                  </div>
-                  <div class="product-details">
-                    <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
-                    
-                    <div class="product-price-container">
-                      <span class="product-price">₹{{ price | money_without_currency }}</span>
-                      
-                      {% if compare_price > price %}
-                        <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
-                        <span class="product-discount">{{ discount_percentage }}% Off</span>
-                      {% endif %}
-                    </div>
-                  </div>
+                <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                
+                <div class="product-price-container">
+                  <span class="product-price">₹{{ price | money_without_currency }}</span>
+                  
+                  {% if compare_price > price %}
+                    <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                    <span class="product-discount">{{ discount_percentage }}% Off</span>
+                  {% endif %}
                 </div>
                 
                 {% if product.available %}
@@ -166,46 +152,39 @@
                 </video>
                 
                 {% if block.settings.show_views %}
-                  <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                  <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                 {% endif %}
               {% elsif block.settings.poster_image != blank %}
                 <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ block.settings.title }}" loading="lazy">
                 
                 {% if block.settings.show_views %}
-                  <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                  <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                 {% endif %}
               {% else %}
                 <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                 
                 {% if block.settings.show_views %}
-                  <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
+                  <div class="video-views">{{ block.settings.views_count | default: '12K' }} Views</div>
                 {% endif %}
               {% endif %}
             </div>
             
             <div class="product-info">
-              <div class="product-header">
-                <div class="product-image">
-                  <img src="{{ product.featured_image | img_url: '50x' }}" alt="{{ product.title }}">
-                </div>
-                <div class="product-details">
-                  <h3 class="product-title">{{ block.settings.title }}</h3>
-                  
-                  <div class="product-price-container">
-                    {% if block.settings.price_text != blank %}
-                      <span class="product-price">{{ block.settings.price_text }}</span>
-                    {% else %}
-                      <span class="product-price">₹{{ price | money_without_currency }}</span>
-                    {% endif %}
-                    
-                    {% if block.settings.compare_price_text != blank %}
-                      <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
-                      {% if block.settings.discount_text != blank %}
-                        <span class="product-discount">{{ block.settings.discount_text }}</span>
-                      {% endif %}
-                    {% endif %}
-                  </div>
-                </div>
+              <h3 class="product-title">{{ block.settings.title }}</h3>
+              
+              <div class="product-price-container">
+                {% if block.settings.price_text != blank %}
+                  <span class="product-price">{{ block.settings.price_text }}</span>
+                {% else %}
+                  <span class="product-price">₹{{ price | money_without_currency }}</span>
+                {% endif %}
+                
+                {% if block.settings.compare_price_text != blank %}
+                  <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
+                  {% if block.settings.discount_text != blank %}
+                    <span class="product-discount">{{ block.settings.discount_text }}</span>
+                  {% endif %}
+                {% endif %}
               </div>
               
               {% if block.settings.button_url != blank %}
@@ -248,6 +227,8 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     height: 100%;
+    border: 1px solid #e0e0e0;
+    max-width: 100%;
   }
   
   .video-container {
@@ -283,29 +264,6 @@
     padding: 15px;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-  }
-  
-  .product-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-  
-  .product-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-  
-  .product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .product-details {
     flex-grow: 1;
   }
   
@@ -446,7 +404,7 @@
           "type": "text",
           "id": "views_count",
           "label": "Views Count",
-          "default": "12.0K"
+          "default": "12K"
         },
         {
           "type": "select",
@@ -515,7 +473,7 @@
           "type": "text",
           "id": "views_count",
           "label": "Views Count",
-          "default": "12.0K"
+          "default": "12K"
         },
         {
           "type": "select",
@@ -603,7 +561,7 @@
           "type": "text",
           "id": "views_count",
           "label": "Views Count",
-          "default": "12.0K"
+          "default": "12K"
         },
         {
           "type": "text",

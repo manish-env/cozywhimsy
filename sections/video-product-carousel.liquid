@@ -4,7 +4,7 @@
   A simple, clean product video carousel that matches the theme's style.
 {% endcomment %}
 
-<div class="page-width">
+<div class="section-container">
   {% if section.settings.title != blank %}
     <div class="section-header text-center">
       <h2>{{ section.settings.title | escape }}</h2>
@@ -212,11 +212,23 @@
 </div>
 
 <style>
+  .section-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
   .video-product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
   
   .video-product-card {
@@ -226,7 +238,7 @@
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    height: 100%;
+    height: 500px;
     border: 1px solid #e0e0e0;
     max-width: 100%;
   }
@@ -305,7 +317,7 @@
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #000;
+    background-color: #ff6b9a;
     color: white;
     border: none;
     border-radius: 4px;
@@ -314,6 +326,10 @@
     cursor: pointer;
     text-decoration: none;
     margin-top: auto;
+  }
+  
+  .buy-now-button:hover {
+    background-color: #e1306c;
   }
   
   .out-of-stock-label {
@@ -352,6 +368,10 @@
     .out-of-stock-label {
       padding: 8px;
       font-size: 12px;
+    }
+    
+    .video-product-card {
+      height: auto;
     }
   }
 </style>

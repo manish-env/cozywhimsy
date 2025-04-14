@@ -18,6 +18,7 @@
             "title": "Anime",
             "collection": "anime-collection",
             "video_url": "",
+            "profile_video": "",
             "link": "shopify://collections/anime-collection",
             "background_color": "#f8f8f8"
           }
@@ -28,6 +29,7 @@
             "title": "Lamps",
             "collection": "light-animals",
             "video_url": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
+            "profile_video": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
             "link": "",
             "background_color": "#f8f8f8"
           }
@@ -39,6 +41,7 @@
             "collection": "frontpage",
             "image": "shopify://shop_images/81Ct8MBqq-L._AC_UF350_350_QL80.jpg",
             "video_url": "",
+            "profile_video": "",
             "link": "",
             "background_color": "#f8f8f8"
           }
@@ -49,6 +52,7 @@
             "title": "Summer",
             "collection": "frontpage",
             "video_url": "",
+            "profile_video": "",
             "link": "",
             "background_color": "#f8f8f8"
           }
@@ -59,6 +63,7 @@
             "title": "Spcieal",
             "collection": "all",
             "video_url": "",
+            "profile_video": "",
             "link": "",
             "background_color": "#f8f8f8"
           }
@@ -77,6 +82,7 @@
         "special_category_link": "",
         "special_category_image": "shopify://shop_images/Untitled_design_1.png",
         "special_category_video": "",
+        "special_category_profile_video": "",
         "margin_top": 10,
         "margin_bottom": -39,
         "padding_top": 0,

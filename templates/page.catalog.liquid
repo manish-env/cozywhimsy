@@ -37,6 +37,9 @@
         <button type="button" id="catalogSearchButton" class="catalog-search-button" aria-label="Search">
           <i class="fas fa-search"></i>
         </button>
+        <button type="button" id="clearSearchButton" class="catalog-clear-search-button" aria-label="Clear search">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -313,10 +316,6 @@
     z-index: 10;
   }
   
-  .catalog-search-form {
-    width: 100%;
-  }
-  
   .search-input-wrapper {
     position: relative;
     display: flex;
@@ -356,6 +355,29 @@
   
   .catalog-search-button:hover {
     color: #ff6b9a;
+  }
+  
+  .catalog-clear-search-button {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: none;
+  }
+  
+  .catalog-clear-search-button:hover {
+    color: #ff6b9a;
+  }
+  
+  .catalog-clear-search-button.visible {
+    display: block;
   }
   
   /* Products Grid Styles */
@@ -826,10 +848,18 @@
     // Search functionality
     const searchInput = document.getElementById('catalogSearchInput');
     const searchButton = document.getElementById('catalogSearchButton');
+    const clearSearchButton = document.getElementById('clearSearchButton');
     
     function performSearch() {
       const searchTerm = searchInput.value.toLowerCase().trim();
       const productCards = document.querySelectorAll('.catalog-product-card');
+      
+      // Toggle clear button visibility
+      if (searchTerm !== '') {
+        clearSearchButton.classList.add('visible');
+      } else {
+        clearSearchButton.classList.remove('visible');
+      }
       
       if (searchTerm === '') {
         // If search is empty, show all products
@@ -850,13 +880,43 @@
       });
     }
     
+    // Clear search function
+    function clearSearch() {
+      searchInput.value = '';
+      clearSearchButton.classList.remove('visible');
+      
+      // Show all products
+      const productCards = document.querySelectorAll('.catalog-product-card');
+      productCards.forEach(card => {
+        card.style.display = 'block';
+      });
+      
+      // Focus back on search input
+      searchInput.focus();
+    }
+    
     // Search on button click
     searchButton.addEventListener('click', performSearch);
     
-    // Search on Enter key press
+    // Clear search on clear button click
+    clearSearchButton.addEventListener('click', clearSearch);
+    
+    // Search on Enter key press and show clear button when typing
     searchInput.addEventListener('keyup', function(event) {
       if (event.key === 'Enter') {
         performSearch();
+      } else {
+        // Show/hide clear button based on input content
+        if (this.value !== '') {
+          clearSearchButton.classList.add('visible');
+        } else {
+          clearSearchButton.classList.remove('visible');
+          // Show all products when search is cleared
+          const productCards = document.querySelectorAll('.catalog-product-card');
+          productCards.forEach(card => {
+            card.style.display = 'block';
+          });
+        }
       }
     });
     

@@ -472,8 +472,10 @@
   .video-container {
     position: relative;
     width: 100%;
-    padding-top: 125%; /* Shorter height for videos */
+    padding-top: 100%; /* Square aspect ratio (1:1) */
     background-color: #f0f0f0;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
   }
   
   .video-wrapper, .image-wrapper {

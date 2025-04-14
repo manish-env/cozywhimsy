@@ -1,0 +1,1257 @@
+{% layout 'theme' %}
+
+<div class="account-page">
+  <div class="container">
+    <!-- Profile Header Section -->
+    <div class="account-profile-header">
+      <div class="profile-image-container">
+        <div class="profile-image-wrapper">
+          <div class="profile-image">
+            <span>{{ customer.name | slice: 0, 1 | upcase }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-info">
+        <h1 class="profile-name">{{ customer.name }}</h1>
+        <p class="profile-email">{{ customer.email }}</p>
+        <p class="profile-since">Customer since {{ customer.created_at | date: "%B %Y" }}</p>
+        
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{ customer.orders_count }}</span>
+            <span class="stat-label">Orders</span>
+          </div>
+          
+          {% if customer.orders_count > 0 %}
+            {% assign total_spent = 0 %}
+            {% for order in customer.orders %}
+              {% assign total_spent = total_spent | plus: order.total_price %}
+            {% endfor %}
+            <div class="stat-item">
+              <span class="stat-value">{{ total_spent | money }}</span>
+              <span class="stat-label">Total Spent</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="profile-actions">
+        <a href="{{ routes.account_logout_url }}" class="logout-button">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log out</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Account Navigation Tabs -->
+    <div class="account-tabs">
+      <button class="tab-button active" data-tab="orders">
+        <i class="fas fa-shopping-bag"></i>
+        <span>Orders</span>
+      </button>
+      <button class="tab-button" data-tab="addresses">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Addresses</span>
+      </button>
+      <button class="tab-button" data-tab="details">
+        <i class="fas fa-user-cog"></i>
+        <span>Account Details</span>
+      </button>
+      <button class="tab-button" data-tab="wishlist">
+        <i class="fas fa-heart"></i>
+        <span>Wishlist</span>
+      </button>
+    </div>
+    
+    <!-- Tab Content Sections -->
+    <div class="account-tab-content">
+      <!-- Orders Tab -->
+      <div id="orders" class="tab-panel active">
+        <div class="panel-header">
+          <h2>Your Orders</h2>
+        </div>
+        
+        {% if customer.orders.size > 0 %}
+          <div class="orders-grid">
+            {% for order in customer.orders %}
+              <div class="order-card">
+                <div class="order-header">
+                  <div class="order-number">
+                    <span class="label">Order</span>
+                    <span class="value">{{ order.name }}</span>
+                  </div>
+                  <div class="order-date">
+                    <span class="label">Date</span>
+                    <span class="value">{{ order.created_at | date: "%b %d, %Y" }}</span>
+                  </div>
+                </div>
+                
+                <div class="order-status">
+                  <div class="status-indicator {% if order.financial_status == 'paid' %}paid{% elsif order.financial_status == 'pending' %}pending{% else %}{{ order.financial_status }}{% endif %}">
+                    {{ order.financial_status | capitalize }}
+                  </div>
+                  <div class="fulfillment-status {% if order.fulfillment_status == 'fulfilled' %}fulfilled{% elsif order.fulfillment_status == 'partial' %}partial{% else %}unfulfilled{% endif %}">
+                    {% if order.fulfillment_status == 'fulfilled' %}
+                      Shipped
+                    {% elsif order.fulfillment_status == 'partial' %}
+                      Partially Shipped
+                    {% else %}
+                      Processing
+                    {% endif %}
+                  </div>
+                </div>
+                
+                <div class="order-items">
+                  {% for line_item in order.line_items limit: 3 %}
+                    <div class="order-item">
+                      <div class="item-image">
+                        {% if line_item.image %}
+                          <img src="{{ line_item.image | img_url: 'small' }}" alt="{{ line_item.title }}" loading="lazy">
+                        {% else %}
+                          <div class="placeholder-image">
+                            <i class="fas fa-box"></i>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="item-details">
+                        <div class="item-title">{{ line_item.title }}</div>
+                        <div class="item-variant">{{ line_item.variant.title }}</div>
+                        <div class="item-quantity">Qty: {{ line_item.quantity }}</div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  
+                  {% if order.line_items.size > 3 %}
+                    <div class="more-items">
+                      + {{ order.line_items.size | minus: 3 }} more item(s)
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="order-footer">
+                  <div class="order-total">
+                    <span class="label">Total</span>
+                    <span class="value">{{ order.total_price | money }}</span>
+                  </div>
+                  
+                  <div class="order-actions">
+                    <a href="{{ order.customer_url }}" class="view-details-button">
+                      View Details
+                    </a>
+                    
+                    {% if order.fulfillment_status != 'fulfilled' %}
+                      <a href="{{ order.customer_url }}" class="track-order-button">
+                        Track Order
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-shopping-bag"></i>
+            </div>
+            <h3>No orders yet</h3>
+            <p>When you place your first order, it will appear here.</p>
+            <a href="/collections/all" class="shop-now-button">Start Shopping</a>
+          </div>
+        {% endif %}
+      </div>
+      
+      <!-- Addresses Tab -->
+      <div id="addresses" class="tab-panel">
+        <div class="panel-header">
+          <h2>Your Addresses</h2>
+          <button id="addNewAddress" class="add-address-button">
+            <i class="fas fa-plus"></i>
+            <span>Add New Address</span>
+          </button>
+        </div>
+        
+        {% if customer.addresses.size > 0 %}
+          <div class="addresses-grid">
+            {% for address in customer.addresses %}
+              <div class="address-card" id="address-{{ address.id }}">
+                <div class="address-header">
+                  <h3 class="address-title">
+                    {{ address.street }} {% if address.street2 %}{{ address.street2 }}{% endif %}
+                  </h3>
+                  
+                  {% if address == customer.default_address %}
+                    <div class="default-badge">Default</div>
+                  {% endif %}
+                </div>
+                
+                <div class="address-content">
+                  <p>{{ address.first_name }} {{ address.last_name }}</p>
+                  <p>{{ address.company }}</p>
+                  <p>{{ address.street }}</p>
+                  {% if address.street2 %}<p>{{ address.street2 }}</p>{% endif %}
+                  <p>{{ address.city }}, {{ address.province_code }} {{ address.zip }}</p>
+                  <p>{{ address.country }}</p>
+                  <p>{{ address.phone }}</p>
+                </div>
+                
+                <div class="address-actions">
+                  <button class="edit-address-button" data-address-id="{{ address.id }}">
+                    <i class="fas fa-pencil-alt"></i>
+                    <span>Edit</span>
+                  </button>
+                  
+                  <button class="delete-address-button" data-address-id="{{ address.id }}">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Delete</span>
+                  </button>
+                  
+                  {% if address != customer.default_address %}
+                    <button class="set-default-button" data-address-id="{{ address.id }}">
+                      <i class="fas fa-check-circle"></i>
+                      <span>Set as Default</span>
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          
+          <!-- Address Forms (hidden by default) -->
+          <div id="addressForms" class="address-forms">
+            <!-- New Address Form -->
+            <div id="newAddressForm" class="address-form-container" style="display: none;">
+              <div class="form-header">
+                <h3>Add New Address</h3>
+                <button class="close-form-button" data-form="newAddressForm">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              {% form 'customer_address', customer.new_address %}
+                <div class="form-fields">
+                  <div class="form-row">
+                    <div class="form-field">
+                      <label for="AddressFirstName">First Name</label>
+                      <input type="text" id="AddressFirstName" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressLastName">Last Name</label>
+                      <input type="text" id="AddressLastName" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+                    </div>
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="AddressCompany">Company</label>
+                    <input type="text" id="AddressCompany" name="address[company]" value="{{ form.company }}" autocomplete="organization">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="AddressAddress1">Address Line 1</label>
+                    <input type="text" id="AddressAddress1" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="AddressAddress2">Address Line 2</label>
+                    <input type="text" id="AddressAddress2" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2">
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-field">
+                      <label for="AddressCity">City</label>
+                      <input type="text" id="AddressCity" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressCountry">Country</label>
+                      <select id="AddressCountry" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
+                        {{ all_country_option_tags }}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div id="AddressProvinceContainer" class="form-row">
+                    <div class="form-field">
+                      <label for="AddressProvince">State/Province</label>
+                      <select id="AddressProvince" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1">
+                      </select>
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressZip">Zip/Postal Code</label>
+                      <input type="text" id="AddressZip" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
+                    </div>
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="AddressPhone">Phone</label>
+                    <input type="tel" id="AddressPhone" name="address[phone]" value="{{ form.phone }}" autocomplete="tel">
+                  </div>
+                  
+                  <div class="form-checkbox">
+                    <input type="checkbox" id="address_default_address_new" name="address[default]" value="1">
+                    <label for="address_default_address_new">Set as default address</label>
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="save-button">Save Address</button>
+                  <button type="button" class="cancel-button" data-form="newAddressForm">Cancel</button>
+                </div>
+              {% endform %}
+            </div>
+            
+            <!-- Edit Address Forms -->
+            {% for address in customer.addresses %}
+              <div id="editAddress_{{ address.id }}" class="address-form-container" style="display: none;">
+                <div class="form-header">
+                  <h3>Edit Address</h3>
+                  <button class="close-form-button" data-form="editAddress_{{ address.id }}">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                
+                {% form 'customer_address', address %}
+                  <div class="form-fields">
+                    <div class="form-row">
+                      <div class="form-field">
+                        <label for="AddressFirstName_{{ address.id }}">First Name</label>
+                        <input type="text" id="AddressFirstName_{{ address.id }}" name="address[first_name]" value="{{ address.first_name }}" autocomplete="given-name">
+                      </div>
+                      
+                      <div class="form-field">
+                        <label for="AddressLastName_{{ address.id }}">Last Name</label>
+                        <input type="text" id="AddressLastName_{{ address.id }}" name="address[last_name]" value="{{ address.last_name }}" autocomplete="family-name">
+                      </div>
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressCompany_{{ address.id }}">Company</label>
+                      <input type="text" id="AddressCompany_{{ address.id }}" name="address[company]" value="{{ address.company }}" autocomplete="organization">
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressAddress1_{{ address.id }}">Address Line 1</label>
+                      <input type="text" id="AddressAddress1_{{ address.id }}" name="address[address1]" value="{{ address.address1 }}" autocomplete="address-line1">
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressAddress2_{{ address.id }}">Address Line 2</label>
+                      <input type="text" id="AddressAddress2_{{ address.id }}" name="address[address2]" value="{{ address.address2 }}" autocomplete="address-line2">
+                    </div>
+                    
+                    <div class="form-row">
+                      <div class="form-field">
+                        <label for="AddressCity_{{ address.id }}">City</label>
+                        <input type="text" id="AddressCity_{{ address.id }}" name="address[city]" value="{{ address.city }}" autocomplete="address-level2">
+                      </div>
+                      
+                      <div class="form-field">
+                        <label for="AddressCountry_{{ address.id }}">Country</label>
+                        <select id="AddressCountry_{{ address.id }}" name="address[country]" data-default="{{ address.country }}" autocomplete="country">
+                          {{ all_country_option_tags }}
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div id="AddressProvinceContainer_{{ address.id }}" class="form-row">
+                      <div class="form-field">
+                        <label for="AddressProvince_{{ address.id }}">State/Province</label>
+                        <select id="AddressProvince_{{ address.id }}" name="address[province]" data-default="{{ address.province }}" autocomplete="address-level1">
+                        </select>
+                      </div>
+                      
+                      <div class="form-field">
+                        <label for="AddressZip_{{ address.id }}">Zip/Postal Code</label>
+                        <input type="text" id="AddressZip_{{ address.id }}" name="address[zip]" value="{{ address.zip }}" autocomplete="postal-code">
+                      </div>
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="AddressPhone_{{ address.id }}">Phone</label>
+                      <input type="tel" id="AddressPhone_{{ address.id }}" name="address[phone]" value="{{ address.phone }}" autocomplete="tel">
+                    </div>
+                    
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="address_default_address_{{ address.id }}" name="address[default]" value="1" {% if address == customer.default_address %}checked{% endif %}>
+                      <label for="address_default_address_{{ address.id }}">Set as default address</label>
+                    </div>
+                  </div>
+                  
+                  <div class="form-actions">
+                    <button type="submit" class="save-button">Update Address</button>
+                    <button type="button" class="cancel-button" data-form="editAddress_{{ address.id }}">Cancel</button>
+                  </div>
+                {% endform %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3>No addresses saved</h3>
+            <p>Add a new address to streamline your checkout process.</p>
+            <button id="emptyStateAddAddress" class="add-address-button">Add New Address</button>
+          </div>
+        {% endif %}
+      </div>
+      
+      <div id="details" class="tab-panel">
+        <div class="panel-header">
+          <h2>Account Details</h2>
+        </div>
+        
+        <div class="account-details-container">
+          <div class="account-details-card">
+            <div class="card-header">
+              <h3>Profile Information</h3>
+              <button id="editProfileButton" class="edit-button">
+                <i class="fas fa-pencil-alt"></i>
+                <span>Edit</span>
+              </button>
+            </div>
+            
+            <div id="profileInfo" class="card-content">
+              <div class="info-row">
+                <div class="info-label">Name</div>
+                <div class="info-value">{{ customer.name }}</div>
+              </div>
+              
+              <div class="info-row">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ customer.email }}</div>
+              </div>
+              
+              <div class="info-row">
+                <div class="info-label">Phone</div>
+                <div class="info-value">{{ customer.phone | default: 'Not provided' }}</div>
+              </div>
+            </div>
+            
+            <div id="profileEditForm" class="edit-form" style="display: none;">
+              {% form 'customer', customer %}
+                <div class="form-fields">
+                  <div class="form-row">
+                    <div class="form-field">
+                      <label for="CustomerFirstName">First Name</label>
+                      <input type="text" id="CustomerFirstName" name="customer[first_name]" value="{{ customer.first_name }}">
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="CustomerLastName">Last Name</label>
+                      <input type="text" id="CustomerLastName" name="customer[last_name]" value="{{ customer.last_name }}">
+                    </div>
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="CustomerEmail">Email</label>
+                    <input type="email" id="CustomerEmail" name="customer[email]" value="{{ customer.email }}">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="CustomerPhone">Phone</label>
+                    <input type="tel" id="CustomerPhone" name="customer[phone]" value="{{ customer.phone }}">
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="save-button">Save Changes</button>
+                  <button type="button" id="cancelProfileEdit" class="cancel-button">Cancel</button>
+                </div>
+              {% endform %}
+            </div>
+          </div>
+          
+          <div class="account-details-card">
+            <div class="card-header">
+              <h3>Password</h3>
+              <button id="changePasswordButton" class="edit-button">
+                <i class="fas fa-key"></i>
+                <span>Change</span>
+              </button>
+            </div>
+            
+            <div id="passwordInfo" class="card-content">
+              <div class="info-row">
+                <div class="info-label">Password</div>
+                <div class="info-value">••••••••</div>
+              </div>
+              
+              <p class="password-info-text">
+                For security reasons, your password is hidden. Click the Change button to update your password.
+              </p>
+            </div>
+            
+            <div id="passwordChangeForm" class="edit-form" style="display: none;">
+              {% form 'customer', customer %}
+                <div class="form-fields">
+                  <div class="form-field">
+                    <label for="CurrentPassword">Current Password</label>
+                    <input type="password" id="CurrentPassword" name="customer[current_password]">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="NewPassword">New Password</label>
+                    <input type="password" id="NewPassword" name="customer[password]">
+                  </div>
+                  
+                  <div class="form-field">
+                    <label for="PasswordConfirmation">Confirm New Password</label>
+                    <input type="password" id="PasswordConfirmation" name="customer[password_confirmation]">
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="save-button">Update Password</button>
+                  <button type="button" id="cancelPasswordChange" class="cancel-button">Cancel</button>
+                </div>
+              {% endform %}
+            </div>
+          </div>
+          
+          <div class="account-details-card">
+            <div class="card-header">
+              <h3>Email Preferences</h3>
+              <button id="editEmailPrefsButton" class="edit-button">
+                <i class="fas fa-envelope"></i>
+                <span>Edit</span>
+              </button>
+            </div>
+            
+            <div id="emailPrefsInfo" class="card-content">
+              <div class="info-row">
+                <div class="info-label">Marketing Emails</div>
+                <div class="info-value">
+                  {% if customer.accepts_marketing %}
+                    <span class="status-active">Subscribed</span>
+                  {% else %}
+                    <span class="status-inactive">Not subscribed</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <div id="emailPrefsForm" class="edit-form" style="display: none;">
+              {% form 'customer', customer %}
+                <div class="form-fields">
+                  <div class="form-checkbox">
+                    <input type="checkbox" id="CustomerAcceptsMarketing" name="customer[accepts_marketing]" {% if customer.accepts_marketing %}checked{% endif %}>
+                    <label for="CustomerAcceptsMarketing">Subscribe to marketing emails</label>
+                  </div>
+                  
+                  <p class="form-help-text">
+                    You'll receive updates about new products, sales, and special offers.
+                  </p>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="save-button">Save Preferences</button>
+                  <button type="button" id="cancelEmailPrefsEdit" class="cancel-button">Cancel</button>
+                </div>
+              {% endform %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="wishlist" class="tab-panel">
+        <div class="panel-header">
+          <h2>Your Wishlist</h2>
+        </div>
+        
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h3>Your wishlist is empty</h3>
+          <p>Save your favorite items to come back to them later.</p>
+          <a href="/collections/all" class="shop-now-button">Browse Products</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .account-page {
+    padding: 20px 0 80px; /* Bottom padding for mobile navbar */
+    background-color: #f9f9f9;
+  }
+  
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  /* Profile Header Styles */
+  .account-profile-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-image-container {
+    margin-right: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .profile-image-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: #ff6b9a;
+  }
+  
+  .profile-info {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .profile-name {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 5px;
+    color: #333;
+  }
+  
+  .profile-email {
+    font-size: 14px;
+    color: #777;
+    margin: 0 0 5px;
+  }
+  
+  .profile-since {
+    font-size: 12px;
+    color: #999;
+    margin: 0 0 15px;
+  }
+  
+  .profile-stats {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stat-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .profile-actions {
+    margin-left: auto;
+    margin-top: 15px;
+  }
+  
+  .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .logout-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Tabs Styles */
+  .account-tabs {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .account-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab-button {
+    flex: 1;
+    min-width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 10px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    color: #777;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .tab-button i {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .tab-button.active {
+    color: #ff6b9a;
+    border-bottom-color: #ff6b9a;
+  }
+  
+  /* Tab Content Styles */
+  .account-tab-content {
+    background-color: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .tab-panel {
+    display: none;
+    padding: 20px;
+  }
+  
+  .tab-panel.active {
+    display: block;
+  }
+  
+  .panel-header {
+    margin-bottom: 20px;
+  }
+  
+  .panel-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Orders Tab Styles */
+  .orders-grid {
+    display: grid;
+    grid-gap: 15px;
+  }
+  
+  .order-card {
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .order-number, .order-date {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 3px;
+  }
+  
+  .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .order-status {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .status-indicator, .fulfillment-status {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+  
+  .status-indicator.paid {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .status-indicator.pending {
+    background-color: #fff8e1;
+    color: #f57c00;
+  }
+  
+  .fulfillment-status.fulfilled {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .fulfillment-status.partial {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  .fulfillment-status.unfulfilled {
+    background-color: #f5f5f5;
+    color: #616161;
+  }
+  
+  .order-items {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .order-item {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .order-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .item-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 10px;
+  }
+  
+  .item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+  }
+  
+  .item-details {
+    flex: 1;
+  }
+  
+  .item-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    color: #333;
+  }
+  
+  .item-variant {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 3px;
+  }
+  
+  .item-quantity {
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .more-items {
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .order-total {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .order-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .view-details-button, .track-order-button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-details-button {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .view-details-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .track-order-button {
+    background-color: #ff6b9a;
+    color: white;
+  }
+  
+  .track-order-button:hover {
+    background-color: #e1306c;
+  }
+  
+  /* Empty State Styles */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .empty-icon {
+    font-size: 40px;
+    color: #ccc;
+    margin-bottom: 15px;
+  }
+  
+  .empty-state h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: #333;
+  }
+  
+  .empty-state p {
+    font-size: 14px;
+    color: #777;
+    margin: 0 0 20px;
+  }
+  
+  .shop-now-button {
+    display: inline-block;
+    background-color: #ff6b9a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .shop-now-button:hover {
+    background-color: #e1306c;
+  }
+  
+  /* Responsive Styles */
+  @media (min-width: 768px) {
+    .container {
+      max-width: 720px;
+    }
+    
+    .orders-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .container {
+      max-width: 960px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1140px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons and panels
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+        
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // Show corresponding panel
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Tab Navigation
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons and panels
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+        
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // Show corresponding panel
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Address Management
+    const addNewAddressBtn = document.getElementById('addNewAddress');
+    const emptyStateAddAddressBtn = document.getElementById('emptyStateAddAddress');
+    const newAddressForm = document.getElementById('newAddressForm');
+    
+    // Show new address form
+    if (addNewAddressBtn) {
+      addNewAddressBtn.addEventListener('click', function() {
+        newAddressForm.style.display = 'block';
+      });
+    }
+    
+    if (emptyStateAddAddressBtn) {
+      emptyStateAddAddressBtn.addEventListener('click', function() {
+        newAddressForm.style.display = 'block';
+      });
+    }
+    
+    // Edit address buttons
+    const editAddressButtons = document.querySelectorAll('.edit-address-button');
+    
+    editAddressButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const addressId = this.getAttribute('data-address-id');
+        const editForm = document.getElementById(`editAddress_${addressId}`);
+        editForm.style.display = 'block';
+      });
+    });
+    
+    // Close form buttons
+    const closeFormButtons = document.querySelectorAll('.close-form-button');
+    const cancelButtons = document.querySelectorAll('.cancel-button');
+    
+    function closeForm(formId) {
+      const form = document.getElementById(formId);
+      if (form) {
+        form.style.display = 'none';
+      }
+    }
+    
+    closeFormButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const formId = this.getAttribute('data-form');
+        closeForm(formId);
+      });
+    });
+    
+    cancelButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const formId = this.getAttribute('data-form');
+        closeForm(formId);
+      });
+    });
+    
+    // Delete address confirmation
+    const deleteAddressButtons = document.querySelectorAll('.delete-address-button');
+    
+    deleteAddressButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const addressId = this.getAttribute('data-address-id');
+        if (confirm('Are you sure you want to delete this address?')) {
+          // Submit delete form
+          const deleteForm = document.createElement('form');
+          deleteForm.method = 'post';
+          deleteForm.action = '/account/addresses/' + addressId;
+          
+          const methodInput = document.createElement('input');
+          methodInput.type = 'hidden';
+          methodInput.name = '_method';
+          methodInput.value = 'delete';
+          
+          deleteForm.appendChild(methodInput);
+          document.body.appendChild(deleteForm);
+          deleteForm.submit();
+        }
+      });
+    });
+    
+    // Set default address
+    const setDefaultButtons = document.querySelectorAll('.set-default-button');
+    
+    setDefaultButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const addressId = this.getAttribute('data-address-id');
+        
+        // Submit set default form
+        const defaultForm = document.createElement('form');
+        defaultForm.method = 'post';
+        defaultForm.action = '/account/addresses/' + addressId + '/default';
+        
+        document.body.appendChild(defaultForm);
+        defaultForm.submit();
+      });
+    });
+    
+    // Country/Province selectors
+    const countrySelects = document.querySelectorAll('select[id^="AddressCountry"]');
+    
+    countrySelects.forEach(countrySelect => {
+      const formId = countrySelect.id.replace('AddressCountry', '');
+      const provinceSelect = document.getElementById('AddressProvince' + formId);
+      const provinceContainer = document.getElementById('AddressProvinceContainer' + formId);
+      
+      if (provinceSelect && provinceContainer) {
+        // Initialize provinces
+        const options = provinceSelect.innerHTML;
+        const defaultValue = provinceSelect.getAttribute('data-default');
+        
+        countrySelect.addEventListener('change', function() {
+          const provinces = this.options[this.selectedIndex].getAttribute('data-provinces');
+          
+          if (provinces) {
+            provinceContainer.style.display = 'flex';
+            
+            const provinceArray = JSON.parse(provinces);
+            let provinceOptions = '';
+            
+            provinceArray.forEach(province => {
+              provinceOptions += `<option value="${province[0]}">${province[1]}</option>`;
+            });
+            
+            provinceSelect.innerHTML = provinceOptions;
+            
+            if (defaultValue && provinceSelect.querySelector(`option[value="${defaultValue}"]`)) {
+              provinceSelect.value = defaultValue;
+            }
+          } else {
+            provinceContainer.style.display = 'none';
+          }
+        });
+        
+        // Trigger change on load
+        countrySelect.dispatchEvent(new Event('change'));
+      }
+    });
+    
+    // Account Details Management
+    const editProfileBtn = document.getElementById('editProfileButton');
+    const profileInfo = document.getElementById('profileInfo');
+    const profileEditForm = document.getElementById('profileEditForm');
+    const cancelProfileEdit = document.getElementById('cancelProfileEdit');
+    
+    if (editProfileBtn && profileInfo && profileEditForm && cancelProfileEdit) {
+      editProfileBtn.addEventListener('click', function() {
+        profileInfo.style.display = 'none';
+        profileEditForm.style.display = 'block';
+      });
+      
+      cancelProfileEdit.addEventListener('click', function() {
+        profileInfo.style.display = 'block';
+        profileEditForm.style.display = 'none';
+      });
+    }
+    
+    const changePasswordBtn = document.getElementById('changePasswordButton');
+    const passwordInfo = document.getElementById('passwordInfo');
+    const passwordChangeForm = document.getElementById('passwordChangeForm');
+    const cancelPasswordChange = document.getElementById('cancelPasswordChange');
+    
+    if (changePasswordBtn && passwordInfo && passwordChangeForm && cancelPasswordChange) {
+      changePasswordBtn.addEventListener('click', function() {
+        passwordInfo.style.display = 'none';
+        passwordChangeForm.style.display = 'block';
+      });
+      
+      cancelPasswordChange.addEventListener('click', function() {
+        passwordInfo.style.display = 'block';
+        passwordChangeForm.style.display = 'none';
+      });
+    }
+    
+    const editEmailPrefsBtn = document.getElementById('editEmailPrefsButton');
+    const emailPrefsInfo = document.getElementById('emailPrefsInfo');
+    const emailPrefsForm = document.getElementById('emailPrefsForm');
+    const cancelEmailPrefsEdit = document.getElementById('cancelEmailPrefsEdit');
+    
+    if (editEmailPrefsBtn && emailPrefsInfo && emailPrefsForm && cancelEmailPrefsEdit) {
+      editEmailPrefsBtn.addEventListener('click', function() {
+        emailPrefsInfo.style.display = 'none';
+        emailPrefsForm.style.display = 'block';
+      });
+      
+      cancelEmailPrefsEdit.addEventListener('click', function() {
+        emailPrefsInfo.style.display = 'block';
+        emailPrefsForm.style.display = 'none';
+      });
+    }
+  });
+</script>

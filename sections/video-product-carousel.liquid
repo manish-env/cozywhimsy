@@ -34,28 +34,25 @@
                   </video>
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                   {% endif %}
                 {% elsif block.settings.poster_image != blank %}
                   <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                   {% endif %}
                 {% else %}
                   <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                   {% endif %}
                 {% endif %}
                 
                 <div class="video-actions">
                   <button class="video-like" aria-label="Like">
                     <i class="far fa-heart"></i>
-                  </button>
-                  <button class="video-share" aria-label="Share">
-                    <i class="far fa-paper-plane"></i>
                   </button>
                 </div>
               </div>
@@ -68,26 +65,28 @@
                   <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
                   
                   <div class="product-price-container">
-                    <span class="product-price">RS. {{ price | money_without_currency }}</span>
+                    <span class="product-price">₹{{ price | money_without_currency }}</span>
                     
                     {% if compare_price > price %}
-                      <span class="product-compare-price">RS. {{ compare_price | money_without_currency }}</span>
+                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
                       <span class="product-discount">{{ discount_percentage }}% Off</span>
                     {% endif %}
                   </div>
-                  
-                  {% if product.available %}
-                    <form method="post" action="/cart/add" class="product-form">
-                      <input type="hidden" name="id" value="{{ current_variant.id }}">
-                      <input type="hidden" name="quantity" value="1">
-                      <button type="submit" class="buy-now-button">
-                        Buy Now
-                      </button>
-                    </form>
-                  {% else %}
-                    <div class="out-of-stock-label">{{ block.settings.sold_out_text | default: 'SOLD OUT' }}</div>
-                  {% endif %}
                 </div>
+              </div>
+              
+              <div class="product-action">
+                {% if product.available %}
+                  <form method="post" action="/cart/add" class="product-form">
+                    <input type="hidden" name="id" value="{{ current_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="buy-now-button">
+                      Buy Now
+                    </button>
+                  </form>
+                {% else %}
+                  <div class="out-of-stock-label">{{ block.settings.sold_out_text | default: 'SOLD OUT' }}</div>
+                {% endif %}
               </div>
             </div>
           {% endif %}
@@ -112,28 +111,25 @@
                   </video>
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                   {% endif %}
                 {% elsif block.settings.poster_image != blank %}
                   <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                   {% endif %}
                 {% else %}
                   <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                   
                   {% if block.settings.show_views %}
-                    <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                    <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                   {% endif %}
                 {% endif %}
                 
                 <div class="video-actions">
                   <button class="video-like" aria-label="Like">
                     <i class="far fa-heart"></i>
-                  </button>
-                  <button class="video-share" aria-label="Share">
-                    <i class="far fa-paper-plane"></i>
                   </button>
                 </div>
               </div>
@@ -146,26 +142,28 @@
                   <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
                   
                   <div class="product-price-container">
-                    <span class="product-price">RS. {{ price | money_without_currency }}</span>
+                    <span class="product-price">₹{{ price | money_without_currency }}</span>
                     
                     {% if compare_price > price %}
-                      <span class="product-compare-price">RS. {{ compare_price | money_without_currency }}</span>
+                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
                       <span class="product-discount">{{ discount_percentage }}% Off</span>
                     {% endif %}
                   </div>
-                  
-                  {% if product.available %}
-                    <form method="post" action="/cart/add" class="product-form">
-                      <input type="hidden" name="id" value="{{ current_variant.id }}">
-                      <input type="hidden" name="quantity" value="1">
-                      <button type="submit" class="buy-now-button">
-                        Buy Now
-                      </button>
-                    </form>
-                  {% else %}
-                    <div class="out-of-stock-label">{{ block.settings.sold_out_text | default: 'SOLD OUT' }}</div>
-                  {% endif %}
                 </div>
+              </div>
+              
+              <div class="product-action">
+                {% if product.available %}
+                  <form method="post" action="/cart/add" class="product-form">
+                    <input type="hidden" name="id" value="{{ current_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="buy-now-button">
+                      Buy Now
+                    </button>
+                  </form>
+                {% else %}
+                  <div class="out-of-stock-label">{{ block.settings.sold_out_text | default: 'SOLD OUT' }}</div>
+                {% endif %}
               </div>
             </div>
           {% endif %}
@@ -180,28 +178,25 @@
                 </video>
                 
                 {% if block.settings.show_views %}
-                  <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                  <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                 {% endif %}
               {% elsif block.settings.poster_image != blank %}
                 <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ block.settings.title }}" loading="lazy">
                 
                 {% if block.settings.show_views %}
-                  <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                  <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                 {% endif %}
               {% else %}
                 <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
                 
                 {% if block.settings.show_views %}
-                  <div class="video-views">{{ block.settings.views_count | default: '122.4K' }} Views</div>
+                  <div class="video-views">{{ block.settings.views_count | default: '12.0K' }} Views</div>
                 {% endif %}
               {% endif %}
               
               <div class="video-actions">
                 <button class="video-like" aria-label="Like">
                   <i class="far fa-heart"></i>
-                </button>
-                <button class="video-share" aria-label="Share">
-                  <i class="far fa-paper-plane"></i>
                 </button>
               </div>
             </div>
@@ -217,7 +212,7 @@
                   {% if block.settings.price_text != blank %}
                     <span class="product-price">{{ block.settings.price_text }}</span>
                   {% else %}
-                    <span class="product-price">RS. {{ price | money_without_currency }}</span>
+                    <span class="product-price">₹{{ price | money_without_currency }}</span>
                   {% endif %}
                   
                   {% if block.settings.compare_price_text != blank %}
@@ -227,25 +222,27 @@
                     {% endif %}
                   {% endif %}
                 </div>
-                
-                {% if block.settings.button_url != blank %}
-                  <a href="{{ block.settings.button_url }}" class="buy-now-button">
-                    {{ block.settings.button_text | default: 'BUY NOW' }}
-                  </a>
-                {% elsif product != blank %}
-                  {% if product.available %}
-                    <form method="post" action="/cart/add" class="product-form">
-                      <input type="hidden" name="id" value="{{ product.selected_variant.id }}">
-                      <input type="hidden" name="quantity" value="1">
-                      <button type="submit" class="buy-now-button">
-                        {{ block.settings.button_text | default: 'BUY NOW' }}
-                      </button>
-                    </form>
-                  {% else %}
-                    <div class="out-of-stock-label">{{ block.settings.sold_out_text | default: 'SOLD OUT' }}</div>
-                  {% endif %}
-                {% endif %}
               </div>
+            </div>
+            
+            <div class="product-action">
+              {% if block.settings.button_url != blank %}
+                <a href="{{ block.settings.button_url }}" class="buy-now-button">
+                  {{ block.settings.button_text | default: 'BUY NOW' }}
+                </a>
+              {% elsif product != blank %}
+                {% if product.available %}
+                  <form method="post" action="/cart/add" class="product-form">
+                    <input type="hidden" name="id" value="{{ product.selected_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="buy-now-button">
+                      {{ block.settings.button_text | default: 'BUY NOW' }}
+                    </button>
+                  </form>
+                {% else %}
+                  <div class="out-of-stock-label">{{ block.settings.sold_out_text | default: 'SOLD OUT' }}</div>
+                {% endif %}
+              {% endif %}
             </div>
           </div>
       {% endcase %}
@@ -269,7 +266,6 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     height: 100%;
-    margin-bottom: 20px;
   }
   
   .video-container {
@@ -305,24 +301,20 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    display: flex;
-    gap: 10px;
   }
   
-  .video-like,
-  .video-share {
+  .video-like {
     background-color: transparent;
     border: none;
     padding: 0;
     font-size: 16px;
-    color: white;
     cursor: pointer;
   }
   
   .product-info {
     padding: 15px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-grow: 1;
   }
   
@@ -331,7 +323,7 @@
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 15px;
+    margin-bottom: 10px;
   }
   
   .product-image img {
@@ -341,9 +333,7 @@
   }
   
   .product-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-grow: 1;
   }
   
   .product-title {
@@ -380,6 +370,10 @@
     margin-left: 5px;
   }
   
+  .product-action {
+    margin-top: auto;
+  }
+  
   .buy-now-button {
     display: block;
     width: 100%;
@@ -392,9 +386,6 @@
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    margin-top: 10px;
-    text-transform: uppercase;
-    font-size: 14px;
   }
   
   .out-of-stock-label {
@@ -407,7 +398,6 @@
     border-radius: 4px;
     font-weight: 600;
     text-align: center;
-    margin-top: auto;
   }
   
   @media screen and (max-width: 767px) {
@@ -485,7 +475,7 @@
           "type": "text",
           "id": "views_count",
           "label": "Views Count",
-          "default": "122.4K"
+          "default": "12.0K"
         },
         {
           "type": "select",
@@ -554,7 +544,7 @@
           "type": "text",
           "id": "views_count",
           "label": "Views Count",
-          "default": "122.4K"
+          "default": "12.0K"
         },
         {
           "type": "select",
@@ -618,13 +608,13 @@
           "type": "text",
           "id": "price_text",
           "label": "Price Text",
-          "default": "RS. 1,449"
+          "default": "₹1,449"
         },
         {
           "type": "text",
           "id": "compare_price_text",
           "label": "Compare Price Text",
-          "default": "RS. 2,098"
+          "default": "₹2,098"
         },
         {
           "type": "text",
@@ -642,7 +632,7 @@
           "type": "text",
           "id": "views_count",
           "label": "Views Count",
-          "default": "122.4K"
+          "default": "12.0K"
         },
         {
           "type": "text",

@@ -1,21 +1,7 @@
 {% layout 'theme' %}
 
 <div class="catalog-page">
-  <!-- Search bar section -->
-  <div class="catalog-search-container">
-    <div class="container">
-      <form action="/search" method="get" class="catalog-search-form">
-        <div class="search-input-wrapper">
-          <input type="search" name="q" placeholder="Search for products..." class="catalog-search-input" aria-label="Search">
-          <button type="submit" class="catalog-search-button" aria-label="Submit search">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-  
-  <!-- Categories section -->
+  <!-- Categories section - Now placed above search bar -->
   <div class="catalog-categories-container">
     <div class="container">
       <div class="catalog-categories-wrapper">
@@ -43,15 +29,117 @@
     </div>
   </div>
   
+  <!-- Search bar section - Now below categories -->
+  <div class="catalog-search-container">
+    <div class="container">
+      <form action="/search" method="get" class="catalog-search-form">
+        <div class="search-input-wrapper">
+          <input type="search" name="q" placeholder="Search for products..." class="catalog-search-input" aria-label="Search">
+          <button type="submit" class="catalog-search-button" aria-label="Submit search">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
   <!-- Products grid section -->
   <div class="catalog-products-container">
     <div class="container">
-      <h2 class="catalog-section-title">All Products</h2>
+      <div class="catalog-header">
+        <h2 class="catalog-section-title">All Products</h2>
+        
+        <!-- Filter and Sort Controls -->
+        <div class="catalog-controls">
+          <div class="catalog-sort">
+            <select id="sortBy" class="catalog-sort-select">
+              <option value="manual">Featured</option>
+              <option value="price-ascending">Price: Low to High</option>
+              <option value="price-descending">Price: High to Low</option>
+              <option value="title-ascending">Alphabetically: A-Z</option>
+              <option value="title-descending">Alphabetically: Z-A</option>
+              <option value="created-descending">Date: New to Old</option>
+              <option value="created-ascending">Date: Old to New</option>
+              <option value="best-selling">Best Selling</option>
+            </select>
+            <i class="fas fa-chevron-down sort-icon"></i>
+          </div>
+          
+          <button id="filterToggle" class="catalog-filter-toggle">
+            <i class="fas fa-filter"></i>
+            <span>Filter</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Filter Drawer -->
+      <div id="filterDrawer" class="catalog-filter-drawer">
+        <div class="filter-drawer-header">
+          <h3>Filter Products</h3>
+          <button id="closeFilter" class="close-filter">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="filter-drawer-content">
+          <!-- Price Range Filter -->
+          <div class="filter-group">
+            <h4 class="filter-title">Price Range</h4>
+            <div class="price-range-inputs">
+              <div class="price-input">
+                <label for="priceMin">From</label>
+                <input type="number" id="priceMin" min="0" placeholder="Min">
+              </div>
+              <div class="price-input">
+                <label for="priceMax">To</label>
+                <input type="number" id="priceMax" min="0" placeholder="Max">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Availability Filter -->
+          <div class="filter-group">
+            <h4 class="filter-title">Availability</h4>
+            <div class="filter-options">
+              <label class="filter-checkbox">
+                <input type="checkbox" id="inStock">
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-label">In stock</span>
+              </label>
+              <label class="filter-checkbox">
+                <input type="checkbox" id="outOfStock">
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-label">Out of stock</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- On Sale Filter -->
+          <div class="filter-group">
+            <h4 class="filter-title">Product Status</h4>
+            <div class="filter-options">
+              <label class="filter-checkbox">
+                <input type="checkbox" id="onSale">
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-label">On sale</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="filter-drawer-footer">
+          <button id="applyFilters" class="apply-filters-btn">Apply Filters</button>
+          <button id="clearFilters" class="clear-filters-btn">Clear All</button>
+        </div>
+      </div>
       
       <div class="catalog-products-grid">
         {% paginate collections.all.products by 12 %}
           {% for product in collections.all.products %}
-            <div class="catalog-product-card">
+            <div class="catalog-product-card" 
+                 data-price="{{ product.price }}" 
+                 data-available="{{ product.available }}" 
+                 data-on-sale="{% if product.compare_at_price > product.price %}true{% else %}false{% endif %}">
               <a href="{{ product.url }}" class="catalog-product-link">
                 <div class="catalog-product-image-container">
                   {% if product.featured_image %}
@@ -121,66 +209,19 @@
     padding-bottom: 80px; /* Space for mobile navbar */
   }
   
-  /* Search Bar Styles */
-  .catalog-search-container {
-    padding: 15px;
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  
-  .catalog-search-form {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 100%;
     width: 100%;
-  }
-  
-  .search-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  
-  .catalog-search-input {
-    width: 100%;
-    padding: 12px 45px 12px 15px;
-    border: 1px solid #f0f0f0;
-    border-radius: 25px;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease;
-  }
-  
-  .catalog-search-input:focus {
-    outline: none;
-    border-color: #ff6b9a;
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(255, 107, 154, 0.1);
-  }
-  
-  .catalog-search-button {
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #777;
-    font-size: 18px;
-    padding: 10px;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  
-  .catalog-search-button:hover {
-    color: #ff6b9a;
+    margin: 0 auto;
   }
   
   /* Categories Styles - Instagram-inspired */
   .catalog-categories-container {
-    padding: 15px 0;
+    padding: 15px 0 10px;
     background-color: #fff;
-    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
   }
   
   .catalog-categories-wrapper {
@@ -195,6 +236,7 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none; /* Firefox */
     padding: 5px 0;
+    margin: 0 -5px; /* Negative margin to offset item margin */
   }
   
   .catalog-categories-list::-webkit-scrollbar {
@@ -263,16 +305,297 @@
     white-space: nowrap;
   }
   
+  /* Search Bar Styles */
+  .catalog-search-container {
+    padding: 12px 0;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .catalog-search-form {
+    width: 100%;
+  }
+  
+  .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .catalog-search-input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 1px solid #f0f0f0;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+  
+  .catalog-search-input:focus {
+    outline: none;
+    border-color: #ff6b9a;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 107, 154, 0.1);
+  }
+  
+  .catalog-search-button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 18px;
+    padding: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .catalog-search-button:hover {
+    color: #ff6b9a;
+  }
+  
   /* Products Grid Styles */
   .catalog-products-container {
-    padding: 15px;
+    padding: 15px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
   }
   
   .catalog-section-title {
     font-size: 20px;
     font-weight: 600;
-    margin-bottom: 20px;
     color: #333;
+    margin: 0;
+  }
+  
+  .catalog-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .catalog-sort {
+    position: relative;
+  }
+  
+  .catalog-sort-select {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 8px 30px 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .sort-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #777;
+  }
+  
+  .catalog-filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* Filter Drawer */
+  .catalog-filter-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 350px;
+    height: 100%;
+    background-color: #fff;
+    z-index: 1000;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .catalog-filter-drawer.open {
+    right: 0;
+  }
+  
+  .filter-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .filter-drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .close-filter {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #777;
+  }
+  
+  .filter-drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+  }
+  
+  .filter-group {
+    margin-bottom: 20px;
+  }
+  
+  .filter-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: #333;
+  }
+  
+  .price-range-inputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .price-input {
+    flex: 1;
+  }
+  
+  .price-input label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: #777;
+  }
+  
+  .price-input input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .filter-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .filter-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .checkbox-custom {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+  
+  .filter-checkbox input:checked ~ .checkbox-custom:after {
+    content: '';
+    position: absolute;
+    display: block;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid #ff6b9a;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .checkbox-label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .filter-drawer-footer {
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .apply-filters-btn {
+    flex: 1;
+    background-color: #ff6b9a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .clear-filters-btn {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  /* Overlay for filter drawer */
+  .filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .filter-overlay.active {
+    display: block;
   }
   
   .catalog-products-grid {
@@ -440,6 +763,10 @@
   
   /* Media Queries */
   @media (min-width: 768px) {
+    .container {
+      max-width: 720px;
+    }
+    
     .catalog-products-grid {
       grid-template-columns: repeat(3, 1fr);
       grid-gap: 20px;
@@ -451,8 +778,137 @@
   }
   
   @media (min-width: 992px) {
+    .container {
+      max-width: 960px;
+    }
+    
     .catalog-products-grid {
       grid-template-columns: repeat(4, 1fr);
     }
   }
+  
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1140px;
+    }
+  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Filter drawer functionality
+    const filterToggle = document.getElementById('filterToggle');
+    const filterDrawer = document.getElementById('filterDrawer');
+    const closeFilter = document.getElementById('closeFilter');
+    const applyFilters = document.getElementById('applyFilters');
+    const clearFilters = document.getElementById('clearFilters');
+    
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'filter-overlay';
+    document.body.appendChild(overlay);
+    
+    // Open filter drawer
+    filterToggle.addEventListener('click', function() {
+      filterDrawer.classList.add('open');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+    
+    // Close filter drawer
+    function closeFilterDrawer() {
+      filterDrawer.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    closeFilter.addEventListener('click', closeFilterDrawer);
+    overlay.addEventListener('click', closeFilterDrawer);
+    
+    // Apply filters
+    applyFilters.addEventListener('click', function() {
+      const minPrice = document.getElementById('priceMin').value;
+      const maxPrice = document.getElementById('priceMax').value;
+      const inStock = document.getElementById('inStock').checked;
+      const outOfStock = document.getElementById('outOfStock').checked;
+      const onSale = document.getElementById('onSale').checked;
+      
+      const productCards = document.querySelectorAll('.catalog-product-card');
+      
+      productCards.forEach(function(card) {
+        let shouldShow = true;
+        const price = parseInt(card.dataset.price) / 100; // Convert cents to dollars
+        const available = card.dataset.available === 'true';
+        const isOnSale = card.dataset.onSale === 'true';
+        
+        // Price filter
+        if (minPrice && price < minPrice) shouldShow = false;
+        if (maxPrice && price > maxPrice) shouldShow = false;
+        
+        // Availability filter
+        if (inStock && !outOfStock && !available) shouldShow = false;
+        if (!inStock && outOfStock && available) shouldShow = false;
+        if (!inStock && !outOfStock) shouldShow = true; // No availability filter selected
+        
+        // Sale filter
+        if (onSale && !isOnSale) shouldShow = false;
+        
+        card.style.display = shouldShow ? 'block' : 'none';
+      });
+      
+      closeFilterDrawer();
+    });
+    
+    // Clear filters
+    clearFilters.addEventListener('click', function() {
+      document.getElementById('priceMin').value = '';
+      document.getElementById('priceMax').value = '';
+      document.getElementById('inStock').checked = false;
+      document.getElementById('outOfStock').checked = false;
+      document.getElementById('onSale').checked = false;
+      
+      const productCards = document.querySelectorAll('.catalog-product-card');
+      productCards.forEach(function(card) {
+        card.style.display = 'block';
+      });
+    });
+    
+    // Sort functionality
+    const sortSelect = document.getElementById('sortBy');
+    
+    sortSelect.addEventListener('change', function() {
+      const value = this.value;
+      const productGrid = document.querySelector('.catalog-products-grid');
+      const productCards = Array.from(document.querySelectorAll('.catalog-product-card'));
+      
+      // Sort products based on selected option
+      productCards.sort(function(a, b) {
+        if (value === 'price-ascending') {
+          return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+        } else if (value === 'price-descending') {
+          return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+        } else if (value === 'title-ascending') {
+          return a.querySelector('.catalog-product-title').textContent.localeCompare(b.querySelector('.catalog-product-title').textContent);
+        } else if (value === 'title-descending') {
+          return b.querySelector('.catalog-product-title').textContent.localeCompare(a.querySelector('.catalog-product-title').textContent);
+        } else if (value === 'best-selling') {
+          // Best selling would require additional data from Shopify
+          return 0;
+        } else {
+          // Default to manual/featured
+          return 0;
+        }
+      });
+      
+      // Remove all products from the grid
+      while (productGrid.firstChild) {
+        productGrid.removeChild(productGrid.firstChild);
+      }
+      
+      // Add sorted products back to the grid
+      productCards.forEach(function(card) {
+        productGrid.appendChild(card);
+      });
+    });
+  });
+</script>

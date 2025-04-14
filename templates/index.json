@@ -416,6 +416,65 @@
         "mobile_margin_top": 0,
         "mobile_margin_bottom": 0
       }
+    },
+    "video_product_carousel_RYUXNA": {
+      "type": "video-product-carousel",
+      "blocks": {
+        "product_video_Y4AqHh": {
+          "type": "product_video",
+          "settings": {
+            "product": "",
+            "custom_title": "",
+            "video_url": "",
+            "show_views": true,
+            "views_count": "1.2K",
+            "button_style": "buy_now",
+            "button_text": "BUY NOW",
+            "sold_out_text": "SOLD OUT"
+          }
+        },
+        "video_slot_9bChhB": {
+          "type": "video_slot",
+          "settings": {
+            "product": "",
+            "custom_title": "",
+            "video_url": "",
+            "show_views": true,
+            "views_count": "1.2K",
+            "button_style": "buy_now",
+            "button_text": "BUY NOW",
+            "sold_out_text": "SOLD OUT"
+          }
+        },
+        "custom_video_rCQQka": {
+          "type": "custom_video",
+          "settings": {
+            "title": "",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
+            "show_views": true,
+            "views_count": "1.2K",
+            "product": "nursery-night-lights-with-battery",
+            "price_text": "",
+            "compare_price_text": "",
+            "discount_text": "",
+            "button_style": "buy_now",
+            "button_text": "BUY NOW",
+            "button_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_video_Y4AqHh",
+        "video_slot_9bChhB",
+        "custom_video_rCQQka"
+      ],
+      "settings": {
+        "title": "#LITCLUB",
+        "subtitle": "",
+        "show_view_all": false,
+        "view_all_url": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
+        "view_all_text": "View All"
+      }
     }
   },
   "order": [
@@ -425,6 +484,7 @@
     "featured_product_spotlight_9Jd4aF",
     "featured_products",
     "gift_categories_TdDdT7",
-    "gift_services_banner_TPNkLK"
+    "gift_services_banner_TPNkLK",
+    "video_product_carousel_RYUXNA"
   ]
 }

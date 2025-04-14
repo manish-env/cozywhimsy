@@ -32,14 +32,12 @@
   <!-- Search bar section - Now below categories -->
   <div class="catalog-search-container">
     <div class="container">
-      <form action="/search" method="get" class="catalog-search-form">
-        <div class="search-input-wrapper">
-          <input type="search" name="q" placeholder="Search for products..." class="catalog-search-input" aria-label="Search">
-          <button type="submit" class="catalog-search-button" aria-label="Submit search">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </form>
+      <div class="search-input-wrapper">
+        <input type="search" id="catalogSearchInput" placeholder="Search for products..." class="catalog-search-input" aria-label="Search">
+        <button type="button" id="catalogSearchButton" class="catalog-search-button" aria-label="Search">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
     </div>
   </div>
   
@@ -825,6 +823,43 @@
     closeFilter.addEventListener('click', closeFilterDrawer);
     overlay.addEventListener('click', closeFilterDrawer);
     
+    // Search functionality
+    const searchInput = document.getElementById('catalogSearchInput');
+    const searchButton = document.getElementById('catalogSearchButton');
+    
+    function performSearch() {
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const productCards = document.querySelectorAll('.catalog-product-card');
+      
+      if (searchTerm === '') {
+        // If search is empty, show all products
+        productCards.forEach(card => {
+          card.style.display = 'block';
+        });
+        return;
+      }
+      
+      // Filter products based on search term
+      productCards.forEach(card => {
+        const productTitle = card.querySelector('.catalog-product-title').textContent.toLowerCase();
+        if (productTitle.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    // Search on button click
+    searchButton.addEventListener('click', performSearch);
+    
+    // Search on Enter key press
+    searchInput.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        performSearch();
+      }
+    });
+    
     // Apply filters
     applyFilters.addEventListener('click', function() {
       const minPrice = document.getElementById('priceMin').value;
@@ -853,7 +888,10 @@
         // Sale filter
         if (onSale && !isOnSale) shouldShow = false;
         
-        card.style.display = shouldShow ? 'block' : 'none';
+        // Only update display if the card is currently visible (not filtered by search)
+        if (card.style.display !== 'none' || card.style.display === '') {
+          card.style.display = shouldShow ? 'block' : 'none';
+        }
       });
       
       closeFilterDrawer();
@@ -867,10 +905,22 @@
       document.getElementById('outOfStock').checked = false;
       document.getElementById('onSale').checked = false;
       
+      // Only show products that match the current search term
+      const searchTerm = searchInput.value.toLowerCase().trim();
       const productCards = document.querySelectorAll('.catalog-product-card');
-      productCards.forEach(function(card) {
-        card.style.display = 'block';
-      });
+      
+      if (searchTerm === '') {
+        // If no search term, show all products
+        productCards.forEach(function(card) {
+          card.style.display = 'block';
+        });
+      } else {
+        // Otherwise, only show products that match the search
+        productCards.forEach(function(card) {
+          const productTitle = card.querySelector('.catalog-product-title').textContent.toLowerCase();
+          card.style.display = productTitle.includes(searchTerm) ? 'block' : 'none';
+        });
+      }
     });
     
     // Sort functionality
@@ -909,6 +959,9 @@
       productCards.forEach(function(card) {
         productGrid.appendChild(card);
       });
+      
+      // Reapply current search filter
+      performSearch();
     });
   });
 </script>

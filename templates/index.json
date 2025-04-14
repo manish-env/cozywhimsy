@@ -423,9 +423,9 @@
         "product_video_Y4AqHh": {
           "type": "product_video",
           "settings": {
-            "product": "",
+            "product": "x-speaker-wireless-bluetooth",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/208b8e30c9284fc88325a9c8d408203d.mp4",
             "custom_title": "",
-            "video_url": "",
             "show_views": true,
             "views_count": "1.2K",
             "button_style": "buy_now",
@@ -437,8 +437,8 @@
           "type": "video_slot",
           "settings": {
             "product": "",
-            "custom_title": "",
             "video_url": "",
+            "custom_title": "",
             "show_views": true,
             "views_count": "1.2K",
             "button_style": "buy_now",
@@ -446,34 +446,27 @@
             "sold_out_text": "SOLD OUT"
           }
         },
-        "custom_video_rCQQka": {
-          "type": "custom_video",
+        "product_video_KiiYED": {
+          "type": "product_video",
           "settings": {
-            "title": "",
-            "video_url": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
-            "show_views": true,
-            "views_count": "1.2K",
             "product": "nursery-night-lights-with-battery",
-            "price_text": "",
-            "compare_price_text": "",
-            "discount_text": "",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
+            "custom_title": "",
+            "show_views": true,
+            "views_count": "12K",
             "button_style": "buy_now",
-            "button_text": "BUY NOW",
-            "button_url": ""
+            "button_text": "",
+            "sold_out_text": "SOLD OUT"
           }
         }
       },
       "block_order": [
         "product_video_Y4AqHh",
         "video_slot_9bChhB",
-        "custom_video_rCQQka"
+        "product_video_KiiYED"
       ],
       "settings": {
-        "title": "#LITCLUB",
-        "subtitle": "",
-        "show_view_all": false,
-        "view_all_url": "https://cdn.shopify.com/videos/c/o/v/c568bae346cb4c04800a03c4219a28b2.mp4",
-        "view_all_text": "View All"
+        "title": "#CozyClub"
       }
     }
   },

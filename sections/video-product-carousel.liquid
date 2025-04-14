@@ -12,8 +12,8 @@
       <div class="section-subtitle">{{ section.settings.subtitle }}</div>
     {% endif %}
     
-    {% if section.settings.show_view_all and section.settings.collection != blank %}
-      <a href="{{ section.settings.collection.url }}" class="view-all-link">
+    {% if section.settings.show_view_all and section.settings.view_all_url != blank %}
+      <a href="{{ section.settings.view_all_url }}" class="view-all-link">
         {{ section.settings.view_all_text }}
         <i class="fas fa-chevron-right"></i>
       </a>
@@ -147,6 +147,266 @@
               </div>
             </div>
           {% endif %}
+        {% elsif block.type == 'video_slot' %}
+          {% assign product = block.settings.product %}
+          {% if product != blank %}
+            {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+            {% assign compare_price = current_variant.compare_at_price %}
+            {% assign price = current_variant.price %}
+            {% assign discount_percentage = 0 %}
+            
+            {% if compare_price > price %}
+              {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
+            {% endif %}
+            
+            <div class="video-product-item" {{ block.shopify_attributes }}>
+              <div class="video-container">
+                {% if block.settings.video_url != blank %}
+                  <div class="video-wrapper">
+                    <video class="product-video" muted loop playsinline poster="{{ block.settings.poster_image | img_url: 'large' }}">
+                      <source src="{{ block.settings.video_url }}" type="video/mp4">
+                    </video>
+                    
+                    <div class="video-controls">
+                      <button class="video-play-pause" aria-label="Play/Pause">
+                        <i class="fas fa-play"></i>
+                      </button>
+                      <div class="video-sound-toggle" aria-label="Toggle Sound">
+                        <i class="fas fa-volume-mute"></i>
+                      </div>
+                    </div>
+                    
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% elsif block.settings.poster_image != blank %}
+                  <div class="image-wrapper">
+                    <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  <div class="image-wrapper">
+                    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                    {% if block.settings.show_views %}
+                      <div class="video-views">
+                        {{ block.settings.views_count | default: '1.2K' }} Views
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+                
+                <div class="video-social-icons">
+                  <button class="social-icon like-button" aria-label="Like">
+                    <i class="fas fa-heart"></i>
+                  </button>
+                  <button class="social-icon comment-button" aria-label="Comment">
+                    <i class="fas fa-comment"></i>
+                  </button>
+                  <button class="social-icon share-button" aria-label="Share">
+                    <i class="fas fa-share"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-thumbnail">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">
+                      {{ product.title | slice: 0, 1 | upcase }}
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <div class="product-details">
+                  <h3 class="product-title">{{ block.settings.custom_title | default: product.title }}</h3>
+                  
+                  <div class="product-price-container">
+                    <span class="product-price">₹{{ price | money_without_currency }}</span>
+                    
+                    {% if compare_price > price %}
+                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                      <span class="product-discount">{{ discount_percentage }}% OFF</span>
+                    {% endif %}
+                  </div>
+                </div>
+                
+                <div class="product-actions">
+                  {% if product.available %}
+                    {% if block.settings.button_style == 'buy_now' %}
+                      <form method="post" action="/cart/add">
+                        <input type="hidden" name="id" value="{{ current_variant.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="buy-now-button">
+                          {{ block.settings.button_text | default: 'BUY NOW' }}
+                        </button>
+                      </form>
+                    {% elsif block.settings.button_style == 'out_of_stock' %}
+                      <div class="out-of-stock-label">
+                        {{ block.settings.button_text | default: 'OUT OF STOCK' }}
+                      </div>
+                    {% else %}
+                      <a href="{{ product.url }}" class="view-product-button">
+                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                      </a>
+                    {% endif %}
+                  {% else %}
+                    <div class="out-of-stock-label">
+                      {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% elsif block.type == 'custom_video' %}
+          {% assign product = block.settings.product %}
+          <div class="video-product-item" {{ block.shopify_attributes }}>
+            <div class="video-container">
+              {% if block.settings.video_url != blank %}
+                <div class="video-wrapper">
+                  <video class="product-video" muted loop playsinline poster="{{ block.settings.poster_image | img_url: 'large' }}">
+                    <source src="{{ block.settings.video_url }}" type="video/mp4">
+                  </video>
+                  
+                  <div class="video-controls">
+                    <button class="video-play-pause" aria-label="Play/Pause">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <div class="video-sound-toggle" aria-label="Toggle Sound">
+                      <i class="fas fa-volume-mute"></i>
+                    </div>
+                  </div>
+                  
+                  {% if block.settings.show_views %}
+                    <div class="video-views">
+                      {{ block.settings.views_count | default: '1.2K' }} Views
+                    </div>
+                  {% endif %}
+                </div>
+              {% elsif block.settings.poster_image != blank %}
+                <div class="image-wrapper">
+                  <img src="{{ block.settings.poster_image | img_url: 'large' }}" alt="{{ block.settings.title }}" loading="lazy">
+                  {% if block.settings.show_views %}
+                    <div class="video-views">
+                      {{ block.settings.views_count | default: '1.2K' }} Views
+                    </div>
+                  {% endif %}
+                </div>
+              {% else %}
+                <div class="image-wrapper">
+                  <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}" loading="lazy">
+                  {% if block.settings.show_views %}
+                    <div class="video-views">
+                      {{ block.settings.views_count | default: '1.2K' }} Views
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              
+              <div class="video-social-icons">
+                <button class="social-icon like-button" aria-label="Like">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <button class="social-icon comment-button" aria-label="Comment">
+                  <i class="fas fa-comment"></i>
+                </button>
+                <button class="social-icon share-button" aria-label="Share">
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="product-info">
+              <div class="product-thumbnail">
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | img_url: 'small' }}" alt="{{ product.title }}" loading="lazy">
+                {% else %}
+                  <div class="placeholder-image">
+                    {{ product.title | slice: 0, 1 | upcase }}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="product-details">
+                <h3 class="product-title">{{ block.settings.title }}</h3>
+                
+                <div class="product-price-container">
+                  {% if block.settings.price_text != blank %}
+                    <span class="product-price">{{ block.settings.price_text }}</span>
+                  {% else %}
+                    {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+                    {% assign price = current_variant.price %}
+                    <span class="product-price">₹{{ price | money_without_currency }}</span>
+                  {% endif %}
+                  
+                  {% if block.settings.compare_price_text != blank %}
+                    <span class="product-compare-price">{{ block.settings.compare_price_text }}</span>
+                  {% else %}
+                    {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+                    {% assign compare_price = current_variant.compare_at_price %}
+                    {% if compare_price > price %}
+                      <span class="product-compare-price">₹{{ compare_price | money_without_currency }}</span>
+                    {% endif %}
+                  {% endif %}
+                  
+                  {% if block.settings.discount_text != blank %}
+                    <span class="product-discount">{{ block.settings.discount_text }}</span>
+                  {% else %}
+                    {% assign current_variant = product.selected_variant | default: product.first_available_variant %}
+                    {% assign compare_price = current_variant.compare_at_price %}
+                    {% assign price = current_variant.price %}
+                    {% assign discount_percentage = 0 %}
+                    
+                    {% if compare_price > price %}
+                      {% assign discount_percentage = compare_price | minus: price | times: 100 | divided_by: compare_price | round %}
+                      <span class="product-discount">{{ discount_percentage }}% OFF</span>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="product-actions">
+                {% if product.available %}
+                  {% if block.settings.button_style == 'buy_now' %}
+                    <form method="post" action="/cart/add">
+                      <input type="hidden" name="id" value="{{ product.selected_variant.id }}">
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="buy-now-button">
+                        {{ block.settings.button_text | default: 'BUY NOW' }}
+                      </button>
+                    </form>
+                  {% elsif block.settings.button_style == 'out_of_stock' %}
+                    <div class="out-of-stock-label">
+                      {{ block.settings.button_text | default: 'OUT OF STOCK' }}
+                    </div>
+                  {% else %}
+                    {% if block.settings.button_url != blank %}
+                      <a href="{{ block.settings.button_url }}" class="view-product-button">
+                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                      </a>
+                    {% else %}
+                      <a href="{{ product.url }}" class="view-product-button">
+                        {{ block.settings.button_text | default: 'VIEW DETAILS' }}
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                {% else %}
+                  <div class="out-of-stock-label">
+                    {{ block.settings.sold_out_text | default: 'SOLD OUT' }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
         {% endif %}
       {% endfor %}
     </div>
@@ -602,15 +862,15 @@
       "label": "Section Subtitle"
     },
     {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
-    {
       "type": "checkbox",
       "id": "show_view_all",
       "label": "Show 'View All' link",
       "default": true
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "View All URL"
     },
     {
       "type": "text",
@@ -689,6 +949,164 @@
           "default": "SOLD OUT"
         }
       ]
+    },
+    {
+      "type": "video_slot",
+      "name": "Video Slot",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Title (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL (MP4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "poster_image",
+          "label": "Poster Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_views",
+          "label": "Show Views Count",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "views_count",
+          "label": "Views Count",
+          "default": "1.2K"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button Style",
+          "options": [
+            {
+              "value": "buy_now",
+              "label": "Buy Now"
+            },
+            {
+              "value": "view_details",
+              "label": "View Details"
+            },
+            {
+              "value": "out_of_stock",
+              "label": "Out of Stock"
+            }
+          ],
+          "default": "buy_now"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "BUY NOW"
+        },
+        {
+          "type": "text",
+          "id": "sold_out_text",
+          "label": "Sold Out Text",
+          "default": "SOLD OUT"
+        }
+      ]
+    },
+    {
+      "type": "custom_video",
+      "name": "Custom Video",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL (MP4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "poster_image",
+          "label": "Poster Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_views",
+          "label": "Show Views Count",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "views_count",
+          "label": "Views Count",
+          "default": "1.2K"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Linked Product"
+        },
+        {
+          "type": "text",
+          "id": "price_text",
+          "label": "Price Text (Optional)",
+          "info": "Leave blank to use product price"
+        },
+        {
+          "type": "text",
+          "id": "compare_price_text",
+          "label": "Compare Price Text (Optional)",
+          "info": "Leave blank to use product compare price"
+        },
+        {
+          "type": "text",
+          "id": "discount_text",
+          "label": "Discount Text (Optional)",
+          "info": "Leave blank to calculate automatically"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button Style",
+          "options": [
+            {
+              "value": "buy_now",
+              "label": "Buy Now"
+            },
+            {
+              "value": "view_details",
+              "label": "View Details"
+            },
+            {
+              "value": "out_of_stock",
+              "label": "Out of Stock"
+            }
+          ],
+          "default": "buy_now"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "BUY NOW"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Custom Button URL",
+          "info": "Overrides product URL if provided"
+        }
+      ]
     }
   ],
   "presets": [
@@ -700,10 +1118,10 @@
           "type": "product_video"
         },
         {
-          "type": "product_video"
+          "type": "video_slot"
         },
         {
-          "type": "product_video"
+          "type": "custom_video"
         }
       ]
     }

@@ -72,18 +72,6 @@
                     {% endif %}
                   </div>
                 {% endif %}
-                
-                <div class="video-social-icons">
-                  <button class="social-icon like-button" aria-label="Like">
-                    <i class="fas fa-heart"></i>
-                  </button>
-                  <button class="social-icon comment-button" aria-label="Comment">
-                    <i class="fas fa-comment"></i>
-                  </button>
-                  <button class="social-icon share-button" aria-label="Share">
-                    <i class="fas fa-share"></i>
-                  </button>
-                </div>
               </div>
               
               <div class="product-info">
@@ -183,18 +171,6 @@
                     {% endif %}
                   </div>
                 {% endif %}
-                
-                <div class="video-social-icons">
-                  <button class="social-icon like-button" aria-label="Like">
-                    <i class="fas fa-heart"></i>
-                  </button>
-                  <button class="social-icon comment-button" aria-label="Comment">
-                    <i class="fas fa-comment"></i>
-                  </button>
-                  <button class="social-icon share-button" aria-label="Share">
-                    <i class="fas fa-share"></i>
-                  </button>
-                </div>
               </div>
               
               <div class="product-info">
@@ -284,18 +260,6 @@
                   {% endif %}
                 </div>
               {% endif %}
-              
-              <div class="video-social-icons">
-                <button class="social-icon like-button" aria-label="Like">
-                  <i class="fas fa-heart"></i>
-                </button>
-                <button class="social-icon comment-button" aria-label="Comment">
-                  <i class="fas fa-comment"></i>
-                </button>
-                <button class="social-icon share-button" aria-label="Share">
-                  <i class="fas fa-share"></i>
-                </button>
-              </div>
             </div>
             
             <div class="product-info">
@@ -506,7 +470,7 @@
   .video-container {
     position: relative;
     width: 100%;
-    padding-top: 177.78%; /* 9:16 Aspect Ratio (Instagram Reels) */
+    padding-top: 125%; /* Shorter height for videos */
     background-color: #f0f0f0;
   }
   
@@ -533,37 +497,6 @@
     font-size: 12px;
     padding: 4px 8px;
     border-radius: 4px;
-  }
-  
-  .video-social-icons {
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .social-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    border: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .social-icon:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-  
-  .like-button.active {
-    color: #ff6b9a;
   }
   
   .product-info {
@@ -739,15 +672,6 @@
     
     videos.forEach(video => {
       videoObserver.observe(video);
-    });
-    
-    // Like buttons
-    const likeButtons = carousel.querySelectorAll('.like-button');
-    
-    likeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
-      });
     });
   });
 </script>

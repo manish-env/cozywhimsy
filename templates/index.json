@@ -446,6 +446,19 @@
             "sold_out_text": "SOLD OUT"
           }
         },
+        "product_video_GxradM": {
+          "type": "product_video",
+          "settings": {
+            "product": "cute-cartoon-power-socket-stickers-assorted-color-pack-of-4",
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/d0828495d38844268e79393d91c81a9c.mp4",
+            "custom_title": "",
+            "show_views": true,
+            "views_count": "12K",
+            "button_style": "buy_now",
+            "button_text": "",
+            "sold_out_text": "SOLD OUT"
+          }
+        },
         "product_video_KiiYED": {
           "type": "product_video",
           "settings": {
@@ -463,6 +476,7 @@
       "block_order": [
         "product_video_Y4AqHh",
         "video_slot_9bChhB",
+        "product_video_GxradM",
         "product_video_KiiYED"
       ],
       "settings": {

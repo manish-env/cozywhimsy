@@ -217,6 +217,29 @@
     transform: scale(1.2);
   }
   
+  .section-header {
+    margin-bottom: 25px;
+  }
+  
+  .section-subheading {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .section-subheading.gradient-text {
+    background: linear-gradient(to right, #ff6b9a, #e1306c, #8a3ab9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+  
   @media screen and (max-width: 767px) {
     .video-product-card {
       width: 200px;
@@ -258,6 +281,11 @@
   {% if section.settings.title != blank %}
     <div class="section-header text-center">
       <h2>{{ section.settings.title | escape }}</h2>
+      {% if section.settings.subheading != blank %}
+        <div class="section-subheading{% if section.settings.use_gradient_text %} gradient-text{% endif %}" style="color: {{ section.settings.subheading_color }};">
+          {{ section.settings.subheading }}
+        </div>
+      {% endif %}
     </div>
   {% endif %}
 
@@ -586,8 +614,27 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Heading",
-      "default": "Video Products"
+      "label": "Section Title",
+      "default": "Trending Products"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover our most popular products with engaging videos"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_text",
+      "label": "Use Gradient Text",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to subheading text"
     }
   ],
   "blocks": [

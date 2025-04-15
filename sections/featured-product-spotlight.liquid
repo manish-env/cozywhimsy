@@ -9,9 +9,13 @@
   margin-right: {{ section.settings.margin_right | default: 0 }}px;
 ">
   <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
-      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+    <div class="section-header text-{{ section.settings.text_alignment | default: 'center' }}">
+      <h2 class="section-title{% if section.settings.use_gradient_heading %} gradient-text{% endif %}">{{ section.settings.title | escape }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <div class="section-subtitle{% if section.settings.use_gradient_subheading %} gradient-text{% endif %}">
+          {{ section.settings.subtitle }}
+        </div>
+      {% endif %}
     </div>
     
     <div class="spotlight-container">
@@ -353,6 +357,60 @@
   font-family: 'Quicksand', sans-serif;
 }
 
+.section-header {
+  margin-bottom: 30px;
+  text-align: {{ section.settings.text_alignment | default: 'center' }};
+}
+
+.section-title {
+  font-size: {{ section.settings.heading_size | default: 28 }}px;
+  color: {{ section.settings.heading_color | default: "#333333" }};
+  margin-bottom: 10px;
+  font-weight: {{ section.settings.heading_weight | default: "600" }};
+  line-height: 1.2;
+}
+
+.section-title.gradient-text {
+  background: linear-gradient(to right, {{ section.settings.gradient_color_1 | default: "#ff6b9a" }}, {{ section.settings.gradient_color_2 | default: "#e1306c" }}, {{ section.settings.gradient_color_3 | default: "#8a3ab9" }});
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.section-subtitle {
+  font-size: {{ section.settings.subheading_size | default: 16 }}px;
+  line-height: 1.5;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  max-width: 800px;
+  color: {{ section.settings.subheading_color | default: "#666666" }};
+  font-weight: {{ section.settings.subheading_weight | default: "400" }};
+}
+
+.section-header.text-center .section-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header.text-right .section-subtitle {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.section-header.text-left .section-subtitle {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.section-subtitle.gradient-text {
+  background: linear-gradient(to right, {{ section.settings.gradient_color_1 | default: "#ff6b9a" }}, {{ section.settings.gradient_color_2 | default: "#e1306c" }}, {{ section.settings.gradient_color_3 | default: "#8a3ab9" }});
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
 /* Mobile Styles */
 @media (max-width: 991px) {
   .spotlight-product {
@@ -440,16 +498,156 @@
   "class": "section",
   "settings": [
     {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Featured Product"
+      "type": "header",
+      "content": "Content"
     },
     {
       "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Product"
+    },
+    {
+      "type": "textarea",
       "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Discover our most popular item"
+      "label": "Subheading",
+      "default": "Discover our most popular product with exclusive features"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Heading Styles"
+    },
+    {
+      "type": "number",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "default": 28,
+      "min": 10,
+      "max": 50
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_heading",
+      "label": "Use Gradient Heading",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to heading text"
+    },
+    {
+      "type": "header",
+      "content": "Subheading Styles"
+    },
+    {
+      "type": "number",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "default": 16,
+      "min": 10,
+      "max": 30
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_subheading",
+      "label": "Use Gradient Subheading",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to subheading text"
+    },
+    {
+      "type": "header",
+      "content": "Gradient Colors"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient Color 1",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient Color 2",
+      "default": "#e1306c"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_3",
+      "label": "Gradient Color 3",
+      "default": "#8a3ab9"
+    },
+    {
+      "type": "header",
+      "content": "Product"
     },
     {
       "type": "product",

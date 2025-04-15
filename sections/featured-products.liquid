@@ -1,8 +1,8 @@
 <section class="featured-products">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">{{ section.settings.title | escape }}</h2>
-      <p class="section-subtitle">{{ section.settings.subtitle | escape }}</p>
+      <h2 class="section-title" style="font-size: {{ section.settings.heading_size | default: 28 }}px; color: {{ section.settings.heading_color | default: '#333333' }}; font-weight: {{ section.settings.heading_weight | default: 600 }}; {{ section.settings.use_gradient_heading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle" style="font-size: {{ section.settings.subheading_size | default: 16 }}px; color: {{ section.settings.subheading_color | default: '#666666' }}; font-weight: {{ section.settings.subheading_weight | default: 400 }}; {{ section.settings.use_gradient_subheading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}">{{ section.settings.subtitle | escape }}</p>
     </div>
     
     <div class="product-grid" style="--grid-columns-desktop: {{ section.settings.columns_desktop | default: 4 }}; --grid-columns-mobile: {{ section.settings.columns_mobile | default: 2 }};">
@@ -66,19 +66,23 @@
   }
   
   .section-header {
-    text-align: center;
+    text-align: {{ section.settings.text_alignment | default: 'center' }};
     margin-bottom: 30px;
   }
   
   .section-title {
-    font-size: 28px;
+    font-size: {{ section.settings.heading_size | default: 28 }}px;
     margin-bottom: 10px;
-    color: var(--title-color, #333);
+    color: {{ section.settings.heading_color | default: '#333333' }};
+    font-weight: {{ section.settings.heading_weight | default: 600 }};
+    {{ section.settings.use_gradient_heading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}
   }
   
   .section-subtitle {
-    font-size: 16px;
-    color: var(--subtitle-color, #666);
+    font-size: {{ section.settings.subheading_size | default: 16 }}px;
+    color: {{ section.settings.subheading_color | default: '#666666' }};
+    font-weight: {{ section.settings.subheading_weight | default: 400 }};
+    {{ section.settings.use_gradient_subheading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}
   }
   
   .product-grid {
@@ -444,14 +448,146 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Title",
+      "label": "Heading",
       "default": "Featured Products"
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "subtitle",
-      "label": "Subtitle",
+      "label": "Subheading",
       "default": "Our most loved items this season"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Heading Styles"
+    },
+    {
+      "type": "number",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "default": 28,
+      "min": 10,
+      "max": 50
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_heading",
+      "label": "Use Gradient Heading",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to heading text"
+    },
+    {
+      "type": "header",
+      "content": "Subheading Styles"
+    },
+    {
+      "type": "number",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "default": 16,
+      "min": 10,
+      "max": 30
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_subheading",
+      "label": "Use Gradient Subheading",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to subheading text"
+    },
+    {
+      "type": "header",
+      "content": "Gradient Colors"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient Color 1",
+      "default": "#ff6b9a"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient Color 2",
+      "default": "#e1306c"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_3",
+      "label": "Gradient Color 3",
+      "default": "#8a3ab9"
     },
     {
       "type": "collection",

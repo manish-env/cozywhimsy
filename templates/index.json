@@ -480,7 +480,10 @@
         "product_video_KiiYED"
       ],
       "settings": {
-        "title": "#CozyClub"
+        "title": "#CozyClub",
+        "subheading": "Follow us on Instagram at Cozywhimsy.store",
+        "subheading_color": "#ff6b9a",
+        "use_gradient_text": true
       }
     }
   },

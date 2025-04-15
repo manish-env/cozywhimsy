@@ -482,6 +482,7 @@
       "settings": {
         "title": "#CozyClub",
         "subheading": "Follow us on Instagram at Cozywhimsy.store",
+        "text_alignment": "left",
         "subheading_color": "#ff6b9a",
         "use_gradient_text": true
       }

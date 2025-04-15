@@ -221,14 +221,38 @@
     margin-bottom: 25px;
   }
   
+  .section-header.text-left {
+    text-align: left;
+  }
+  
+  .section-header.text-right {
+    text-align: right;
+  }
+  
+  .section-header.text-center {
+    text-align: center;
+  }
+  
   .section-subheading {
     font-size: 16px;
     line-height: 1.5;
     margin-top: 5px;
     margin-bottom: 20px;
-    text-align: center;
     max-width: 800px;
+  }
+  
+  .section-header.text-center .section-subheading {
     margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .section-header.text-right .section-subheading {
+    margin-left: auto;
+    margin-right: 0;
+  }
+  
+  .section-header.text-left .section-subheading {
+    margin-left: 0;
     margin-right: auto;
   }
   
@@ -279,7 +303,7 @@
 
 <div class="container video-product-section">
   {% if section.settings.title != blank %}
-    <div class="section-header text-center">
+    <div class="section-header text-{{ section.settings.text_alignment }}">
       <h2>{{ section.settings.title | escape }}</h2>
       {% if section.settings.subheading != blank %}
         <div class="section-subheading{% if section.settings.use_gradient_text %} gradient-text{% endif %}" style="color: {{ section.settings.subheading_color }};">
@@ -622,6 +646,26 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "Discover our most popular products with engaging videos"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
     },
     {
       "type": "color",

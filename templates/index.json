@@ -46,6 +46,18 @@
             "background_color": "#f8f8f8"
           }
         },
+        "category_Ec3Mdi": {
+          "type": "category",
+          "settings": {
+            "title": "Trending",
+            "collection": "trending",
+            "image": "shopify://shop_images/Studio_Ghibli_Ai.webp",
+            "video_url": "",
+            "profile_video": "",
+            "link": "",
+            "background_color": "#f8f8f8"
+          }
+        },
         "category_EjkrK4": {
           "type": "category",
           "settings": {
@@ -73,6 +85,7 @@
         "category_WNjjML",
         "category_JtxyJm",
         "category_iFDUfb",
+        "category_Ec3Mdi",
         "category_EjkrK4",
         "category_DbtxYQ"
       ],

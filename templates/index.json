@@ -240,8 +240,8 @@
         "mobile_margin_top": 0,
         "mobile_margin_bottom": 0,
         "text_alignment": "left",
-        "heading_color": "#ff6b9a",
-        "use_logo_color_heading": false,
+        "heading_color": "#ffffff",
+        "use_logo_color_heading": true,
         "subheading_color": "#666666",
         "use_logo_color_subheading": false
       }
@@ -328,144 +328,6 @@
         "section_padding_bottom": 60
       }
     },
-    "gift_categories_TdDdT7": {
-      "type": "gift-categories",
-      "blocks": {
-        "category_V37cLr": {
-          "type": "category",
-          "settings": {
-            "title": "Gifts for Her",
-            "description": "Find the perfect gift for the special woman in your life",
-            "image": "shopify://shop_images/gift.png",
-            "link": "",
-            "button_text": "Shop Now",
-            "badge_text": ""
-          }
-        },
-        "category_tzedDY": {
-          "type": "category",
-          "settings": {
-            "title": "Gifts for Her",
-            "description": "Find the perfect gift for the special woman in your life",
-            "image": "shopify://shop_images/Untitled_design_1.png",
-            "link": "",
-            "button_text": "Shop Now",
-            "badge_text": ""
-          }
-        },
-        "category_T79jUc": {
-          "type": "category",
-          "settings": {
-            "title": "Gifts for Him",
-            "description": "Unique gift ideas for the men in your life",
-            "image": "shopify://shop_images/81Ct8MBqq-L._AC_UF350_350_QL80.jpg",
-            "link": "",
-            "button_text": "Shop Now",
-            "badge_text": ""
-          }
-        },
-        "category_4BXKAg": {
-          "type": "category",
-          "settings": {
-            "title": "Birthday Gifts",
-            "description": "Make their special day unforgettable",
-            "image": "shopify://shop_images/gift__pink.png",
-            "link": "",
-            "button_text": "Shop Now",
-            "badge_text": "Popular"
-          }
-        }
-      },
-      "block_order": [
-        "category_V37cLr",
-        "category_tzedDY",
-        "category_T79jUc",
-        "category_4BXKAg"
-      ],
-      "settings": {
-        "title": "Find the Perfect Gift",
-        "subtitle": "Browse our curated gift collections for every occasion",
-        "center_title": true,
-        "show_separator": true,
-        "separator_color": "#ff6b9a",
-        "separator_width": 50,
-        "separator_margin": 20,
-        "background_color": "#ffffff",
-        "title_color": "#333333",
-        "subtitle_color": "#666666",
-        "text_color": "#333333",
-        "button_color": "#ff6b9a",
-        "badge_background": "#ff6b9a",
-        "badge_text_color": "#ffffff",
-        "padding_top": 40,
-        "padding_bottom": 40,
-        "mobile_padding_top": 28,
-        "mobile_padding_bottom": 28,
-        "mobile_margin_top": 0,
-        "mobile_margin_bottom": 0
-      }
-    },
-    "gift_services_banner_TPNkLK": {
-      "type": "gift-services-banner",
-      "blocks": {
-        "service_JbfdAR": {
-          "type": "service",
-          "settings": {
-            "title": "Free Gift Wrapping",
-            "description": "We offer complimentary gift wrapping on all orders",
-            "icon_type": "emoji",
-            "icon_emoji": "🎁"
-          }
-        },
-        "service_eNQALb": {
-          "type": "service",
-          "settings": {
-            "title": "Personalized Messages",
-            "description": "Add a handwritten note to your gift",
-            "icon_type": "emoji",
-            "icon_emoji": "✉️"
-          }
-        },
-        "service_jwcH4p": {
-          "type": "service",
-          "settings": {
-            "title": "Direct Shipping",
-            "description": "Ship directly to your gift recipient",
-            "icon_type": "emoji",
-            "icon_emoji": "🚚"
-          }
-        }
-      },
-      "block_order": [
-        "service_JbfdAR",
-        "service_eNQALb",
-        "service_jwcH4p"
-      ],
-      "settings": {
-        "title": "Our Gift Services",
-        "subtitle": "Making gift-giving easy and memorable",
-        "center_title": true,
-        "columns_desktop": 3,
-        "background_color": "#f9f3f5",
-        "title_color": "#333333",
-        "subtitle_color": "#666666",
-        "text_color": "#333333",
-        "item_background_color": "#ffffff",
-        "icon_background_color": "#fff0f5",
-        "icon_color": "#ff6b9a",
-        "button_text": "Learn More About Our Gift Services",
-        "button_link": "",
-        "center_button": true,
-        "button_background_color": "#ff6b9a",
-        "button_text_color": "#ffffff",
-        "padding_top": 40,
-        "padding_bottom": 40,
-        "mobile_padding_top": 28,
-        "mobile_padding_bottom": 28,
-        "mobile_margin_top": 0,
-        "mobile_margin_bottom": 0
-      }
-    },
     "video_product_carousel_RYUXNA": {
       "type": "video-product-carousel",
       "blocks": {
@@ -541,10 +403,8 @@
     "mobile_toplevel_categories_WLExDV",
     "hero",
     "featured_categories",
+    "video_product_carousel_RYUXNA",
     "featured_product_spotlight_9Jd4aF",
-    "featured_products",
-    "gift_categories_TdDdT7",
-    "gift_services_banner_TPNkLK",
-    "video_product_carousel_RYUXNA"
+    "featured_products"
   ]
 }

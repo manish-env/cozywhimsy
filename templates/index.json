@@ -149,6 +149,15 @@
             "button_text": "Shop Now"
           }
         },
+        "category_rQywjX": {
+          "type": "category",
+          "settings": {
+            "title": "Category",
+            "collection": "anime-collection",
+            "image": "shopify://shop_images/6623036224.jpg",
+            "button_text": "Shop Now"
+          }
+        },
         "category_En9jVE": {
           "type": "category",
           "settings": {
@@ -174,6 +183,15 @@
             "button_text": "Shop Now"
           }
         },
+        "category_j4qdD7": {
+          "type": "category",
+          "settings": {
+            "title": "Category",
+            "collection": "frontpage",
+            "image": "shopify://shop_images/5531344064.jpg",
+            "button_text": "Shop Now"
+          }
+        },
         "category_2": {
           "type": "category",
           "settings": {
@@ -185,9 +203,11 @@
       },
       "block_order": [
         "category_aRYck9",
+        "category_rQywjX",
         "category_En9jVE",
         "category_WQQnD9",
         "category_1",
+        "category_j4qdD7",
         "category_2"
       ],
       "settings": {
@@ -213,7 +233,7 @@
         "separator_color": "#ff6b9a",
         "separator_width": 50,
         "separator_margin": 20,
-        "padding_top": 36,
+        "padding_top": 0,
         "padding_bottom": 36,
         "mobile_padding_top": 20,
         "mobile_padding_bottom": 16,

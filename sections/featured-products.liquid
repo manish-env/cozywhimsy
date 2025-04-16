@@ -1,8 +1,8 @@
 <section class="featured-products">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title" style="font-size: {{ section.settings.heading_size | default: 28 }}px; color: {{ section.settings.heading_color | default: '#333333' }}; font-weight: {{ section.settings.heading_weight | default: 600 }}; {{ section.settings.use_gradient_heading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}">{{ section.settings.title | escape }}</h2>
-      <p class="section-subtitle" style="font-size: {{ section.settings.subheading_size | default: 16 }}px; color: {{ section.settings.subheading_color | default: '#666666' }}; font-weight: {{ section.settings.subheading_weight | default: 400 }}; {{ section.settings.use_gradient_subheading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}">{{ section.settings.subtitle | escape }}</p>
+      <h2 class="section-title" style="font-size: {{ section.settings.heading_size | default: 28 }}px; color: {{ section.settings.heading_color | default: '#333333' }}; font-weight: {{ section.settings.heading_weight | default: 600 }}; {% if section.settings.use_gradient_heading %}background: linear-gradient(90deg, {{ section.settings.gradient_color_1 | default: '#ff6b9a' }}, {{ section.settings.gradient_color_2 | default: '#e1306c' }}, {{ section.settings.gradient_color_3 | default: '#8a3ab9' }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;{% endif %}">{{ section.settings.title | escape }}</h2>
+      <p class="section-subtitle" style="font-size: {{ section.settings.subheading_size | default: 16 }}px; color: {{ section.settings.subheading_color | default: '#666666' }}; font-weight: {{ section.settings.subheading_weight | default: 400 }}; {% if section.settings.use_gradient_subheading %}background: linear-gradient(90deg, {{ section.settings.gradient_color_1 | default: '#ff6b9a' }}, {{ section.settings.gradient_color_2 | default: '#e1306c' }}, {{ section.settings.gradient_color_3 | default: '#8a3ab9' }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;{% endif %}">{{ section.settings.subtitle | escape }}</p>
     </div>
     
     <div class="product-grid" style="--grid-columns-desktop: {{ section.settings.columns_desktop | default: 4 }}; --grid-columns-mobile: {{ section.settings.columns_mobile | default: 2 }};">
@@ -75,14 +75,14 @@
     margin-bottom: 10px;
     color: {{ section.settings.heading_color | default: '#333333' }};
     font-weight: {{ section.settings.heading_weight | default: 600 }};
-    {{ section.settings.use_gradient_heading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}
+    {% if section.settings.use_gradient_heading %}background: linear-gradient(90deg, {{ section.settings.gradient_color_1 | default: '#ff6b9a' }}, {{ section.settings.gradient_color_2 | default: '#e1306c' }}, {{ section.settings.gradient_color_3 | default: '#8a3ab9' }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;{% endif %}
   }
   
   .section-subtitle {
     font-size: {{ section.settings.subheading_size | default: 16 }}px;
     color: {{ section.settings.subheading_color | default: '#666666' }};
     font-weight: {{ section.settings.subheading_weight | default: 400 }};
-    {{ section.settings.use_gradient_subheading | default: false ? 'background: linear-gradient(90deg, ' + section.settings.gradient_color_1 | default: '#ff6b9a' + ', ' + section.settings.gradient_color_2 | default: '#e1306c' + ', ' + section.settings.gradient_color_3 | default: '#8a3ab9' + '); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '' }}
+    {% if section.settings.use_gradient_subheading %}background: linear-gradient(90deg, {{ section.settings.gradient_color_1 | default: '#ff6b9a' }}, {{ section.settings.gradient_color_2 | default: '#e1306c' }}, {{ section.settings.gradient_color_3 | default: '#8a3ab9' }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;{% endif %}
   }
   
   .product-grid {
@@ -485,9 +485,7 @@
       "type": "number",
       "id": "heading_size",
       "label": "Heading Size",
-      "default": 28,
-      "min": 10,
-      "max": 50
+      "default": 28
     },
     {
       "type": "color",
@@ -530,9 +528,7 @@
       "type": "number",
       "id": "subheading_size",
       "label": "Subheading Size",
-      "default": 16,
-      "min": 10,
-      "max": 30
+      "default": 16
     },
     {
       "type": "color",
@@ -588,7 +584,7 @@
       "id": "gradient_color_3",
       "label": "Gradient Color 3",
       "default": "#8a3ab9"
-    }
+    },
     {
       "type": "collection",
       "id": "collection",

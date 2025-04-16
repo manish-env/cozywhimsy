@@ -34,14 +34,15 @@
       </div>
     {% endif %}
     
-    <div class="section-header">
+    <div class="section-header text-{{ section.settings.text_alignment }}">
       {% assign show_title = false %}
       {% if section.settings.show_title_desktop or section.settings.show_title_mobile %}
         {% assign show_title = true %}
       {% endif %}
       
       {% if section.settings.title != blank and show_title %}
-        <h2 class="section-title {% if section.settings.show_title_desktop == false %}desktop-hide-title{% endif %} {% if section.settings.show_title_mobile == false %}mobile-hide-title{% endif %}">
+        <h2 class="section-title {% if section.settings.show_title_desktop == false %}desktop-hide-title{% endif %} {% if section.settings.show_title_mobile == false %}mobile-hide-title{% endif %}" 
+            style="color: {% if section.settings.use_logo_color_heading %}var(--primary-pink, #ff6b9a){% else %}{{ section.settings.heading_color }}{% endif %};">
           {{ section.settings.title | escape }}
         </h2>
       {% endif %}
@@ -52,15 +53,15 @@
       {% endif %}
       
       {% if section.settings.subtitle != blank and show_subtitle %}
-        <p class="section-subtitle {% if section.settings.show_subtitle_desktop == false %}desktop-hide-subtitle{% endif %} {% if section.settings.show_subtitle_mobile == false %}mobile-hide-subtitle{% endif %}">
+        <p class="section-subtitle {% if section.settings.show_subtitle_desktop == false %}desktop-hide-subtitle{% endif %} {% if section.settings.show_subtitle_mobile == false %}mobile-hide-subtitle{% endif %}"
+           style="color: {% if section.settings.use_logo_color_subheading %}var(--primary-pink, #ff6b9a){% else %}{{ section.settings.subheading_color }}{% endif %};">
          {{ section.settings.subtitle | escape }}
         </p>
       {% endif %}
-    
     </div>
     
-    <!-- Desktop Carousel View -->
-    <div class="category-carousel desktop-only">
+    <!-- Circular Category Carousel View -->
+    <div class="category-carousel">
       {% if section.blocks.size > 0 %}
         <div class="carousel-container">
           <button class="carousel-nav carousel-prev" aria-label="Previous categories">
@@ -71,26 +72,29 @@
               <div class="carousel-item" {{ block.shopify_attributes }}>
                 {% if block.settings.collection != blank %}
                   <a href="{{ block.settings.collection.url }}" class="category-card-link">
-                    <div class="category-card-inner">
+                    <div class="category-circle">
                       {% if block.settings.image != blank %}
                         <div class="category-img" style="background-image: url('{{ block.settings.image | img_url: 'master' }}');"></div>
                       {% elsif block.settings.collection.image != blank %}
                         <div class="category-img" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}');"></div>
                       {% else %}
-                        <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
+                        <div class="category-img" style="background-color: {{ block.settings.background_color | default: '#f8e1e8' }};">
+                          <span class="category-placeholder">{{ block.settings.title | default: block.settings.collection.title | slice: 0, 1 | upcase }}</span>
+                        </div>
                       {% endif %}
-                      <div class="category-title">
-                        <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
-                      </div>
+                    </div>
+                    <div class="category-title">
+                      <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
                     </div>
                   </a>
                 {% else %}
-                  <div class="category-card-inner">
-                    <div class="category-img" style="background-color: {{ block.settings.background_color }};">
+                  <div class="category-circle">
+                    <div class="category-img" style="background-color: {{ block.settings.background_color | default: '#f8e1e8' }};">
+                      <span class="category-placeholder">{{ block.settings.title | default: "Category" | slice: 0, 1 | upcase }}</span>
                     </div>
-                    <div class="category-title">
-                      <h3>{{ block.settings.title | default: "Category Name" }}</h3>
-                    </div>
+                  </div>
+                  <div class="category-title">
+                    <h3>{{ block.settings.title | default: "Category Name" }}</h3>
                   </div>
                 {% endif %}
               </div>
@@ -109,79 +113,13 @@
           <div class="carousel-track">
             {% for i in (1..6) %}
               <div class="carousel-item">
-                <div class="category-card-inner">
+                <div class="category-circle">
                   <div class="category-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};">
-                  </div>
-                  <div class="category-title">
-                    <h3>Sample Category {{ i }}</h3>
+                    <span class="category-placeholder">{{ i }}</span>
                   </div>
                 </div>
-              </div>
-            {% endfor %}
-          </div>
-          <button class="carousel-nav carousel-next" aria-label="Next categories" disabled>
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      {% endif %}
-    </div>
-    
-    <!-- Mobile Carousel View -->
-    <div class="category-carousel mobile-only">
-      {% if section.blocks.size > 0 %}
-        <div class="carousel-container">
-          <button class="carousel-nav carousel-prev" aria-label="Previous categories">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <div class="carousel-track">
-            {% for block in section.blocks %}
-              <div class="carousel-item" {{ block.shopify_attributes }}>
-                {% if block.settings.collection != blank %}
-                  <a href="{{ block.settings.collection.url }}" class="category-card-link">
-                    <div class="category-card-inner">
-                      {% if block.settings.image != blank %}
-                        <div class="category-img" style="background-image: url('{{ block.settings.image | img_url: 'master' }}');"></div>
-                      {% elsif block.settings.collection.image != blank %}
-                        <div class="category-img" style="background-image: url('{{ block.settings.collection.image | img_url: 'master' }}');"></div>
-                      {% else %}
-                        <div class="category-img" style="background-color: {{ block.settings.background_color }};"></div>
-                      {% endif %}
-                      <div class="category-title">
-                        <h3>{{ block.settings.title | default: block.settings.collection.title }}</h3>
-                      </div>
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="category-card-inner">
-                    <div class="category-img" style="background-color: {{ block.settings.background_color }};">
-                    </div>
-                    <div class="category-title">
-                      <h3>{{ block.settings.title | default: "Category Name" }}</h3>
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-          <button class="carousel-nav carousel-next" aria-label="Next categories">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      {% else %}
-        {% comment %} Display placeholder categories if no blocks are added {% endcomment %}
-        <div class="carousel-container">
-          <button class="carousel-nav carousel-prev" aria-label="Previous categories" disabled>
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <div class="carousel-track">
-            {% for i in (1..6) %}
-              <div class="carousel-item">
-                <div class="category-card-inner">
-                  <div class="category-img" style="background-color: {% cycle '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff', '#f8e1e8', '#f0e6ff' %};">
-                  </div>
-                  <div class="category-title">
-                    <h3>Sample Category {{ i }}</h3>
-                  </div>
+                <div class="category-title">
+                  <h3>Category {{ i }}</h3>
                 </div>
               </div>
             {% endfor %}
@@ -244,52 +182,80 @@
   /* Carousel Styles */
   .category-carousel {
     position: relative;
-    padding: 0 15px;
+    padding: 20px 0;
+    margin: 20px 0;
   }
   
   .carousel-container {
     position: relative;
     overflow: hidden;
+    padding: 20px 50px;
   }
   
   .carousel-track {
     display: flex;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    gap: 30px;
+    padding: 15px 0;
   }
   
   .carousel-item {
     flex: 0 0 auto;
-    width: 25%;
-    margin-right: 20px;
-  }
-  
-  .carousel-item:last-child {
-    margin-right: 0;
+    width: calc(25% - 22.5px);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
   
   .category-card-link {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-decoration: none;
+    color: inherit;
   }
   
-  .category-card-inner {
+  .category-circle {
     background-color: #fff;
-    border-radius: 15px;
+    border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    height: 180px;
+    position: relative;
+    padding: 4px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
   }
   
-  .category-card-inner:hover {
+  .category-circle:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(255, 107, 154, 0.15);
+    box-shadow: 0 10px 25px rgba(255, 107, 154, 0.3);
   }
   
   .category-img {
     width: 100%;
-    height: 200px;
+    height: 100%;
     background-size: cover;
     background-position: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 3px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .category-placeholder {
+    font-size: 36px;
+    font-weight: 600;
+    color: #333;
   }
   
   .category-title {
@@ -299,52 +265,108 @@
   
   .category-title h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #333;
+    transition: color 0.3s ease;
+  }
+  
+  .category-circle:hover .category-title h3 {
+    color: #ff6b9a;
   }
   
   .carousel-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
     border: none;
-    padding: 10px;
-    font-size: 18px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    z-index: 5;
+    transition: all 0.3s ease;
+    color: #333;
+    font-size: 14px;
   }
   
   .carousel-prev {
-    left: 0;
+    left: 5px;
   }
   
   .carousel-next {
-    right: 0;
+    right: 5px;
+  }
+  
+  .carousel-nav:hover {
+    background-color: #ff6b9a;
+    color: white;
+    box-shadow: 0 5px 15px rgba(255, 107, 154, 0.3);
   }
   
   .carousel-nav:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background-color: #f5f5f5;
+    color: #999;
+    box-shadow: none;
   }
   
   /* Mobile Carousel Styles */
+  @media (max-width: 991px) {
+    .carousel-item {
+      width: calc(33.333% - 15px);
+    }
+    
+    .category-circle {
+      width: 140px;
+      height: 140px;
+    }
+  }
+  
   @media (max-width: 767px) {
     .category-carousel {
-      padding: 0;
+      padding: 10px 0;
+      margin: 10px 0;
+    }
+    
+    .carousel-container {
+      padding: 5px 35px;
     }
     
     .carousel-item {
-      width: 100%;
-      margin-right: 0;
+      width: calc(100% - 10px);
     }
     
-    .category-card-inner {
-      border-radius: 0;
+    .category-circle {
+      width: 120px;
+      height: 120px;
     }
     
-    .category-img {
-      height: 150px;
+    .category-title {
+      padding: 12px;
+    }
+    
+    .category-title h3 {
+      font-size: 14px;
+    }
+    
+    .carousel-nav {
+      width: 32px;
+      height: 32px;
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 374px) {
+    .category-circle {
+      width: 80px;
+      height: 80px;
     }
   }
   
@@ -480,12 +502,9 @@
     
     /* For smaller mobile screens */
     @media (max-width: 374px) {
-      .category-card-inner {
-        border-radius: 0;
-      }
-      
-      .category-img {
-        height: 120px;
+      .category-circle {
+        width: 60px;
+        height: 60px;
       }
     }
   }
@@ -848,6 +867,52 @@
       "unit": "px",
       "label": "Mobile bottom margin",
       "default": 0
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_logo_color_heading",
+      "label": "Use logo color for heading",
+      "default": false,
+      "info": "When enabled, uses the theme's primary pink color for the heading"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_logo_color_subheading",
+      "label": "Use logo color for subheading",
+      "default": false,
+      "info": "When enabled, uses the theme's primary pink color for the subheading"
     }
   ],
   "blocks": [

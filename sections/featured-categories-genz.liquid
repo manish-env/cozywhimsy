@@ -1,0 +1,784 @@
+{% comment %}
+  Gen Z Featured Categories Section
+  Inspired by Instagram UI with vibrant colors and modern styling
+{% endcomment %}
+
+<section class="categories-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title{% if section.settings.use_gradient_heading %} gradient-text{% endif %}">{{ section.settings.title | escape }}</h2>
+      {% if section.settings.subheading != blank %}
+        <div class="section-subheading{% if section.settings.use_gradient_subheading %} gradient-text{% endif %}">
+          {{ section.settings.subheading }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_banner %}
+      <div class="promo-banner{% if section.settings.show_banner_desktop == false %} desktop-hide-banner{% endif %}{% if section.settings.show_banner_mobile == false %} mobile-hide-banner{% endif %}">
+        <div class="promo-banner-content">
+          <h3 class="promo-banner-title">{{ section.settings.banner_title }}</h3>
+          <p class="promo-banner-text">{{ section.settings.banner_text }}</p>
+          {% if section.settings.banner_button_text != blank %}
+            <a href="{{ section.settings.banner_button_link }}" class="btn primary-btn">{{ section.settings.banner_button_text }}</a>
+          {% endif %}
+        </div>
+        {% if section.settings.banner_image != blank %}
+          <img src="{{ section.settings.banner_image | image_url: width: 1500 }}" alt="{{ section.settings.banner_title }}" class="promo-banner-image">
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="desktop-categories">
+      <div class="categories-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'category' %}
+            <div class="category-card" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.link }}">
+                {% if block.settings.image != blank %}
+                  <img src="{{ block.settings.image | image_url: width: 500 }}" alt="{{ block.settings.title }}" class="category-image">
+                {% else %}
+                  <div class="category-placeholder">
+                    {{ block.settings.title | slice: 0 | upcase }}
+                  </div>
+                {% endif %}
+                <div class="category-overlay">
+                  <h3 class="category-title">{{ block.settings.title }}</h3>
+                  {% if block.settings.show_products_count %}
+                    <div class="category-count">{{ block.settings.products_count }} Products</div>
+                  {% endif %}
+                </div>
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mobile-categories">
+      <div class="stories-carousel-container">
+        <button class="stories-nav stories-prev" aria-label="Previous categories">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        
+        <div class="stories-carousel">
+          {% for block in section.blocks %}
+            {% if block.type == 'category' %}
+              <div class="story-item" {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link }}" class="story-link">
+                  <div class="story-circle">
+                    {% if block.settings.image != blank %}
+                      <img src="{{ block.settings.image | image_url: width: 150 }}" alt="{{ block.settings.title }}" class="story-image">
+                    {% else %}
+                      <div class="story-placeholder">
+                        {{ block.settings.title | slice: 0 | upcase }}
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="story-title">{{ block.settings.title }}</div>
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        <button class="stories-nav stories-next" aria-label="Next categories">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Gen Z Categories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Find Your Vibe"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Browse our trending categories and discover your perfect style"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "default": 28,
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ccff00"
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_heading",
+      "label": "Use Gradient Heading",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to heading text"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "default": 16,
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#bbbbbb"
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_subheading",
+      "label": "Use Gradient Subheading",
+      "default": false,
+      "info": "When enabled, applies Instagram-style gradient to subheading text"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient Color 1",
+      "default": "#ff6bff"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient Color 2",
+      "default": "#00f5ff"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_3",
+      "label": "Gradient Color 3",
+      "default": "#8a2be2"
+    },
+    {
+      "type": "header",
+      "content": "Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Show Banner",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner_desktop",
+      "label": "Show on Desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner_mobile",
+      "label": "Show on Mobile",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title",
+      "default": "New Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "banner_text",
+      "label": "Banner Text",
+      "default": "Check out our latest arrivals with exclusive discounts"
+    },
+    {
+      "type": "text",
+      "id": "banner_button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "banner_button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "header",
+      "content": "Separator Line"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator_desktop",
+      "label": "Show Separator on Desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator_mobile",
+      "label": "Show Separator on Mobile",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Name",
+          "default": "Category"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Category Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Category Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_products_count",
+          "label": "Show Products Count",
+          "default": true
+        },
+        {
+          "type": "number",
+          "id": "products_count",
+          "label": "Products Count",
+          "default": 10
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gen Z Categories",
+      "category": "Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Aesthetic Vibes",
+            "products_count": 24
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Y2K Style",
+            "products_count": 18
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Digital Art",
+            "products_count": 12
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Sustainable",
+            "products_count": 15
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.categories-section {
+  padding: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-header {
+  text-align: {{ section.settings.text_alignment }};
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.section-header::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(45deg, {{ section.settings.gradient_color_1 }}, {{ section.settings.gradient_color_2 }}, {{ section.settings.gradient_color_3 }});
+  margin: 15px auto 0;
+  border-radius: 3px;
+  
+  {% if section.settings.text_alignment == 'left' %}
+    margin-left: 0;
+  {% elsif section.settings.text_alignment == 'right' %}
+    margin-left: auto;
+    margin-right: 0;
+  {% endif %}
+  
+  {% if section.settings.show_separator_desktop == false %}
+    @media (min-width: 768px) {
+      display: none;
+    }
+  {% endif %}
+  
+  {% if section.settings.show_separator_mobile == false %}
+    @media (max-width: 767px) {
+      display: none;
+    }
+  {% endif %}
+}
+
+.section-title {
+  font-size: {{ section.settings.heading_size }}px;
+  color: {{ section.settings.heading_color }};
+  margin-bottom: 10px;
+  font-weight: {{ section.settings.heading_weight }};
+  line-height: 1.2;
+}
+
+.section-title.gradient-text {
+  background: linear-gradient(to right, {{ section.settings.gradient_color_1 }}, {{ section.settings.gradient_color_2 }}, {{ section.settings.gradient_color_3 }});
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.section-subheading {
+  font-size: {{ section.settings.subheading_size }}px;
+  line-height: 1.5;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  max-width: 800px;
+  color: {{ section.settings.subheading_color }};
+  font-weight: {{ section.settings.subheading_weight }};
+}
+
+.section-header.text-center .section-subheading {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header.text-right .section-subheading {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.section-header.text-left .section-subheading {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.section-subheading.gradient-text {
+  background: linear-gradient(to right, {{ section.settings.gradient_color_1 }}, {{ section.settings.gradient_color_2 }}, {{ section.settings.gradient_color_3 }});
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Promo Banner */
+.promo-banner {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+}
+
+.desktop-hide-banner {
+  @media (min-width: 768px) {
+    display: none !important;
+  }
+}
+
+.mobile-hide-banner {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.promo-banner-content {
+  padding: 30px;
+  max-width: 500px;
+  position: relative;
+  z-index: 1;
+}
+
+.promo-banner-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--lime);
+}
+
+.promo-banner-text {
+  margin-bottom: 20px;
+}
+
+.promo-banner-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 50%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+/* Desktop Categories */
+.desktop-categories {
+  display: block;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.category-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1/1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.05);
+}
+
+.category-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(45deg, {{ section.settings.gradient_color_1 }}, {{ section.settings.gradient_color_3 }});
+  color: #1a1a1a;
+}
+
+.category-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.category-title {
+  color: var(--white);
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.category-count {
+  color: var(--lime);
+  font-size: 0.9rem;
+}
+
+/* Mobile Categories (Instagram Stories Style) */
+.mobile-categories {
+  display: none;
+}
+
+.stories-carousel-container {
+  position: relative;
+  padding: 10px 0;
+}
+
+.stories-carousel {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 40px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.stories-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.story-link {
+  text-decoration: none;
+}
+
+.story-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(45deg, {{ section.settings.gradient_color_1 }}, {{ section.settings.gradient_color_2 }}, {{ section.settings.gradient_color_3 }});
+}
+
+.story-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #121212;
+}
+
+.story-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  background-color: #1a1a1a;
+  color: var(--white);
+  border: 2px solid #121212;
+}
+
+.story-title {
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--white);
+}
+
+.stories-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(26, 26, 26, 0.8);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  cursor: pointer;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.stories-nav:hover {
+  background-color: var(--neon-pink);
+  color: var(--black);
+}
+
+.stories-prev {
+  left: 5px;
+}
+
+.stories-next {
+  right: 5px;
+}
+
+.stories-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 767px) {
+  .desktop-categories {
+    display: none;
+  }
+  
+  .mobile-categories {
+    display: block;
+  }
+  
+  .story-circle {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .promo-banner {
+    flex-direction: column;
+  }
+  
+  .promo-banner-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    right: auto;
+    top: auto;
+  }
+  
+  .promo-banner-content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .story-circle {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .stories-carousel {
+    padding: 10px 30px;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  // Stories carousel navigation for mobile
+  const storiesCarousel = document.querySelector('.stories-carousel');
+  const prevBtn = document.querySelector('.stories-prev');
+  const nextBtn = document.querySelector('.stories-next');
+  
+  if (storiesCarousel && prevBtn && nextBtn) {
+    const scrollAmount = 200;
+    
+    prevBtn.addEventListener('click', () => {
+      storiesCarousel.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      storiesCarousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Update button states
+    const updateButtonStates = () => {
+      const isAtStart = storiesCarousel.scrollLeft <= 10;
+      const isAtEnd = storiesCarousel.scrollLeft + storiesCarousel.clientWidth >= storiesCarousel.scrollWidth - 10;
+      
+      prevBtn.disabled = isAtStart;
+      prevBtn.style.opacity = isAtStart ? '0.5' : '1';
+      nextBtn.disabled = isAtEnd;
+      nextBtn.style.opacity = isAtEnd ? '0.5' : '1';
+    };
+    
+    storiesCarousel.addEventListener('scroll', updateButtonStates);
+    window.addEventListener('resize', updateButtonStates);
+    
+    // Initial update
+    updateButtonStates();
+  }
+});
+{% endjavascript %}

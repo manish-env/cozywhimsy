@@ -113,7 +113,7 @@
         "type": "font_picker",
         "id": "genz_heading_font",
         "label": "Gen Z Heading Font",
-        "default": "impact_n4"
+        "default": "poppins_n7"
       }
     ]
   },

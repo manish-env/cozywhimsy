@@ -8,6 +8,28 @@
     "theme_support_url": "https://support.shopify.com"
   },
   {
+    "name": "Theme Style",
+    "settings": [
+      {
+        "type": "select",
+        "id": "theme_style",
+        "label": "Theme Style",
+        "options": [
+          {
+            "value": "default",
+            "label": "CozyWhimsy (Default)"
+          },
+          {
+            "value": "genz",
+            "label": "Gen Z Mode"
+          }
+        ],
+        "default": "default",
+        "info": "Switch between the classic CozyWhimsy style and the vibrant Gen Z style"
+      }
+    ]
+  },
+  {
     "name": "Colors",
     "settings": [
       {
@@ -41,6 +63,57 @@
         "id": "light_purple",
         "label": "Light Purple",
         "default": "#f0e6ff"
+      }
+    ]
+  },
+  {
+    "name": "Gen Z Style Colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "These colors are only used when Gen Z Mode is enabled"
+      },
+      {
+        "type": "color",
+        "id": "genz_neon_pink",
+        "label": "Neon Pink",
+        "default": "#ff6bff"
+      },
+      {
+        "type": "color",
+        "id": "genz_electric_blue",
+        "label": "Electric Blue",
+        "default": "#00f5ff"
+      },
+      {
+        "type": "color",
+        "id": "genz_violet",
+        "label": "Violet",
+        "default": "#8a2be2"
+      },
+      {
+        "type": "color",
+        "id": "genz_lime",
+        "label": "Lime",
+        "default": "#ccff00"
+      },
+      {
+        "type": "color",
+        "id": "genz_black",
+        "label": "Background Black",
+        "default": "#121212"
+      },
+      {
+        "type": "color",
+        "id": "genz_white",
+        "label": "Text White",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "font_picker",
+        "id": "genz_heading_font",
+        "label": "Gen Z Heading Font",
+        "default": "impact_n4"
       }
     ]
   },

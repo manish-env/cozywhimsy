@@ -25,8 +25,11 @@
   
   <!-- Swiper.js for carousels -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  
+  <!-- Gen Z Style -->
+  {% render 'genz-style' %}
 </head>
-<body>
+<body class="{% if settings.theme_style == 'genz' %}genz-mode{% endif %}">
   {% section 'header' %}
   
   <main role="main" id="MainContent">

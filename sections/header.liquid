@@ -1,440 +1,75 @@
-<header class="site-header {% if section.settings.mobile_navbar_style == 'bottom_tabs' %}has-bottom-tabs{% endif %}">
-  <div class="header-container">
-    <!-- Logo on Left -->
-    <div class="logo-container">
-      <a href="/" class="logo">
+{% comment %}
+  Gen Z Theme Header Section
+  Modern, vibrant styling with neon accents and gradient effects
+{% endcomment %}
+
+<header class="genz-header">
+  <div class="container header-container">
+    <div class="logo">
+      <a href="{{ routes.root_url }}" class="header-logo-link">
         {% if section.settings.logo != blank %}
-          <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" width="auto" height="40" loading="lazy">
+          <img 
+            src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}"
+            alt="{{ section.settings.logo.alt | default: shop.name }}"
+            width="{{ section.settings.logo_width }}"
+            height="{{ section.settings.logo.height | divided_by: section.settings.logo.width | times: section.settings.logo_width | round }}"
+            class="header-logo"
+          >
         {% else %}
-          <img src="{{ 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }}" width="auto" height="40" loading="lazy">
+          <div class="logo-icon">V</div>
+          <span class="logo-text">{{ shop.name }}</span>
         {% endif %}
       </a>
     </div>
-    
-    <!-- Desktop Search (hidden on mobile) -->
-    <div class="search-container desktop-only">
-      <form action="/search" method="get" class="search-form">
-        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="search-input" aria-label="Search">
-        <button type="submit" class="search-button" aria-label="Submit search">
-          <i class="fas fa-search"></i>
-        </button>
-      </form>
-    </div>
-    
-    <!-- Mobile Actions (right-aligned) -->
-    <div class="mobile-actions">
-      {% unless section.settings.hide_hamburger_menu %}
-      <div class="nav-toggle" id="navToggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      {% endunless %}
-      
-      <!-- Mobile Wishlist Icon -->
-      <a href="{{ routes.root_url }}pages/wishlist" class="mobile-wishlist-icon" aria-label="Wishlist">
-        <div class="icon-wrapper">
-          <i class="fas fa-heart"></i>
-          <span class="mobile-wishlist-count" data-wishlist-count>0</span>
-        </div>
+
+    <nav class="main-nav">
+      <ul>
+        {% for link in section.settings.menu.links %}
+          <li>
+            <a href="{{ link.url }}" {% if link.current %}class="active"{% endif %}>
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="{{ routes.search_url }}" class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
       </a>
       
-      <!-- Mobile Cart Icon -->
-      <a href="/cart" class="mobile-cart-icon" aria-label="Cart">
-        <div class="icon-wrapper">
-          <i class="fas fa-shopping-bag"></i>
-          <span class="mobile-cart-count">{{ cart.item_count }}</span>
-        </div>
+      <a href="{{ routes.account_url }}" class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
       </a>
-    </div>
-    
-    <div class="header-right">
-      <nav class="main-nav" id="mainNav">
-        <ul class="nav-list">
-          {% for link in section.settings.menu.links %}
-            {% if link.links != blank %}
-              <li class="nav-item has-dropdown {% if link.active %}active{% endif %}">
-                <a href="{{ link.url }}" class="nav-link">
-                  {{ link.title }}
-                  <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu">
-                  {% for childlink in link.links %}
-                    <li class="dropdown-item">
-                      <a href="{{ childlink.url }}" class="dropdown-link">{{ childlink.title }}</a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </li>
-            {% else %}
-              <li class="nav-item {% if link.active %}active{% endif %}">
-                <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </nav>
       
-      <div class="header-actions">
-        <a href="/account" class="icon-link" aria-label="Account">
-          <div class="icon-wrapper">
-            <i class="fas fa-user"></i>
-          </div>
-        </a>
-        
-        {% render 'wishlist-icon' %}
-        
-        <a href="/cart" class="icon-link cart-icon" aria-label="Cart">
-          <div class="icon-wrapper">
-            <i class="fas fa-shopping-bag"></i>
-            <span class="cart-count">{{ cart.item_count }}</span>
-          </div>
-        </a>
-      </div>
+      <a href="{{ routes.cart_url }}" class="header-icon cart-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count">{{ cart.item_count }}</span>
+      </a>
+      
+      <button class="mobile-menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </div>
 </header>
 
-{% if section.settings.enable_mobile_categories %}
-<div class="mobile-categories-container">
-  {% render 'mobile-categories-nav' %}
-</div>
-{% endif %}
-
-{% if section.settings.mobile_navbar_style == 'bottom_tabs' %}
-  <div class="mobile-bottom-navbar">
-    <a href="/" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
-      <div class="nav-icon-container">
-        <i class="fas fa-home"></i>
-      </div>
-      <span>Home</span>
-    </a>
-    
-    <a href="/pages/catalog" class="bottom-nav-item {% if request.path contains '/pages/catalog' %}active{% endif %}">
-      <div class="nav-icon-container">
-        <i class="fas fa-search"></i>
-      </div>
-      <span>Search</span>
-    </a>
-    
-    <a href="/account" class="bottom-nav-item {% if request.path contains '/account' %}active{% endif %}">
-      <div class="nav-icon-container">
-        <i class="fas fa-user-circle"></i>
-      </div>
-      <span>Profile</span>
-    </a>
-    
-    <a href="https://wa.me/{{ section.settings.whatsapp_number | default: '919876543210' }}" class="bottom-nav-item whatsapp-nav-item" target="_blank" rel="noopener">
-      <div class="nav-icon-container">
-        <i class="fab fa-whatsapp"></i>
-      </div>
-      <span>Chat</span>
-    </a>
-  </div>
-{% endif %}
-
-<div class="header-spacer"></div>
-
-<style>
-  /* Critical CSS only - moved non-critical styles to theme.css */
-  .mobile-bottom-navbar {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-width: 100vw;
-    background-color: #fff;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 5px 0;
-    border-top: 1px solid #f0f0f0;
-    overflow-x: hidden;
-  }
-  
-  .bottom-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    padding: 8px 0;
-    text-decoration: none;
-    color: #777;
-    position: relative;
-    transition: all 0.3s ease;
-  }
-  
-  .nav-icon-container {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 4px;
-    background: linear-gradient(45deg, #fff0f6, #fff5f9);
-    box-shadow: 0 2px 5px rgba(255, 107, 154, 0.08);
-    transition: all 0.3s ease;
-  }
-  
-  .bottom-nav-item i {
-    font-size: 20px;
-    color: #777;
-    transition: color 0.3s ease;
-  }
-  
-  .bottom-nav-item span {
-    font-size: 11px;
-    font-weight: 500;
-  }
-  
-  .bottom-nav-item.active .nav-icon-container {
-    background: linear-gradient(45deg, #ffeff5, #fff0f6);
-    box-shadow: 0 3px 8px rgba(255, 107, 154, 0.15);
-  }
-  
-  .bottom-nav-item.active i,
-  .bottom-nav-item:hover i {
-    color: #ff6b9a;
-  }
-  
-  .bottom-nav-item.active span,
-  .bottom-nav-item:hover span {
-    color: #ff6b9a;
-  }
-  
-  /* WhatsApp specific styling */
-  .whatsapp-nav-item .nav-icon-container {
-    background: linear-gradient(45deg, #e9ffef, #f0fff4);
-  }
-  
-  .whatsapp-nav-item i {
-    color: #25D366;
-  }
-  
-  .whatsapp-nav-item.active .nav-icon-container {
-    background: linear-gradient(45deg, #dcf8e6, #e8fff0);
-    box-shadow: 0 3px 8px rgba(37, 211, 102, 0.15);
-  }
-  
-  .whatsapp-nav-item.active i,
-  .whatsapp-nav-item:hover i {
-    color: #25D366;
-  }
-  
-  .whatsapp-nav-item.active span,
-  .whatsapp-nav-item:hover span {
-    color: #25D366;
-  }
-  
-  /* Remove nth-child selectors */
-  .bottom-nav-item:nth-child(4) .nav-icon-container {
-    background: none;
-  }
-  
-  .bottom-nav-item:nth-child(4).active .nav-icon-container {
-    background: none;
-    box-shadow: none;
-  }
-  
-  .bottom-nav-item:nth-child(4).active i,
-  .bottom-nav-item:nth-child(4):hover i {
-    color: inherit;
-  }
-  
-  .bottom-nav-item:nth-child(4).active span,
-  .bottom-nav-item:nth-child(4):hover span {
-    color: inherit;
-  }
-  
-  /* Mobile Icons in Header */
-  .mobile-cart-icon,
-  .mobile-wishlist-icon {
-    display: none;
-    position: relative;
-    margin-left: 15px;
-    color: #ff6b9a;
-    text-decoration: none;
-  }
-  
-  .mobile-cart-icon .icon-wrapper,
-  .mobile-wishlist-icon .icon-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .mobile-cart-icon i,
-  .mobile-wishlist-icon i {
-    font-size: 20px;
-  }
-  
-  .mobile-cart-count,
-  .mobile-wishlist-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: {{ section.settings.accent_color | default: '#e1306c' }};
-    color: white;
-    font-size: 10px;
-    font-weight: bold;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  @media (max-width: 767px) {
-    .site-header.has-bottom-tabs .header-actions {
-      display: none;
-    }
-    
-    .site-header.has-bottom-tabs {
-      padding-bottom: 0;
-    }
-    
-    .mobile-bottom-navbar {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 8px 0;
-    }
-    
-    .header-container {
-      padding: 10px 15px;
-    }
-    
-    .desktop-only {
-      display: none;
-    }
-    
-    .mobile-actions {
-      display: flex;
-      align-items: center;
-    }
-    
-    .nav-toggle {
-      display: block;
-    }
-    
-    .main-nav {
-      display: none;
-    }
-    
-    {% if section.settings.hide_hamburger_menu %}
-      .nav-toggle {
-        display: none;
-      }
-    {% endif %}
-    
-    .mobile-cart-icon,
-    .mobile-wishlist-icon {
-      display: block;
-    }
-    
-    .header-actions .cart-icon,
-    .header-actions .wishlist-icon {
-      display: none;
-    }
-  }
-  
-  /* Fix for horizontal scrolling */
-  html, body {
-    overflow-x: hidden;
-    max-width: 100%;
-  }
-  
-  .site-header {
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-  
-  .mobile-categories-container {
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-</style>
-
-<script defer>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navToggle = document.getElementById('navToggle');
-    const mainNav = document.getElementById('mainNav');
-    const header = document.querySelector('.site-header');
-    const bottomNavbar = document.querySelector('.mobile-bottom-navbar');
-    const bottomNavPosition = '{{ section.settings.mobile_navbar_position }}';
-    
-    // Toggle mobile menu
-    navToggle.addEventListener('click', function() {
-      mainNav.classList.toggle('active');
-      this.classList.toggle('active');
-      document.body.classList.toggle('nav-open');
-    });
-    
-    // Handle dropdown menus on mobile
-    const dropdownLinks = document.querySelectorAll('.has-dropdown > .nav-link');
-    
-    dropdownLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        if (window.innerWidth < 992) {
-          e.preventDefault();
-          this.parentNode.classList.toggle('dropdown-open');
-        }
-      });
-    });
-    
-    // Sticky header and bottom navbar on scroll - use requestAnimationFrame for better performance
-    let lastScrollTop = 0;
-    let ticking = false;
-    
-    window.addEventListener('scroll', function() {
-      if (!ticking) {
-        window.requestAnimationFrame(function() {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          
-          // Handle top header
-          if (scrollTop > 100) {
-            header.classList.add('sticky');
-            
-            if (scrollTop > lastScrollTop) {
-              // Scrolling down
-              header.classList.add('hide');
-            } else {
-              // Scrolling up
-              header.classList.remove('hide');
-            }
-          } else {
-            header.classList.remove('sticky');
-            header.classList.remove('hide');
-          }
-          
-          // Handle bottom navbar visibility based on settings
-          if (bottomNavbar && bottomNavPosition === 'scroll') {
-            if (scrollTop > lastScrollTop && scrollTop > 150) {
-              // Scrolling down - hide the navbar
-              bottomNavbar.classList.add('bottom-nav-hidden');
-            } else {
-              // Scrolling up - show the navbar
-              bottomNavbar.classList.remove('bottom-nav-hidden');
-            }
-          }
-          
-          lastScrollTop = scrollTop;
-          ticking = false;
-        });
-        
-        ticking = true;
-      }
-    });
-  });
-</script>
-
 {% schema %}
 {
-  "name": "Header",
+  "name": "Gen Z Header",
   "settings": [
     {
       "type": "image_picker",
@@ -442,126 +77,230 @@
       "label": "Logo"
     },
     {
-      "type": "text",
-      "id": "search_placeholder",
-      "label": "Search placeholder text",
-      "default": "Search for products..."
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 100,
+      "unit": "px",
+      "label": "Logo width"
     },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Menu",
-      "default": "main-menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky_header",
-      "label": "Enable sticky header",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Mobile Navigation"
-    },
-    {
-      "type": "select",
-      "id": "mobile_navbar_style",
-      "label": "Mobile navbar style",
-      "options": [
-        {
-          "value": "standard",
-          "label": "Standard (hamburger menu)"
-        },
-        {
-          "value": "simplified_top",
-          "label": "Simplified top navbar"
-        },
-        {
-          "value": "bottom_tabs",
-          "label": "Bottom tab navigation"
-        }
-      ],
-      "default": "standard",
-      "info": "Choose how navigation appears on mobile devices"
-    },
-    {
-      "type": "checkbox",
-      "id": "hide_hamburger_menu",
-      "label": "Hide hamburger menu on mobile",
-      "default": false,
-      "info": "When enabled, the hamburger menu icon will be hidden on mobile devices"
-    },
-    {
-      "type": "url",
-      "id": "mobile_navbar_categories_link",
-      "label": "Categories link (for bottom tabs)",
-      "info": "URL for the Categories tab in bottom navigation"
-    },
-    {
-      "type": "color",
-      "id": "mobile_navbar_active_color",
-      "label": "Active tab color",
-      "default": "#ff6b9a",
-      "info": "Color for active tab in bottom navigation"
-    },
-    {
-      "type": "select",
-      "id": "mobile_navbar_position",
-      "label": "Bottom navbar position",
-      "options": [
-        {
-          "value": "fixed",
-          "label": "Fixed (always visible)"
-        },
-        {
-          "value": "scroll",
-          "label": "Show on scroll up"
-        }
-      ],
-      "default": "fixed",
-      "info": "Control when the bottom navbar is visible"
-    },
-    {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "header_bg",
-      "label": "Background color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "header_text",
-      "label": "Text color",
-      "default": "#333333"
-    },
-    {
-      "type": "color",
-      "id": "header_text_color",
-      "label": "Text color",
-      "default": "#333333"
-    },
-    {
-      "type": "text",
-      "id": "whatsapp_number",
-      "label": "WhatsApp number",
-      "info": "Enter your WhatsApp number with country code (e.g., 911234567890)",
-      "placeholder": "911234567890"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_mobile_categories",
-      "label": "Enable mobile categories",
-      "default": false
+      "default": "main-menu",
+      "label": "Menu"
     }
   ],
   "presets": [
     {
-      "name": "Header",
+      "name": "Gen Z Header",
       "category": "Header"
     }
   ]
 }
 {% endschema %}
+
+{% stylesheet %}
+.genz-header {
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  background-color: rgba(18, 18, 18, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black);
+  font-weight: bold;
+}
+
+.logo-text {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 1.5rem;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.header-logo {
+  max-height: 50px;
+  width: auto;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+}
+
+.main-nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  color: var(--neon-pink);
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient);
+  transition: width 0.3s ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a.active::after {
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-icon {
+  color: var(--white);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.header-icon:hover {
+  color: var(--neon-pink);
+  transform: translateY(-2px);
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: var(--lime);
+  color: var(--black);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--white);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 991px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--black);
+    padding: 80px 30px 30px;
+    transition: right 0.3s ease;
+    z-index: 999;
+    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .main-nav.active {
+    right: 0;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mobile-menu-btn.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-btn.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 767px) {
+  .header-actions {
+    gap: 15px;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  // Mobile menu toggle
+  const menuBtn = document.querySelector('.mobile-menu-btn');
+  const nav = document.querySelector('.main-nav');
+  
+  if (menuBtn && nav) {
+    menuBtn.addEventListener('click', function() {
+      menuBtn.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+  }
+});
+{% endjavascript %}

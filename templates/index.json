@@ -9,6 +9,19 @@
  */
 {
   "sections": {
+    "hero_genz_tUndPA": {
+      "type": "hero-genz",
+      "name": "Gen Z Hero",
+      "settings": {
+        "heading": "Gifts for the Gen Z Soul",
+        "subheading": "Discover unique, trendy gifts that speak to the Gen Z aesthetic. Express yourself with our curated collection of vibrant, authentic products.",
+        "button_label": "Shop Now",
+        "button_link": "shopify://collections/all",
+        "secondary_button_label": "Learn More",
+        "secondary_button_link": "",
+        "show_floating_elements": true
+      }
+    },
     "mobile_toplevel_categories_WLExDV": {
       "type": "mobile-toplevel-categories",
       "blocks": {
@@ -103,51 +116,6 @@
         "background_color": "#ffffff",
         "circle_size": 80,
         "circle_spacing": 10
-      }
-    },
-    "hero": {
-      "type": "hero",
-      "blocks": {
-        "slide_HhY4ry": {
-          "type": "slide",
-          "settings": {
-            "slide_caption": "Slide Title",
-            "slide_button_link": "",
-            "slide_button_text": "Shop Now"
-          }
-        }
-      },
-      "block_order": [
-        "slide_HhY4ry"
-      ],
-      "settings": {
-        "enable_hero_section": true,
-        "hide_on_mobile": false,
-        "hide_on_desktop": false,
-        "heading": "Welcome to Cozywhimsy",
-        "subheading": "Handcrafted items that bring warmth and whimsy to your home",
-        "button_link": "/collections/all",
-        "button_text": "Shop Now",
-        "secondary_button_link": "",
-        "secondary_button_text": "Explore Collections",
-        "image": "shopify://shop_images/5531344064.jpg",
-        "secondary_image": "shopify://shop_images/5089441490.jpg",
-        "primary_caption": "New Arrivals",
-        "secondary_caption": "Featured Collection",
-        "mobile_hero_style": "carousel",
-        "mobile_image": "shopify://shop_images/1x1-13BDAY-banner-sale-common-02-1744218202.webp",
-        "mobile_banner_height": 500,
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "mobile_padding_top": 0,
-        "mobile_padding_bottom": 0,
-        "mobile_margin_top": 0,
-        "mobile_margin_bottom": 0,
-        "mobile_image_size": "600x",
-        "mobile_image_position": "center center",
-        "mobile_overlay_opacity": 0,
-        "mobile_fallback_bg": "#f8f8f8",
-        "mobile_slide_delay": 5000
       }
     },
     "featured_categories": {
@@ -413,8 +381,8 @@
     }
   },
   "order": [
+    "hero_genz_tUndPA",
     "mobile_toplevel_categories_WLExDV",
-    "hero",
     "featured_categories",
     "video_product_carousel_RYUXNA",
     "featured_product_spotlight_9Jd4aF",

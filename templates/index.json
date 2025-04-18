@@ -275,6 +275,19 @@
             "sold_out_text": "SOLD OUT"
           }
         },
+        "product_video_3qAEMw": {
+          "type": "product_video",
+          "settings": {
+            "product": "x-speaker-wireless-bluetooth",
+            "video_url": "https://cdn.shopify.com/s/files/1/0747/7284/0696/files/Pink_Gradients_Social_Media_UXUI_Informational_Instagram_Post_1.png?v=1745006763",
+            "custom_title": "",
+            "show_views": true,
+            "views_count": "12K",
+            "button_style": "buy_now",
+            "button_text": "",
+            "sold_out_text": "SOLD OUT"
+          }
+        },
         "video_slot_9bChhB": {
           "type": "video_slot",
           "settings": {
@@ -317,6 +330,7 @@
       },
       "block_order": [
         "product_video_Y4AqHh",
+        "product_video_3qAEMw",
         "video_slot_9bChhB",
         "product_video_GxradM",
         "product_video_KiiYED"

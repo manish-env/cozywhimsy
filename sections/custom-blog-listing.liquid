@@ -1,6 +1,6 @@
 <div class="custom-blog-listing" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
   <div class="container">
-    <div class="blog-grid blog-layout-{{ section.settings.layout }}">
+    <div class="blog-layout">
       {% comment %}Use current blog if we're on a blog template, otherwise use the selected blog{% endcomment %}
       {% if template contains 'blog' %}
         {% assign current_blog = blog %}
@@ -8,70 +8,38 @@
         {% assign current_blog = blogs[section.settings.blog] %}
       {% endif %}
       
-      {% if section.settings.show_description and section.settings.description != blank %}
-        <div class="blog-description rte">
-          {{ section.settings.description }}
-        </div>
-      {% endif %}
-      
-      {% if section.settings.show_search %}
-        <div class="blog-search">
-          <form action="{{ routes.search_url }}" method="get" role="search">
-            <input type="hidden" name="type" value="article">
-            <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" aria-label="{{ section.settings.search_placeholder }}">
-            <button type="submit" aria-label="{{ 'general.search.submit' | t }}">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 19L13.8 13.8M16 8.5C16 12.6421 12.6421 16 8.5 16C4.35786 16 1 12.6421 1 8.5C1 4.35786 4.35786 1 8.5 1C12.6421 1 16 4.35786 16 8.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </form>
-        </div>
-      {% endif %}
-      
-      <div class="blog-filter-container">
-        {% if section.settings.show_categories and current_blog.all_tags.size > 0 %}
-          <div class="blog-categories">
-            <h3 class="filter-heading">{{ section.settings.categories_heading }}</h3>
-            <ul class="category-list">
-              <li class="category-item {% unless current_tag %}active{% endunless %}">
-                <a href="{{ current_blog.url }}">{{ section.settings.all_posts_text }}</a>
-              </li>
-              {% for tag in current_blog.all_tags %}
-                <li class="category-item {% if current_tag == tag %}active{% endif %}">
-                  <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-      </div>
-      
-      {% paginate current_blog.articles by section.settings.posts_per_page %}
-        <div class="blog-articles">
-          {% for article in current_blog.articles %}
-            <div class="blog-article-card">
-              <article class="blog-article">
-                {% if section.settings.show_featured_image and article.image %}
-                  <a href="{{ article.url }}" class="blog-article-image-link">
-                    <div class="blog-article-image-container image-height-{{ section.settings.image_height }}">
-                      <img 
-                        srcset="{% if article.image.width >= 350 %}{{ article.image | img_url: '350x' }} 350w,{% endif %}
-                                {% if article.image.width >= 750 %}{{ article.image | img_url: '750x' }} 750w,{% endif %}
-                                {% if article.image.width >= 1100 %}{{ article.image | img_url: '1100x' }} 1100w,{% endif %}"
-                        src="{{ article.image | img_url: '750x' }}"
-                        sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
-                        alt="{{ article.title | escape }}"
-                        class="blog-article-image"
-                        loading="lazy"
-                        width="{{ article.image.width }}"
-                        height="{{ article.image.height }}">
-                    </div>
-                  </a>
-                {% endif %}
-                
-                <div class="blog-article-content">
-                  {% if section.settings.show_date or section.settings.show_author %}
+      <div class="blog-main-content">
+        {% paginate current_blog.articles by section.settings.posts_per_page %}
+          <div class="blog-articles">
+            {% for article in current_blog.articles %}
+              <div class="blog-article-card">
+                <article class="blog-article">
+                  {% if section.settings.show_featured_image and article.image %}
+                    <a href="{{ article.url }}" class="blog-article-image-link">
+                      <div class="blog-article-image-container">
+                        <img 
+                          srcset="{% if article.image.width >= 350 %}{{ article.image | img_url: '350x' }} 350w,{% endif %}
+                                  {% if article.image.width >= 750 %}{{ article.image | img_url: '750x' }} 750w,{% endif %}
+                                  {% if article.image.width >= 1100 %}{{ article.image | img_url: '1100x' }} 1100w,{% endif %}"
+                          src="{{ article.image | img_url: '750x' }}"
+                          sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                          alt="{{ article.title | escape }}"
+                          class="blog-article-image"
+                          loading="lazy"
+                          width="{{ article.image.width }}"
+                          height="{{ article.image.height }}">
+                      </div>
+                    </a>
+                  {% endif %}
+                  
+                  <div class="blog-article-content">
                     <div class="blog-article-meta">
+                      {% if article.tags.size > 0 %}
+                        <span class="blog-article-category">
+                          {{ article.tags.first }}
+                        </span>
+                      {% endif %}
+                      
                       {% if section.settings.show_date %}
                         <span class="blog-article-date">
                           <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
@@ -79,54 +47,47 @@
                           </time>
                         </span>
                       {% endif %}
-                      
-                      {% if section.settings.show_author and article.author %}
-                        <span class="blog-article-author">
-                          by {{ article.author }}
-                        </span>
-                      {% endif %}
                     </div>
-                  {% endif %}
-                  
-                  <h2 class="blog-article-title">
-                    <a href="{{ article.url }}">{{ article.title }}</a>
-                  </h2>
-                  
-                  {% if section.settings.show_excerpt %}
-                    <div class="blog-article-excerpt">
-                      {% if article.excerpt != blank %}
-                        {{ article.excerpt }}
-                      {% else %}
-                        {{ article.content | strip_html | truncatewords: section.settings.excerpt_words }}
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                  
-                  {% if section.settings.show_read_more %}
-                    <a href="{{ article.url }}" class="blog-article-read-more">
-                      {{ section.settings.read_more_text }}
-                    </a>
-                  {% endif %}
-                </div>
-              </article>
+                    
+                    <h2 class="blog-article-title">
+                      <a href="{{ article.url }}">{{ article.title }}</a>
+                    </h2>
+                  </div>
+                </article>
+              </div>
+            {% else %}
+              <div class="empty-blog">
+                <p>{{ section.settings.no_articles_text }}</p>
+              </div>
+            {% endfor %}
+          </div>
+          
+          {% if paginate.pages > 1 %}
+            <div class="blog-pagination">
+              {{ paginate | default_pagination }}
             </div>
-          {% else %}
-            <div class="empty-blog">
-              <p>{{ section.settings.no_articles_text }}</p>
-            </div>
-          {% endfor %}
+          {% endif %}
+        {% endpaginate %}
+      </div>
+      
+      <div class="blog-sidebar">
+        <div class="sidebar-section search-section">
+          <h3 class="sidebar-heading">Search</h3>
+          <div class="blog-search">
+            <form action="{{ routes.search_url }}" method="get" role="search">
+              <input type="hidden" name="type" value="article">
+              <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" aria-label="{{ section.settings.search_placeholder }}">
+              <button type="submit" aria-label="{{ 'general.search.submit' | t }}">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 19L13.8 13.8M16 8.5C16 12.6421 12.6421 16 8.5 16C4.35786 16 1 12.6421 1 8.5C1 4.35786 4.35786 1 8.5 1C12.6421 1 16 4.35786 16 8.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </form>
+          </div>
         </div>
         
-        {% if paginate.pages > 1 %}
-          <div class="blog-pagination">
-            {{ paginate | default_pagination }}
-          </div>
-        {% endif %}
-      {% endpaginate %}
-      
-      {% if section.settings.show_recent_posts and section.settings.recent_posts_count > 0 %}
-        <div class="recent-posts">
-          <h3 class="recent-posts-heading">{{ section.settings.recent_posts_heading }}</h3>
+        <div class="sidebar-section recent-posts-section">
+          <h3 class="sidebar-heading">Recent Posts</h3>
           <div class="recent-posts-list">
             {% for article in current_blog.articles limit: section.settings.recent_posts_count %}
               <div class="recent-post-item">
@@ -149,7 +110,49 @@
             {% endfor %}
           </div>
         </div>
-      {% endif %}
+        
+        {% if current_blog.all_tags.size > 0 %}
+          <div class="sidebar-section categories-section">
+            <h3 class="sidebar-heading">Categories</h3>
+            <ul class="categories-list">
+              {% for tag in current_blog.all_tags %}
+                <li class="category-item {% if current_tag == tag %}active{% endif %}">
+                  <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}">
+                    {{ tag }}
+                    <span class="category-count">{{ tag | count_posts_by_tag: current_blog.handle }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_popular_tags %}
+          <div class="sidebar-section popular-tags-section">
+            <h3 class="sidebar-heading">Popular tag</h3>
+            <div class="popular-tags">
+              {% for tag in current_blog.all_tags limit: 10 %}
+                <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="popular-tag">{{ tag }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_newsletter %}
+          <div class="sidebar-section newsletter-section">
+            <h3 class="sidebar-heading">Subscribe newsletter</h3>
+            <div class="newsletter-form">
+              {% form 'customer', id: 'blog-newsletter-form' %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="newsletter-field">
+                  <input type="email" name="contact[email]" id="blog-newsletter-email" placeholder="Your email" required>
+                  <button type="submit">Subscribe</button>
+                </div>
+              {% endform %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
@@ -162,18 +165,6 @@
       "type": "blog",
       "id": "blog",
       "label": "Blog"
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "Description",
-      "default": "<p>Read our latest articles and updates</p>"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_description",
-      "label": "Show description",
-      "default": true
     },
     {
       "type": "select",
@@ -202,60 +193,9 @@
     },
     {
       "type": "checkbox",
-      "id": "show_search",
-      "default": true,
-      "label": "Show search"
-    },
-    {
-      "type": "text",
-      "id": "search_placeholder",
-      "default": "Search",
-      "label": "Search placeholder"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_categories",
-      "default": true,
-      "label": "Show categories"
-    },
-    {
-      "type": "text",
-      "id": "categories_heading",
-      "default": "Categories",
-      "label": "Categories heading"
-    },
-    {
-      "type": "text",
-      "id": "all_posts_text",
-      "default": "All Posts",
-      "label": "All posts text"
-    },
-    {
-      "type": "checkbox",
       "id": "show_date",
       "default": true,
       "label": "Show date"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_author",
-      "default": true,
-      "label": "Show author"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_excerpt",
-      "default": true,
-      "label": "Show excerpt"
-    },
-    {
-      "type": "range",
-      "id": "excerpt_words",
-      "min": 10,
-      "max": 100,
-      "step": 5,
-      "default": 30,
-      "label": "Excerpt word count"
     },
     {
       "type": "checkbox",
@@ -264,54 +204,10 @@
       "label": "Show featured image"
     },
     {
-      "type": "select",
-      "id": "image_height",
-      "options": [
-        {
-          "value": "small",
-          "label": "Small"
-        },
-        {
-          "value": "medium",
-          "label": "Medium"
-        },
-        {
-          "value": "large",
-          "label": "Large"
-        }
-      ],
-      "default": "medium",
-      "label": "Image height"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_read_more",
-      "default": true,
-      "label": "Show read more button"
-    },
-    {
       "type": "text",
-      "id": "read_more_text",
-      "default": "Read more",
-      "label": "Read more text"
-    },
-    {
-      "type": "text",
-      "id": "no_articles_text",
-      "default": "No articles found",
-      "label": "No articles text"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_recent_posts",
-      "default": true,
-      "label": "Show recent posts sidebar"
-    },
-    {
-      "type": "text",
-      "id": "recent_posts_heading",
-      "default": "Recent Posts",
-      "label": "Recent posts heading"
+      "id": "search_placeholder",
+      "default": "Search",
+      "label": "Search placeholder"
     },
     {
       "type": "range",
@@ -319,7 +215,7 @@
       "min": 2,
       "max": 10,
       "step": 1,
-      "default": 5,
+      "default": 3,
       "label": "Number of recent posts"
     },
     {
@@ -333,6 +229,24 @@
       "id": "show_recent_post_date",
       "default": true,
       "label": "Show recent post date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_popular_tags",
+      "default": true,
+      "label": "Show popular tags"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "default": true,
+      "label": "Show newsletter subscription"
+    },
+    {
+      "type": "text",
+      "id": "no_articles_text",
+      "default": "No articles found",
+      "label": "No articles text"
     },
     {
       "type": "range",
@@ -371,20 +285,120 @@
     background-color: #f9f9f9;
   }
   
-  .blog-description {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .blog-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+  }
+  
+  /* Main content styles */
+  .blog-articles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+  
+  .blog-article-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+  }
+  
+  .blog-article {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .blog-article-image-container {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  
+  .blog-article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .blog-article-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .blog-article-meta {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+  }
+  
+  .blog-article-category {
+    color: #3498db;
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  
+  .blog-article-date {
+    color: #777;
+  }
+  
+  .blog-article-title {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    line-height: 1.4;
+  }
+  
+  .blog-article-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .blog-article-title a:hover {
+    color: #3498db;
+  }
+  
+  .blog-pagination {
+    margin-top: 40px;
     text-align: center;
-    max-width: 800px;
-    margin: 0 auto 40px;
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: var(--light-text);
   }
   
-  .blog-search {
-    max-width: 500px;
-    margin: 0 auto 40px;
+  /* Sidebar styles */
+  .blog-sidebar {
+    position: sticky;
+    top: 20px;
   }
   
+  .sidebar-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sidebar-heading {
+    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Search section */
   .blog-search form {
     display: flex;
     position: relative;
@@ -392,16 +406,16 @@
   
   .blog-search input[type="search"] {
     width: 100%;
-    padding: 12px 20px;
+    padding: 10px 40px 10px 15px;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     outline: none;
     transition: border-color 0.2s ease;
   }
   
   .blog-search input[type="search"]:focus {
-    border-color: var(--primary-color);
+    border-color: #3498db;
   }
   
   .blog-search button {
@@ -419,189 +433,17 @@
     justify-content: center;
   }
   
-  .blog-filter-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 40px;
-  }
-  
-  .blog-categories {
-    flex: 0 0 100%;
-  }
-  
-  .filter-heading {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-  
-  .category-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .category-item a {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border-radius: 20px;
-    color: var(--dark-text);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-  }
-  
-  .category-item a:hover,
-  .category-item.active a {
-    background-color: var(--primary-color);
-    color: white;
-  }
-  
-  .blog-layout-grid .blog-articles {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-  }
-  
-  .blog-layout-list .blog-article {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 40px;
-  }
-  
-  .blog-layout-list .blog-article-image-container {
-    flex: 0 0 40%;
-  }
-  
-  .blog-article-card {
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .blog-article-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .blog-article-image-container {
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 0;
-  }
-  
-  .image-height-small {
-    aspect-ratio: 16/9;
-  }
-  
-  .image-height-medium {
-    aspect-ratio: 4/3;
-  }
-  
-  .image-height-large {
-    aspect-ratio: 1/1;
-  }
-  
-  .blog-article-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-  
-  .blog-article-image-link:hover .blog-article-image {
-    transform: scale(1.05);
-  }
-  
-  .blog-article-content {
-    padding: 20px;
-  }
-  
-  .blog-article-meta {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: var(--light-text);
-  }
-  
-  .blog-article-author {
-    margin-left: 10px;
-  }
-  
-  .blog-article-title {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    line-height: 1.3;
-  }
-  
-  .blog-article-title a {
-    color: var(--dark-text);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  
-  .blog-article-title a:hover {
-    color: var(--primary-color);
-  }
-  
-  .blog-article-excerpt {
-    margin-bottom: 20px;
-    color: var(--light-text);
-    line-height: 1.6;
-  }
-  
-  .blog-article-read-more {
-    display: inline-block;
-    color: var(--primary-color);
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  
-  .blog-article-read-more:hover {
-    color: var(--dark-text);
-  }
-  
-  .blog-pagination {
-    margin-top: 40px;
-    text-align: center;
-  }
-  
-  .empty-blog {
-    text-align: center;
-    padding: 40px 0;
-    color: var(--light-text);
-  }
-  
-  .recent-posts {
-    margin-top: 60px;
-  }
-  
-  .recent-posts-heading {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  
+  /* Recent posts section */
   .recent-posts-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
   
   .recent-post-item {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 15px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   }
   
   .recent-post-image {
@@ -612,67 +454,138 @@
   }
   
   .recent-post-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin: 0 0 5px;
     line-height: 1.4;
+    font-weight: 500;
   }
   
   .recent-post-title a {
-    color: var(--dark-text);
+    color: #333;
     text-decoration: none;
     transition: color 0.2s ease;
   }
   
   .recent-post-title a:hover {
-    color: var(--primary-color);
+    color: #3498db;
   }
   
   .recent-post-date {
     font-size: 0.8rem;
-    color: var(--light-text);
+    color: #777;
   }
   
+  /* Categories section */
+  .categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .category-item {
+    border-bottom: 1px solid #eee;
+  }
+  
+  .category-item:last-child {
+    border-bottom: none;
+  }
+  
+  .category-item a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .category-item a:hover {
+    color: #3498db;
+  }
+  
+  .category-count {
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  /* Popular tags section */
+  .popular-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .popular-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+  
+  .popular-tag:hover {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  /* Newsletter section */
+  .newsletter-field {
+    position: relative;
+  }
+  
+  .newsletter-field input {
+    width: 100%;
+    padding: 10px 100px 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  
+  .newsletter-field button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 0 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .newsletter-field button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Responsive styles */
   @media (max-width: 989px) {
-    .blog-layout-grid .blog-articles {
-      grid-template-columns: repeat(2, 1fr);
+    .blog-layout {
+      grid-template-columns: 1fr;
     }
     
-    .recent-posts-list {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    .blog-sidebar {
+      margin-top: 40px;
     }
   }
   
   @media (max-width: 749px) {
-    .blog-layout-grid .blog-articles {
+    .blog-articles {
       grid-template-columns: 1fr;
     }
     
-    .blog-layout-list .blog-article {
-      flex-direction: column;
-    }
-    
-    .blog-layout-list .blog-article-image-container {
-      flex: 0 0 100%;
-    }
-    
     .blog-article-title {
-      font-size: 1.3rem;
-    }
-    
-    .blog-filter-container {
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    .category-list {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    .category-item {
-      flex: 0 0 auto;
+      font-size: 1.1rem;
     }
   }
 </style>

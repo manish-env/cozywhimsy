@@ -1,49 +1,54 @@
 <article class="custom-blog-article" itemscope itemtype="http://schema.org/BlogPosting" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
   <div class="container">
     <div class="article-container">
-      {% assign article = articles[section.settings.article] %}
-      
-      {% if article == blank and section.settings.placeholder_article %}
-        {% assign article = articles[section.settings.placeholder_article] %}
+      {% comment %}Use the current article if we're on an article template{% endcomment %}
+      {% if template contains 'article' and article.id %}
+        {% assign current_article = article %}
+      {% else %}
+        {% assign current_article = articles[section.settings.article] %}
+        
+        {% if current_article == blank and section.settings.placeholder_article %}
+          {% assign current_article = articles[section.settings.placeholder_article] %}
+        {% endif %}
       {% endif %}
       
-      {% if article %}
-        {% if section.settings.show_featured_image and article.image %}
+      {% if current_article %}
+        {% if section.settings.show_featured_image and current_article.image %}
           <div class="article-featured-image-wrapper">
             <div class="article-featured-image image-height-{{ section.settings.image_height }}">
-              <img srcset="{% if article.image.width >= 350 %}{{ article.image | img_url: '350x' }} 350w,{% endif %}
-                           {% if article.image.width >= 750 %}{{ article.image | img_url: '750x' }} 750w,{% endif %}
-                           {% if article.image.width >= 1100 %}{{ article.image | img_url: '1100x' }} 1100w,{% endif %}
-                           {% if article.image.width >= 1500 %}{{ article.image | img_url: '1500x' }} 1500w,{% endif %}
-                           {% if article.image.width >= 2200 %}{{ article.image | img_url: '2200x' }} 2200w,{% endif %}
-                           {{ article.image | img_url: 'master' }} {{ article.image.width }}w"
-                   src="{{ article.image | img_url: '1100x' }}"
+              <img srcset="{% if current_article.image.width >= 350 %}{{ current_article.image | img_url: '350x' }} 350w,{% endif %}
+                           {% if current_article.image.width >= 750 %}{{ current_article.image | img_url: '750x' }} 750w,{% endif %}
+                           {% if current_article.image.width >= 1100 %}{{ current_article.image | img_url: '1100x' }} 1100w,{% endif %}
+                           {% if current_article.image.width >= 1500 %}{{ current_article.image | img_url: '1500x' }} 1500w,{% endif %}
+                           {% if current_article.image.width >= 2200 %}{{ current_article.image | img_url: '2200x' }} 2200w,{% endif %}
+                           {{ current_article.image | img_url: 'master' }} {{ current_article.image.width }}w"
+                   src="{{ current_article.image | img_url: '1100x' }}"
                    sizes="(min-width: 1100px) 1100px, 100vw"
                    loading="lazy"
-                   width="{{ article.image.width }}"
-                   height="{{ article.image.height }}"
-                   alt="{{ article.image.alt | escape }}"
+                   width="{{ current_article.image.width }}"
+                   height="{{ current_article.image.height }}"
+                   alt="{{ current_article.image.alt | escape }}"
                    class="article-image">
             </div>
           </div>
         {% endif %}
         
         <div class="article-header">
-          <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
+          <h1 class="article-title" itemprop="headline">{{ current_article.title }}</h1>
           
           {% if section.settings.show_date or section.settings.show_author %}
             <div class="article-meta">
               {% if section.settings.show_date %}
                 <span class="article-date">
-                  <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
-                    {{ article.published_at | date: "%B %d, %Y" }}
+                  <time datetime="{{ current_article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+                    {{ current_article.published_at | date: "%B %d, %Y" }}
                   </time>
                 </span>
               {% endif %}
               
-              {% if section.settings.show_author and article.author %}
+              {% if section.settings.show_author and current_article.author %}
                 <span class="article-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-                  by <span itemprop="name">{{ article.author }}</span>
+                  by <span itemprop="name">{{ current_article.author }}</span>
                 </span>
               {% endif %}
             </div>
@@ -51,14 +56,14 @@
         </div>
         
         <div class="article-content rte" itemprop="articleBody">
-          {{ article.content }}
+          {{ current_article.content }}
         </div>
         
-        {% if section.settings.show_tags and article.tags.size > 0 %}
+        {% if section.settings.show_tags and current_article.tags.size > 0 %}
           <div class="article-tags">
             <span class="article-tags-label">{{ section.settings.tags_label }}</span>
             <ul class="article-tags-list">
-              {% for tag in article.tags %}
+              {% for tag in current_article.tags %}
                 <li class="article-tag-item">
                   <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag-link">{{ tag }}</a>
                 </li>
@@ -71,16 +76,16 @@
           <div class="article-share">
             <div class="article-share-label">{{ section.settings.share_label }}</div>
             <div class="article-share-buttons">
-              <a target="_blank" href="https://www.facebook.com/sharer.php?u={{ shop.url | append: article.url }}" class="article-share-button facebook">
+              <a target="_blank" href="https://www.facebook.com/sharer.php?u={{ shop.url | append: current_article.url }}" class="article-share-button facebook">
                 <i class="fab fa-facebook-f"></i>
               </a>
-              <a target="_blank" href="https://twitter.com/share?text={{ article.title | url_encode }}&url={{ shop.url | append: article.url }}" class="article-share-button twitter">
+              <a target="_blank" href="https://twitter.com/share?text={{ current_article.title | url_encode }}&url={{ shop.url | append: current_article.url }}" class="article-share-button twitter">
                 <i class="fab fa-twitter"></i>
               </a>
-              <a target="_blank" href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: article.url }}&media={{ article.image | img_url: 'original' }}&description={{ article.title | url_encode }}" class="article-share-button pinterest">
+              <a target="_blank" href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: current_article.url }}&media={{ current_article.image | img_url: 'original' }}&description={{ current_article.title | url_encode }}" class="article-share-button pinterest">
                 <i class="fab fa-pinterest-p"></i>
               </a>
-              <a target="_blank" href="mailto:?subject={{ article.title }}&body={{ shop.url | append: article.url }}" class="article-share-button email">
+              <a target="_blank" href="mailto:?subject={{ current_article.title }}&body={{ shop.url | append: current_article.url }}" class="article-share-button email">
                 <i class="fas fa-envelope"></i>
               </a>
             </div>
@@ -89,17 +94,17 @@
         
         {% if section.settings.show_prev_next %}
           <div class="article-navigation">
-            {% if article.previous_article %}
-              <a href="{{ article.previous_article.url }}" class="article-prev">
+            {% if current_article.previous_article %}
+              <a href="{{ current_article.previous_article.url }}" class="article-prev">
                 <span class="article-nav-label">{{ section.settings.prev_article_label }}</span>
-                <span class="article-nav-title">{{ article.previous_article.title }}</span>
+                <span class="article-nav-title">{{ current_article.previous_article.title }}</span>
               </a>
             {% endif %}
             
-            {% if article.next_article %}
-              <a href="{{ article.next_article.url }}" class="article-next">
+            {% if current_article.next_article %}
+              <a href="{{ current_article.next_article.url }}" class="article-next">
                 <span class="article-nav-label">{{ section.settings.next_article_label }}</span>
-                <span class="article-nav-title">{{ article.next_article.title }}</span>
+                <span class="article-nav-title">{{ current_article.next_article.title }}</span>
               </a>
             {% endif %}
           </div>

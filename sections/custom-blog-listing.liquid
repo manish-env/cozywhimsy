@@ -1,8 +1,15 @@
 <div class="custom-blog-listing" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
   <div class="container">
     <div class="blog-grid blog-layout-{{ section.settings.layout }}">
+      {% comment %}Debug information to help troubleshoot{% endcomment %}
+      <div style="display: none;">
+        Template: {{ template }}
+        Current blog handle: {{ blog.handle }}
+        Selected blog: {{ section.settings.blog }}
+      </div>
+      
       {% comment %}Use current blog if we're on a blog template, otherwise use the selected blog{% endcomment %}
-      {% if template contains 'blog' and blog.handle != blank %}
+      {% if template contains 'blog' %}
         {% assign current_blog = blog %}
       {% else %}
         {% assign current_blog = blogs[section.settings.blog] %}

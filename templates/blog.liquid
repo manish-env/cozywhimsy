@@ -1,3 +1,12 @@
 {% section 'blog-header' %}
-{% section 'custom-blog-listing' %}
+
+<div class="debug-info" style="margin: 20px; padding: 20px; border: 1px solid #ccc; display: none;">
+  <h3>Debug Information</h3>
+  <p>Blog handle: {{ blog.handle }}</p>
+  <p>Blog title: {{ blog.title }}</p>
+  <p>Number of articles: {{ blog.articles_count }}</p>
+  <p>First article title (if exists): {% if blog.articles.first %}{{ blog.articles.first.title }}{% else %}No articles{% endif %}</p>
+</div>
+
+{% section 'main-blog' %}
 {% section 'newsletter' %}

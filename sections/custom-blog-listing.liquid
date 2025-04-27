@@ -1,13 +1,6 @@
 <div class="custom-blog-listing" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
   <div class="container">
     <div class="blog-grid blog-layout-{{ section.settings.layout }}">
-      {% comment %}Debug information to help troubleshoot{% endcomment %}
-      <div style="display: none;">
-        Template: {{ template }}
-        Current blog handle: {{ blog.handle }}
-        Selected blog: {{ section.settings.blog }}
-      </div>
-      
       {% comment %}Use current blog if we're on a blog template, otherwise use the selected blog{% endcomment %}
       {% if template contains 'blog' %}
         {% assign current_blog = blog %}
@@ -20,6 +13,38 @@
           {{ section.settings.description }}
         </div>
       {% endif %}
+      
+      {% if section.settings.show_search %}
+        <div class="blog-search">
+          <form action="{{ routes.search_url }}" method="get" role="search">
+            <input type="hidden" name="type" value="article">
+            <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" aria-label="{{ section.settings.search_placeholder }}">
+            <button type="submit" aria-label="{{ 'general.search.submit' | t }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 19L13.8 13.8M16 8.5C16 12.6421 12.6421 16 8.5 16C4.35786 16 1 12.6421 1 8.5C1 4.35786 4.35786 1 8.5 1C12.6421 1 16 4.35786 16 8.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      {% endif %}
+      
+      <div class="blog-filter-container">
+        {% if section.settings.show_categories and current_blog.all_tags.size > 0 %}
+          <div class="blog-categories">
+            <h3 class="filter-heading">{{ section.settings.categories_heading }}</h3>
+            <ul class="category-list">
+              <li class="category-item {% unless current_tag %}active{% endunless %}">
+                <a href="{{ current_blog.url }}">{{ section.settings.all_posts_text }}</a>
+              </li>
+              {% for tag in current_blog.all_tags %}
+                <li class="category-item {% if current_tag == tag %}active{% endif %}">
+                  <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
       
       {% paginate current_blog.articles by section.settings.posts_per_page %}
         <div class="blog-articles">
@@ -98,6 +123,33 @@
           </div>
         {% endif %}
       {% endpaginate %}
+      
+      {% if section.settings.show_recent_posts and section.settings.recent_posts_count > 0 %}
+        <div class="recent-posts">
+          <h3 class="recent-posts-heading">{{ section.settings.recent_posts_heading }}</h3>
+          <div class="recent-posts-list">
+            {% for article in current_blog.articles limit: section.settings.recent_posts_count %}
+              <div class="recent-post-item">
+                {% if article.image and section.settings.show_recent_post_image %}
+                  <a href="{{ article.url }}" class="recent-post-image-link">
+                    <img src="{{ article.image | img_url: '100x100', crop: 'center' }}" alt="{{ article.title | escape }}" class="recent-post-image">
+                  </a>
+                {% endif %}
+                <div class="recent-post-content">
+                  <h4 class="recent-post-title">
+                    <a href="{{ article.url }}">{{ article.title }}</a>
+                  </h4>
+                  {% if section.settings.show_recent_post_date %}
+                    <span class="recent-post-date">
+                      {{ article.published_at | date: "%B %d, %Y" }}
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -147,6 +199,36 @@
       "step": 3,
       "default": 9,
       "label": "Posts per page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "default": true,
+      "label": "Show search"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "default": "Search",
+      "label": "Search placeholder"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_categories",
+      "default": true,
+      "label": "Show categories"
+    },
+    {
+      "type": "text",
+      "id": "categories_heading",
+      "default": "Categories",
+      "label": "Categories heading"
+    },
+    {
+      "type": "text",
+      "id": "all_posts_text",
+      "default": "All Posts",
+      "label": "All posts text"
     },
     {
       "type": "checkbox",
@@ -220,6 +302,39 @@
       "label": "No articles text"
     },
     {
+      "type": "checkbox",
+      "id": "show_recent_posts",
+      "default": true,
+      "label": "Show recent posts sidebar"
+    },
+    {
+      "type": "text",
+      "id": "recent_posts_heading",
+      "default": "Recent Posts",
+      "label": "Recent posts heading"
+    },
+    {
+      "type": "range",
+      "id": "recent_posts_count",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "label": "Number of recent posts"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recent_post_image",
+      "default": true,
+      "label": "Show recent post image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recent_post_date",
+      "default": true,
+      "label": "Show recent post date"
+    },
+    {
       "type": "range",
       "id": "padding_top",
       "min": 0,
@@ -253,6 +368,7 @@
 <style>
   .custom-blog-listing {
     padding: 60px 0;
+    background-color: #f9f9f9;
   }
   
   .blog-description {
@@ -262,6 +378,87 @@
     font-size: 1.1rem;
     line-height: 1.7;
     color: var(--light-text);
+  }
+  
+  .blog-search {
+    max-width: 500px;
+    margin: 0 auto 40px;
+  }
+  
+  .blog-search form {
+    display: flex;
+    position: relative;
+  }
+  
+  .blog-search input[type="search"] {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  
+  .blog-search input[type="search"]:focus {
+    border-color: var(--primary-color);
+  }
+  
+  .blog-search button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .blog-filter-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  
+  .blog-categories {
+    flex: 0 0 100%;
+  }
+  
+  .filter-heading {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  
+  .category-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .category-item a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    color: var(--dark-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  .category-item a:hover,
+  .category-item.active a {
+    background-color: var(--primary-color);
+    color: white;
   }
   
   .blog-layout-grid .blog-articles {
@@ -280,11 +477,23 @@
     flex: 0 0 40%;
   }
   
+  .blog-article-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .blog-article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
   .blog-article-image-container {
     position: relative;
     overflow: hidden;
-    border-radius: var(--border-radius);
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
   
   .image-height-small {
@@ -308,6 +517,10 @@
   
   .blog-article-image-link:hover .blog-article-image {
     transform: scale(1.05);
+  }
+  
+  .blog-article-content {
+    padding: 20px;
   }
   
   .blog-article-meta {
@@ -365,9 +578,67 @@
     color: var(--light-text);
   }
   
+  .recent-posts {
+    margin-top: 60px;
+  }
+  
+  .recent-posts-heading {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .recent-posts-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .recent-post-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .recent-post-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  
+  .recent-post-title {
+    font-size: 1rem;
+    margin: 0 0 5px;
+    line-height: 1.4;
+  }
+  
+  .recent-post-title a {
+    color: var(--dark-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .recent-post-title a:hover {
+    color: var(--primary-color);
+  }
+  
+  .recent-post-date {
+    font-size: 0.8rem;
+    color: var(--light-text);
+  }
+  
   @media (max-width: 989px) {
     .blog-layout-grid .blog-articles {
       grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .recent-posts-list {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
   }
   
@@ -386,6 +657,22 @@
     
     .blog-article-title {
       font-size: 1.3rem;
+    }
+    
+    .blog-filter-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .category-list {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .category-item {
+      flex: 0 0 auto;
     }
   }
 </style>

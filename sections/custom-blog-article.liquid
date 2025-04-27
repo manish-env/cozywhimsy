@@ -1,0 +1,511 @@
+<article class="custom-blog-article" itemscope itemtype="http://schema.org/BlogPosting" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="article-container">
+      {% assign article = articles[section.settings.article] %}
+      
+      {% if article == blank and section.settings.placeholder_article %}
+        {% assign article = articles[section.settings.placeholder_article] %}
+      {% endif %}
+      
+      {% if article %}
+        {% if section.settings.show_featured_image and article.image %}
+          <div class="article-featured-image-wrapper">
+            <div class="article-featured-image image-height-{{ section.settings.image_height }}">
+              <img srcset="{% if article.image.width >= 350 %}{{ article.image | img_url: '350x' }} 350w,{% endif %}
+                           {% if article.image.width >= 750 %}{{ article.image | img_url: '750x' }} 750w,{% endif %}
+                           {% if article.image.width >= 1100 %}{{ article.image | img_url: '1100x' }} 1100w,{% endif %}
+                           {% if article.image.width >= 1500 %}{{ article.image | img_url: '1500x' }} 1500w,{% endif %}
+                           {% if article.image.width >= 2200 %}{{ article.image | img_url: '2200x' }} 2200w,{% endif %}
+                           {{ article.image | img_url: 'master' }} {{ article.image.width }}w"
+                   src="{{ article.image | img_url: '1100x' }}"
+                   sizes="(min-width: 1100px) 1100px, 100vw"
+                   loading="lazy"
+                   width="{{ article.image.width }}"
+                   height="{{ article.image.height }}"
+                   alt="{{ article.image.alt | escape }}"
+                   class="article-image">
+            </div>
+          </div>
+        {% endif %}
+        
+        <div class="article-header">
+          <h1 class="article-title" itemprop="headline">{{ article.title }}</h1>
+          
+          {% if section.settings.show_date or section.settings.show_author %}
+            <div class="article-meta">
+              {% if section.settings.show_date %}
+                <span class="article-date">
+                  <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+                    {{ article.published_at | date: "%B %d, %Y" }}
+                  </time>
+                </span>
+              {% endif %}
+              
+              {% if section.settings.show_author and article.author %}
+                <span class="article-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                  by <span itemprop="name">{{ article.author }}</span>
+                </span>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="article-content rte" itemprop="articleBody">
+          {{ article.content }}
+        </div>
+        
+        {% if section.settings.show_tags and article.tags.size > 0 %}
+          <div class="article-tags">
+            <span class="article-tags-label">{{ section.settings.tags_label }}</span>
+            <ul class="article-tags-list">
+              {% for tag in article.tags %}
+                <li class="article-tag-item">
+                  <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag-link">{{ tag }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_share %}
+          <div class="article-share">
+            <div class="article-share-label">{{ section.settings.share_label }}</div>
+            <div class="article-share-buttons">
+              <a target="_blank" href="https://www.facebook.com/sharer.php?u={{ shop.url | append: article.url }}" class="article-share-button facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a target="_blank" href="https://twitter.com/share?text={{ article.title | url_encode }}&url={{ shop.url | append: article.url }}" class="article-share-button twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a target="_blank" href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: article.url }}&media={{ article.image | img_url: 'original' }}&description={{ article.title | url_encode }}" class="article-share-button pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </a>
+              <a target="_blank" href="mailto:?subject={{ article.title }}&body={{ shop.url | append: article.url }}" class="article-share-button email">
+                <i class="fas fa-envelope"></i>
+              </a>
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.show_prev_next %}
+          <div class="article-navigation">
+            {% if article.previous_article %}
+              <a href="{{ article.previous_article.url }}" class="article-prev">
+                <span class="article-nav-label">{{ section.settings.prev_article_label }}</span>
+                <span class="article-nav-title">{{ article.previous_article.title }}</span>
+              </a>
+            {% endif %}
+            
+            {% if article.next_article %}
+              <a href="{{ article.next_article.url }}" class="article-next">
+                <span class="article-nav-label">{{ section.settings.next_article_label }}</span>
+                <span class="article-nav-title">{{ article.next_article.title }}</span>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        
+      {% else %}
+        <div class="article-placeholder">
+          <p>{{ section.settings.no_article_text }}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Custom Blog Article",
+  "settings": [
+    {
+      "type": "article",
+      "id": "article",
+      "label": "Article"
+    },
+    {
+      "type": "article",
+      "id": "placeholder_article",
+      "label": "Placeholder article (if none selected)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "default": true,
+      "label": "Show featured image"
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image height"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": true,
+      "label": "Show author"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "default": true,
+      "label": "Show tags"
+    },
+    {
+      "type": "text",
+      "id": "tags_label",
+      "default": "Tags:",
+      "label": "Tags label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "default": true,
+      "label": "Show share buttons"
+    },
+    {
+      "type": "text",
+      "id": "share_label",
+      "default": "Share this article",
+      "label": "Share label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prev_next",
+      "default": true,
+      "label": "Show previous/next navigation"
+    },
+    {
+      "type": "text",
+      "id": "prev_article_label",
+      "default": "Previous",
+      "label": "Previous article label"
+    },
+    {
+      "type": "text",
+      "id": "next_article_label",
+      "default": "Next",
+      "label": "Next article label"
+    },
+    {
+      "type": "text",
+      "id": "no_article_text",
+      "default": "No article selected",
+      "label": "No article text"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Blog Article",
+      "settings": {}
+    }
+  ],
+  "templates": ["page"]
+}
+{% endschema %}
+
+<style>
+  .custom-blog-article {
+    padding: 60px 0;
+  }
+  
+  .article-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .article-featured-image-wrapper {
+    margin-bottom: 30px;
+  }
+  
+  .article-featured-image {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .image-height-adapt {
+    /* Adaptive height based on image */
+  }
+  
+  .image-height-small {
+    padding-bottom: 30%;
+  }
+  
+  .image-height-medium {
+    padding-bottom: 50%;
+  }
+  
+  .image-height-large {
+    padding-bottom: 70%;
+  }
+  
+  .article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .article-header {
+    margin-bottom: 30px;
+  }
+  
+  .article-title {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--dark-text);
+    line-height: 1.2;
+  }
+  
+  .article-meta {
+    font-size: 1rem;
+    color: var(--light-text);
+  }
+  
+  .article-author {
+    margin-left: 10px;
+  }
+  
+  .article-content {
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--light-text);
+  }
+  
+  .article-content p {
+    margin-bottom: 20px;
+  }
+  
+  .article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin: 30px 0;
+  }
+  
+  .article-content h2 {
+    font-size: 1.8rem;
+    margin: 40px 0 20px;
+    color: var(--dark-text);
+  }
+  
+  .article-content h3 {
+    font-size: 1.5rem;
+    margin: 30px 0 15px;
+    color: var(--dark-text);
+  }
+  
+  .article-content ul, .article-content ol {
+    margin: 20px 0;
+    padding-left: 20px;
+  }
+  
+  .article-content li {
+    margin-bottom: 10px;
+  }
+  
+  .article-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 20px;
+    margin: 30px 0;
+    font-style: italic;
+    color: var(--light-text);
+  }
+  
+  .article-tags {
+    margin-bottom: 30px;
+  }
+  
+  .article-tags-label {
+    font-weight: 500;
+    margin-right: 10px;
+    color: var(--dark-text);
+  }
+  
+  .article-tags-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .article-tag-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .article-tag-link {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: var(--light-background);
+    border-radius: var(--border-radius);
+    color: var(--light-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  .article-tag-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .article-share {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .article-share-label {
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: var(--dark-text);
+  }
+  
+  .article-share-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .article-share-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  
+  .article-share-button:hover {
+    transform: translateY(-3px);
+  }
+  
+  .article-share-button.facebook {
+    background-color: #3b5998;
+  }
+  
+  .article-share-button.twitter {
+    background-color: #1da1f2;
+  }
+  
+  .article-share-button.pinterest {
+    background-color: #bd081c;
+  }
+  
+  .article-share-button.email {
+    background-color: #505050;
+  }
+  
+  .article-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+  }
+  
+  .article-prev, .article-next {
+    display: flex;
+    flex-direction: column;
+    max-width: 45%;
+    text-decoration: none;
+  }
+  
+  .article-next {
+    text-align: right;
+  }
+  
+  .article-nav-label {
+    font-size: 0.9rem;
+    color: var(--light-text);
+    margin-bottom: 5px;
+  }
+  
+  .article-nav-title {
+    font-weight: 500;
+    color: var(--dark-text);
+    transition: color 0.2s ease;
+  }
+  
+  .article-prev:hover .article-nav-title, 
+  .article-next:hover .article-nav-title {
+    color: var(--primary-color);
+  }
+  
+  .article-placeholder {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--light-text);
+  }
+  
+  @media (max-width: 767px) {
+    .article-title {
+      font-size: 2rem;
+    }
+    
+    .article-content {
+      font-size: 1rem;
+    }
+    
+    .article-navigation {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .article-prev, .article-next {
+      max-width: 100%;
+    }
+    
+    .article-next {
+      text-align: left;
+    }
+  }
+</style>

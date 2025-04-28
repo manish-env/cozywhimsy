@@ -4,17 +4,19 @@
       {% comment %}Use current blog if we're on a blog template, otherwise use the selected blog{% endcomment %}
       {% if template contains 'blog' %}
         {% assign current_blog = blog %}
-      {% else %}
+      {% elsif section.settings.blog != blank %}
         {% assign current_blog = blogs[section.settings.blog] %}
+      {% else %}
+        {% assign current_blog = blogs.first %}
       {% endif %}
       
       <div class="blog-main-content">
-        {% if current_blog.articles.size > 0 %}
-          <div class="blog-articles">
+        <div class="blog-articles">
+          {% if current_blog.articles.size > 0 %}
             {% for article in current_blog.articles limit: section.settings.posts_per_page %}
               <div class="blog-article-card">
                 <article class="blog-article">
-                  {% if section.settings.show_featured_image and article.image %}
+                  {% if article.image %}
                     <a href="{{ article.url }}" class="blog-article-image-link">
                       <div class="blog-article-image-container">
                         <img 
@@ -40,13 +42,11 @@
                         </span>
                       {% endif %}
                       
-                      {% if section.settings.show_date %}
-                        <span class="blog-article-date">
-                          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-                            {{ article.published_at | date: "%B %d, %Y" }}
-                          </time>
-                        </span>
-                      {% endif %}
+                      <span class="blog-article-date">
+                        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                          {{ article.published_at | date: "%B %d, %Y" }}
+                        </time>
+                      </span>
                     </div>
                     
                     <h2 class="blog-article-title">
@@ -56,30 +56,71 @@
                 </article>
               </div>
             {% endfor %}
-          </div>
-          
-          {% if current_blog.articles.size > section.settings.posts_per_page %}
-            <div class="blog-pagination">
-              <div class="pagination">
-                {% if current_blog.articles.size > section.settings.posts_per_page %}
-                  <a href="{{ current_blog.url }}?page=1" class="pagination-prev">
-                    &larr; Previous
-                  </a>
-                {% endif %}
-                
-                <span class="pagination-current">Page 1 of {{ current_blog.articles.size | divided_by: section.settings.posts_per_page | ceil }}</span>
-                
-                {% if current_blog.articles.size > section.settings.posts_per_page %}
-                  <a href="{{ current_blog.url }}?page=2" class="pagination-next">
-                    Next &rarr;
-                  </a>
-                {% endif %}
-              </div>
+          {% else %}
+            {% comment %}Fallback demo content if no articles exist{% endcomment %}
+            {% comment %}First article{% endcomment %}
+            <div class="blog-article-card">
+              <article class="blog-article">
+                <a href="#" class="blog-article-image-link">
+                  <div class="blog-article-image-container">
+                    <img src="https://cdn.shopify.com/s/files/1/0627/7388/7215/articles/04122-2_1100x.jpg?v=1645125498" 
+                         alt="How Business Consulting Can Systematically Guide Your Company" 
+                         class="blog-article-image">
+                  </div>
+                </a>
+                <div class="blog-article-content">
+                  <div class="blog-article-meta">
+                    <span class="blog-article-category">Experience</span>
+                    <span class="blog-article-date">December 2, 2024</span>
+                  </div>
+                  <h2 class="blog-article-title">
+                    <a href="#">How Business Consulting Can Systematically Guide Your Company</a>
+                  </h2>
+                </div>
+              </article>
+            </div>
+            
+            {% comment %}Second article{% endcomment %}
+            <div class="blog-article-card">
+              <article class="blog-article">
+                <a href="#" class="blog-article-image-link">
+                  <div class="blog-article-image-container">
+                    <img src="https://cdn.shopify.com/s/files/1/0627/7388/7215/articles/04122-1_1100x.jpg?v=1645125498" 
+                         alt="Improving patient outcomes and financial performance" 
+                         class="blog-article-image">
+                  </div>
+                </a>
+                <div class="blog-article-content">
+                  <div class="blog-article-meta">
+                    <span class="blog-article-category">Tips & Tricks</span>
+                    <span class="blog-article-date">December 2, 2024</span>
+                  </div>
+                  <h2 class="blog-article-title">
+                    <a href="#">Improving patient outcomes and financial performance</a>
+                  </h2>
+                </div>
+              </article>
             </div>
           {% endif %}
-        {% else %}
-          <div class="empty-blog">
-            <p>{{ section.settings.no_articles_text }}</p>
+        </div>
+        
+        {% if current_blog.articles.size > section.settings.posts_per_page %}
+          <div class="blog-pagination">
+            <div class="pagination">
+              {% if paginate.previous %}
+                <a href="{{ current_blog.url }}?page={{ paginate.previous.page }}" class="pagination-prev">
+                  &larr; Previous
+                </a>
+              {% endif %}
+              
+              <span class="pagination-current">Page {{ paginate.current_page | default: 1 }} of {{ current_blog.articles.size | divided_by: section.settings.posts_per_page | ceil }}</span>
+              
+              {% if paginate.next %}
+                <a href="{{ current_blog.url }}?page={{ paginate.next.page }}" class="pagination-next">
+                  Next &rarr;
+                </a>
+              {% endif %}
+            </div>
           </div>
         {% endif %}
       </div>
@@ -103,32 +144,45 @@
         <div class="sidebar-section recent-posts-section">
           <h3 class="sidebar-heading">Recent Posts</h3>
           <div class="recent-posts-list">
-            {% for article in current_blog.articles limit: section.settings.recent_posts_count %}
-              <div class="recent-post-item">
-                {% if article.image and section.settings.show_recent_post_image %}
-                  <a href="{{ article.url }}" class="recent-post-image-link">
-                    <img src="{{ article.image | img_url: '100x100', crop: 'center' }}" alt="{{ article.title | escape }}" class="recent-post-image">
-                  </a>
-                {% endif %}
-                <div class="recent-post-content">
-                  <h4 class="recent-post-title">
-                    <a href="{{ article.url }}">{{ article.title }}</a>
-                  </h4>
-                  {% if section.settings.show_recent_post_date %}
+            {% if current_blog.articles.size > 0 %}
+              {% for article in current_blog.articles limit: section.settings.recent_posts_count %}
+                <div class="recent-post-item">
+                  {% if article.image %}
+                    <a href="{{ article.url }}" class="recent-post-image-link">
+                      <img src="{{ article.image | img_url: '100x100', crop: 'center' }}" alt="{{ article.title | escape }}" class="recent-post-image">
+                    </a>
+                  {% endif %}
+                  <div class="recent-post-content">
+                    <h4 class="recent-post-title">
+                      <a href="{{ article.url }}">{{ article.title }}</a>
+                    </h4>
                     <span class="recent-post-date">
                       {{ article.published_at | date: "%B %d, %Y" }}
                     </span>
-                  {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              {% comment %}Fallback demo content if no articles exist{% endcomment %}
+              <div class="recent-post-item">
+                <a href="#" class="recent-post-image-link">
+                  <img src="https://cdn.shopify.com/s/files/1/0627/7388/7215/articles/04122-2_100x100_crop_center.jpg?v=1645125498" alt="How Business Consulting Can Systematically Guide Your Company" class="recent-post-image">
+                </a>
+                <div class="recent-post-content">
+                  <h4 class="recent-post-title">
+                    <a href="#">How Business Consulting Can Systematically Guide Your Company</a>
+                  </h4>
+                  <span class="recent-post-date">December 2, 2024</span>
                 </div>
               </div>
-            {% endfor %}
+            {% endif %}
           </div>
         </div>
         
-        {% if current_blog.all_tags.size > 0 %}
-          <div class="sidebar-section categories-section">
-            <h3 class="sidebar-heading">Categories</h3>
-            <ul class="categories-list">
+        <div class="sidebar-section categories-section">
+          <h3 class="sidebar-heading">Categories</h3>
+          <ul class="categories-list">
+            {% if current_blog.all_tags.size > 0 %}
               {% for tag in current_blog.all_tags %}
                 <li class="category-item {% if current_tag == tag %}active{% endif %}">
                   <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}">
@@ -137,35 +191,52 @@
                   </a>
                 </li>
               {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
+            {% else %}
+              {% comment %}Fallback demo categories if no tags exist{% endcomment %}
+              <li class="category-item">
+                <a href="#">
+                  Business Consulting
+                  <span class="category-count">7</span>
+                </a>
+              </li>
+              <li class="category-item">
+                <a href="#">
+                  Design Trends
+                  <span class="category-count">3</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
         
-        {% if section.settings.show_popular_tags %}
-          <div class="sidebar-section popular-tags-section">
-            <h3 class="sidebar-heading">Popular tag</h3>
-            <div class="popular-tags">
+        <div class="sidebar-section popular-tags-section">
+          <h3 class="sidebar-heading">Popular tag</h3>
+          <div class="popular-tags">
+            {% if current_blog.all_tags.size > 0 %}
               {% for tag in current_blog.all_tags limit: 10 %}
                 <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="popular-tag">{{ tag }}</a>
               {% endfor %}
-            </div>
+            {% else %}
+              {% comment %}Fallback demo tags if no tags exist{% endcomment %}
+              <a href="#" class="popular-tag">Business</a>
+              <a href="#" class="popular-tag">Business Consulting</a>
+              <a href="#" class="popular-tag">Consulting</a>
+            {% endif %}
           </div>
-        {% endif %}
+        </div>
         
-        {% if section.settings.show_newsletter %}
-          <div class="sidebar-section newsletter-section">
-            <h3 class="sidebar-heading">Subscribe newsletter</h3>
-            <div class="newsletter-form">
-              {% form 'customer', id: 'blog-newsletter-form' %}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-field">
-                  <input type="email" name="contact[email]" id="blog-newsletter-email" placeholder="Your email" required>
-                  <button type="submit">Subscribe</button>
-                </div>
-              {% endform %}
-            </div>
+        <div class="sidebar-section newsletter-section">
+          <h3 class="sidebar-heading">Subscribe newsletter</h3>
+          <div class="newsletter-form">
+            {% form 'customer', id: 'blog-newsletter-form' %}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="newsletter-field">
+                <input type="email" name="contact[email]" id="blog-newsletter-email" placeholder="Your email" required>
+                <button type="submit">Subscribe</button>
+              </div>
+            {% endform %}
           </div>
-        {% endif %}
+        </div>
       </div>
     </div>
   </div>

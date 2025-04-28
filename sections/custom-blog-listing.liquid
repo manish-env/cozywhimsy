@@ -10,6 +10,23 @@
         {% assign current_blog = blogs.first %}
       {% endif %}
       
+      {% if section.settings.show_debug %}
+        <div style="margin-bottom: 20px; padding: 15px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 5px;">
+          <h3 style="margin-top: 0;">Debug Information</h3>
+          <p><strong>Template:</strong> {{ template }}</p>
+          <p><strong>Current blog handle:</strong> {% if current_blog %}{{ current_blog.handle }}{% else %}No blog assigned{% endif %}</p>
+          <p><strong>Selected blog in settings:</strong> {{ section.settings.blog }}</p>
+          <p><strong>Articles count:</strong> {% if current_blog %}{{ current_blog.articles.size }}{% else %}0{% endif %}</p>
+          <p><strong>Available blogs:</strong></p>
+          <ul>
+            {% for blog in blogs %}
+              <li>{{ blog.handle }} ({{ blog.articles.size }} articles)</li>
+            {% endfor %}
+          </ul>
+          <p><strong>To fix:</strong> Go to theme customizer, select this section, and choose one of the blogs listed above in the "Blog" dropdown.</p>
+        </div>
+      {% endif %}
+      
       <div class="blog-main-content">
         <div class="blog-articles">
           {% if current_blog.articles.size > 0 %}
@@ -247,9 +264,25 @@
   "name": "Custom Blog Listing",
   "settings": [
     {
-      "type": "blog",
+      "type": "select",
       "id": "blog",
-      "label": "Blog"
+      "label": "Blog to display",
+      "options": [
+        {
+          "value": "news",
+          "label": "News"
+        },
+        {
+          "value": "hello-world",
+          "label": "Hello World"
+        },
+        {
+          "value": "testing",
+          "label": "Testing"
+        }
+      ],
+      "default": "news",
+      "info": "Select which blog to display in this section"
     },
     {
       "type": "select",
@@ -270,10 +303,10 @@
     {
       "type": "range",
       "id": "posts_per_page",
-      "min": 3,
+      "min": 2,
       "max": 24,
-      "step": 3,
-      "default": 9,
+      "step": 2,
+      "default": 4,
       "label": "Posts per page"
     },
     {
@@ -316,24 +349,6 @@
       "label": "Show recent post date"
     },
     {
-      "type": "checkbox",
-      "id": "show_popular_tags",
-      "default": true,
-      "label": "Show popular tags"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_newsletter",
-      "default": true,
-      "label": "Show newsletter subscription"
-    },
-    {
-      "type": "text",
-      "id": "no_articles_text",
-      "default": "No articles found",
-      "label": "No articles text"
-    },
-    {
       "type": "range",
       "id": "padding_top",
       "min": 0,
@@ -352,15 +367,26 @@
       "unit": "px",
       "label": "Bottom padding",
       "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "show_debug",
+      "default": true,
+      "label": "Show debug information"
     }
   ],
   "presets": [
     {
       "name": "Custom Blog Listing",
-      "settings": {}
+      "settings": {
+        "blog": "news",
+        "layout": "grid",
+        "posts_per_page": 4,
+        "show_debug": true
+      }
     }
   ],
-  "templates": ["page"]
+  "templates": ["page", "blog"]
 }
 {% endschema %}
 

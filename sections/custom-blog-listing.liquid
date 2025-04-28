@@ -9,9 +9,9 @@
       {% endif %}
       
       <div class="blog-main-content">
-        {% paginate current_blog.articles by section.settings.posts_per_page %}
+        {% if current_blog.articles.size > 0 %}
           <div class="blog-articles">
-            {% for article in current_blog.articles %}
+            {% for article in current_blog.articles limit: section.settings.posts_per_page %}
               <div class="blog-article-card">
                 <article class="blog-article">
                   {% if section.settings.show_featured_image and article.image %}
@@ -55,19 +55,33 @@
                   </div>
                 </article>
               </div>
-            {% else %}
-              <div class="empty-blog">
-                <p>{{ section.settings.no_articles_text }}</p>
-              </div>
             {% endfor %}
           </div>
           
-          {% if paginate.pages > 1 %}
+          {% if current_blog.articles.size > section.settings.posts_per_page %}
             <div class="blog-pagination">
-              {{ paginate | default_pagination }}
+              <div class="pagination">
+                {% if current_blog.articles.size > section.settings.posts_per_page %}
+                  <a href="{{ current_blog.url }}?page=1" class="pagination-prev">
+                    &larr; Previous
+                  </a>
+                {% endif %}
+                
+                <span class="pagination-current">Page 1 of {{ current_blog.articles.size | divided_by: section.settings.posts_per_page | ceil }}</span>
+                
+                {% if current_blog.articles.size > section.settings.posts_per_page %}
+                  <a href="{{ current_blog.url }}?page=2" class="pagination-next">
+                    Next &rarr;
+                  </a>
+                {% endif %}
+              </div>
             </div>
           {% endif %}
-        {% endpaginate %}
+        {% else %}
+          <div class="empty-blog">
+            <p>{{ section.settings.no_articles_text }}</p>
+          </div>
+        {% endif %}
       </div>
       
       <div class="blog-sidebar">
@@ -119,7 +133,7 @@
                 <li class="category-item {% if current_tag == tag %}active{% endif %}">
                   <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}">
                     {{ tag }}
-                    <span class="category-count">{{ tag | count_posts_by_tag: current_blog.handle }}</span>
+                    <span class="category-count">{{ current_blog.articles | where: "tags", tag | size }}</span>
                   </a>
                 </li>
               {% endfor %}

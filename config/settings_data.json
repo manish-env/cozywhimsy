@@ -323,6 +323,23 @@
           "padding_top": 36,
           "padding_bottom": 36
         }
+      },
+      "custom-blog-listing": {
+        "type": "custom-blog-listing",
+        "settings": {
+          "blog": "hello-world",
+          "layout": "grid",
+          "posts_per_page": 4,
+          "show_date": true,
+          "show_featured_image": true,
+          "search_placeholder": "Search",
+          "recent_posts_count": 3,
+          "show_recent_post_image": true,
+          "show_recent_post_date": true,
+          "padding_top": 36,
+          "padding_bottom": 36,
+          "show_debug": true
+        }
       }
     },
     "content_for_index": []

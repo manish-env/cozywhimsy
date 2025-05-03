@@ -131,168 +131,6 @@
         "mobile_slide_delay": 5000
       }
     },
-    "gifts_by_occasion_fCKPH3": {
-      "type": "gifts-by-occasion",
-      "blocks": {
-        "occasion_G8cjbw": {
-          "type": "occasion",
-          "settings": {
-            "title": "Birthday",
-            "link": "shopify://products/nursery-night-lights-with-battery",
-            "icon": "birthday",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_3LGFpW": {
-          "type": "occasion",
-          "settings": {
-            "title": "Wedding",
-            "link": "",
-            "icon": "wedding",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_qPiwRL": {
-          "type": "occasion",
-          "settings": {
-            "title": "Baby",
-            "link": "",
-            "icon": "baby",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_R8W8dJ": {
-          "type": "occasion",
-          "settings": {
-            "title": "Graduation",
-            "link": "",
-            "icon": "graduation",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_zYBHz3": {
-          "type": "occasion",
-          "settings": {
-            "title": "Anniversary",
-            "link": "",
-            "icon": "anniversary",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_irH8MT": {
-          "type": "occasion",
-          "settings": {
-            "title": "Valentine's",
-            "link": "",
-            "icon": "valentines",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_DFEQUF": {
-          "type": "occasion",
-          "settings": {
-            "title": "Christmas",
-            "link": "",
-            "icon": "christmas",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_mbfGqQ": {
-          "type": "occasion",
-          "settings": {
-            "title": "Mother's Day",
-            "link": "",
-            "icon": "mothers_day",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_7eqdc7": {
-          "type": "occasion",
-          "settings": {
-            "title": "Father's Day",
-            "link": "",
-            "icon": "fathers_day",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_fy4EQm": {
-          "type": "occasion",
-          "settings": {
-            "title": "Friendship",
-            "link": "",
-            "icon": "friendship",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_4ie8Ee": {
-          "type": "occasion",
-          "settings": {
-            "title": "Retirement",
-            "link": "",
-            "icon": "retirement",
-            "show_count": false,
-            "count": ""
-          }
-        },
-        "occasion_HnX9tm": {
-          "type": "occasion",
-          "settings": {
-            "title": "Housewarming",
-            "link": "",
-            "icon": "housewarming",
-            "show_count": false,
-            "count": ""
-          }
-        }
-      },
-      "block_order": [
-        "occasion_G8cjbw",
-        "occasion_3LGFpW",
-        "occasion_qPiwRL",
-        "occasion_R8W8dJ",
-        "occasion_zYBHz3",
-        "occasion_irH8MT",
-        "occasion_DFEQUF",
-        "occasion_mbfGqQ",
-        "occasion_7eqdc7",
-        "occasion_fy4EQm",
-        "occasion_4ie8Ee",
-        "occasion_HnX9tm"
-      ],
-      "name": "Gifts by Occasion",
-      "settings": {
-        "title": "Find the Perfect Gift",
-        "subtitle": "Shop by occasion for thoughtful gifts they'll love",
-        "center_title": true,
-        "show_separator": true,
-        "separator_width": 50,
-        "separator_color": "#ffffff",
-        "separator_margin": 30,
-        "gap": 20,
-        "icon_shape": "50%",
-        "border_style": "instagram",
-        "border_color": "#ff6b9a",
-        "icon_background": "#f8f8f8",
-        "icon_color": "#333333",
-        "background_color": "#ffffff",
-        "title_color": "#333333",
-        "subtitle_color": "#666666",
-        "text_color": "#333333",
-        "count_color": "#999999",
-        "padding_top": 50,
-        "padding_bottom": 50
-      }
-    },
     "featured_categories": {
       "type": "featured-categories",
       "blocks": {
@@ -552,7 +390,7 @@
         "center_title": true,
         "show_separator": true,
         "separator_width": 50,
-        "separator_color": "#ff6b9a",
+        "separator_color": "#ffffff",
         "separator_margin": 30,
         "columns_desktop": 3,
         "columns_tablet": 2,
@@ -584,7 +422,6 @@
   "order": [
     "mobile_toplevel_categories_WLExDV",
     "hero",
-    "gifts_by_occasion_fCKPH3",
     "featured_categories",
     "featured_product_spotlight_9Jd4aF",
     "featured_products",

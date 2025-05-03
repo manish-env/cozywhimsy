@@ -126,7 +126,7 @@
           "twitter_link": "",
           "tiktok_link": "",
           "copyright_text": "© 2025 Cozywhimsy. All rights reserved.",
-          "footer_bottom_menu": "",
+          "footer_bottom_menu": "footer",
           "show_payment_icons": true
         }
       },

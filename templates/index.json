@@ -131,6 +131,168 @@
         "mobile_slide_delay": 5000
       }
     },
+    "gifts_by_occasion_fCKPH3": {
+      "type": "gifts-by-occasion",
+      "blocks": {
+        "occasion_G8cjbw": {
+          "type": "occasion",
+          "settings": {
+            "title": "Birthday",
+            "link": "shopify://products/nursery-night-lights-with-battery",
+            "icon": "birthday",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_3LGFpW": {
+          "type": "occasion",
+          "settings": {
+            "title": "Wedding",
+            "link": "",
+            "icon": "wedding",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_qPiwRL": {
+          "type": "occasion",
+          "settings": {
+            "title": "Baby",
+            "link": "",
+            "icon": "baby",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_R8W8dJ": {
+          "type": "occasion",
+          "settings": {
+            "title": "Graduation",
+            "link": "",
+            "icon": "graduation",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_zYBHz3": {
+          "type": "occasion",
+          "settings": {
+            "title": "Anniversary",
+            "link": "",
+            "icon": "anniversary",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_irH8MT": {
+          "type": "occasion",
+          "settings": {
+            "title": "Valentine's",
+            "link": "",
+            "icon": "valentines",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_DFEQUF": {
+          "type": "occasion",
+          "settings": {
+            "title": "Christmas",
+            "link": "",
+            "icon": "christmas",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_mbfGqQ": {
+          "type": "occasion",
+          "settings": {
+            "title": "Mother's Day",
+            "link": "",
+            "icon": "mothers_day",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_7eqdc7": {
+          "type": "occasion",
+          "settings": {
+            "title": "Father's Day",
+            "link": "",
+            "icon": "fathers_day",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_fy4EQm": {
+          "type": "occasion",
+          "settings": {
+            "title": "Friendship",
+            "link": "",
+            "icon": "friendship",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_4ie8Ee": {
+          "type": "occasion",
+          "settings": {
+            "title": "Retirement",
+            "link": "",
+            "icon": "retirement",
+            "show_count": false,
+            "count": ""
+          }
+        },
+        "occasion_HnX9tm": {
+          "type": "occasion",
+          "settings": {
+            "title": "Housewarming",
+            "link": "",
+            "icon": "housewarming",
+            "show_count": false,
+            "count": ""
+          }
+        }
+      },
+      "block_order": [
+        "occasion_G8cjbw",
+        "occasion_3LGFpW",
+        "occasion_qPiwRL",
+        "occasion_R8W8dJ",
+        "occasion_zYBHz3",
+        "occasion_irH8MT",
+        "occasion_DFEQUF",
+        "occasion_mbfGqQ",
+        "occasion_7eqdc7",
+        "occasion_fy4EQm",
+        "occasion_4ie8Ee",
+        "occasion_HnX9tm"
+      ],
+      "name": "Gifts by Occasion",
+      "settings": {
+        "title": "Find the Perfect Gift",
+        "subtitle": "Shop by occasion for thoughtful gifts they'll love",
+        "center_title": true,
+        "show_separator": true,
+        "separator_width": 50,
+        "separator_color": "#ffffff",
+        "separator_margin": 30,
+        "gap": 20,
+        "icon_shape": "50%",
+        "border_style": "instagram",
+        "border_color": "#ff6b9a",
+        "icon_background": "#f8f8f8",
+        "icon_color": "#333333",
+        "background_color": "#ffffff",
+        "title_color": "#333333",
+        "subtitle_color": "#666666",
+        "text_color": "#333333",
+        "count_color": "#999999",
+        "padding_top": 50,
+        "padding_bottom": 50
+      }
+    },
     "featured_categories": {
       "type": "featured-categories",
       "blocks": {
@@ -319,14 +481,112 @@
         "mobile_margin_top": 0,
         "mobile_margin_bottom": 0
       }
+    },
+    "product_bundles_3g8DpM": {
+      "type": "product-bundles",
+      "blocks": {
+        "bundle_E7hJF6": {
+          "type": "bundle",
+          "settings": {
+            "title": "Gift Bundle",
+            "description": "A curated collection of our best products at a special price.",
+            "image": "shopify://shop_images/81Ct8MBqq-L._AC_UF350_350_QL80.jpg",
+            "product_1": "electric-portable-mini-juicer-bottle",
+            "product_2": "usb-rechargable-capybara-night-light",
+            "product_3": "duck-night-light",
+            "product_4": "",
+            "discount_percentage": 15,
+            "badge_text": "Limited Edition",
+            "button_text": "Add Bundle to Cart",
+            "show_secondary_button": false,
+            "secondary_button_text": "Learn More",
+            "secondary_button_link": ""
+          }
+        },
+        "bundle_K7qAXG": {
+          "type": "bundle",
+          "settings": {
+            "title": "Gift Bundle",
+            "description": "A curated collection of our best products at a special price.",
+            "product_1": "",
+            "product_2": "",
+            "product_3": "",
+            "product_4": "",
+            "discount_percentage": 15,
+            "badge_text": "Limited Edition",
+            "button_text": "Add Bundle to Cart",
+            "show_secondary_button": false,
+            "secondary_button_text": "Learn More",
+            "secondary_button_link": ""
+          }
+        },
+        "bundle_y3qPkG": {
+          "type": "bundle",
+          "settings": {
+            "title": "Gift Bundle",
+            "description": "A curated collection of our best products at a special price.",
+            "product_1": "",
+            "product_2": "",
+            "product_3": "",
+            "product_4": "",
+            "discount_percentage": 15,
+            "badge_text": "Limited Edition",
+            "button_text": "Add Bundle to Cart",
+            "show_secondary_button": false,
+            "secondary_button_text": "Learn More",
+            "secondary_button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "bundle_E7hJF6",
+        "bundle_K7qAXG",
+        "bundle_y3qPkG"
+      ],
+      "name": "Product Bundles",
+      "settings": {
+        "title": "Shop Our Bundles",
+        "subtitle": "Save more when you buy our curated product bundles",
+        "center_title": true,
+        "show_separator": true,
+        "separator_width": 50,
+        "separator_color": "#ff6b9a",
+        "separator_margin": 30,
+        "columns_desktop": 3,
+        "columns_tablet": 2,
+        "columns_mobile": 1,
+        "background_color": "#ffffff",
+        "title_color": "#333333",
+        "subtitle_color": "#666666",
+        "content_title_color": "#333333",
+        "content_text_color": "#666666",
+        "price_color": "#ff6b9a",
+        "discount_text_color": "#4CAF50",
+        "badge_background": "#ff6b9a",
+        "badge_color": "#ffffff",
+        "custom_badge_background": "#4CAF50",
+        "custom_badge_color": "#ffffff",
+        "button_background": "#ff6b9a",
+        "button_text_color": "#ffffff",
+        "secondary_button_color": "#666666",
+        "show_view_all": true,
+        "view_all_text": "View All Bundles",
+        "view_all_link": "",
+        "center_view_all": true,
+        "view_all_color": "#ff6b9a",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
     "mobile_toplevel_categories_WLExDV",
     "hero",
+    "gifts_by_occasion_fCKPH3",
     "featured_categories",
     "featured_product_spotlight_9Jd4aF",
     "featured_products",
-    "gift_categories_TdDdT7"
+    "gift_categories_TdDdT7",
+    "product_bundles_3g8DpM"
   ]
 }

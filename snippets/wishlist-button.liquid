@@ -18,7 +18,10 @@
   type="button" 
   class="wishlist-button {{ button_class }}" 
   data-wishlist-button 
-  data-product-id="{{ product_id }}" 
+  data-product-id="{{ product.id }}" 
+  data-product-name="{{ product.title }}" 
+  data-product-image="{{ product.featured_image | img_url: 'medium' }}" 
+  data-product-price="{{ product.price | money_without_currency }}" 
   aria-label="{{ 'wishlist.add_to_wishlist' | t }}"
   title="{{ 'wishlist.add_to_wishlist' | t }}">
   

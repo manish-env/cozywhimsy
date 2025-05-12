@@ -1,4 +1,4 @@
-<footer class="site-footer">
+<footer class="site-footer renovated-footer">
   <div class="footer-wave">
     <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
       <path d="M0,0 C240,40 480,60 720,60 C960,60 1200,40 1440,0 L1440,120 L0,120 Z" fill="var(--light-pink)"></path>
@@ -9,67 +9,67 @@
     <div class="container">
       <div class="footer-content">
         <!-- Brand Column -->
-        <div class="footer-brand">
-          <a href="/" class="footer-logo">
+        <div class="footer-brand renovated-footer-brand">
+          <a href="/" class="footer-logo renovated-footer-logo">
             {% if section.settings.footer_logo != blank %}
               <img src="{{ section.settings.footer_logo | img_url: 'master' }}" alt="{{ shop.name }}">
             {% else %}
               <img src="{{ 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }}">
             {% endif %}
           </a>
-          <div class="footer-tagline">{{ section.settings.footer_text }}</div>
+          <div class="footer-tagline renovated-footer-tagline">{{ section.settings.footer_text }}</div>
         </div>
 
         <!-- Navigation Links -->
-        <div class="footer-nav">
+        <nav class="footer-nav renovated-footer-nav" aria-label="Footer navigation">
           {% for block in section.blocks %}
             {% case block.type %}
               {% when 'link_list' %}
-                <div class="footer-column" {{ block.shopify_attributes }}>
-                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
+                <div class="footer-column renovated-footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading renovated-footer-heading">{{ block.settings.title }}</h4>
                   {% assign footer_menu = block.settings.menu %}
                   {% if linklists[footer_menu].links.size > 0 %}
-                    <ul class="footer-menu">
+                    <ul class="footer-menu renovated-footer-menu">
                       {% for link in linklists[footer_menu].links %}
-                        <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
+                        <li><a href="{{ link.url }}" class="footer-link renovated-footer-link">{{ link.title }}</a></li>
                       {% endfor %}
                     </ul>
                   {% endif %}
                 </div>
               {% when 'text' %}
-                <div class="footer-column" {{ block.shopify_attributes }}>
-                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
-                  <div class="footer-text">{{ block.settings.text }}</div>
+                <div class="footer-column renovated-footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading renovated-footer-heading">{{ block.settings.title }}</h4>
+                  <div class="footer-text renovated-footer-text">{{ block.settings.text }}</div>
                 </div>
               {% when 'contact' %}
-                <div class="footer-column" {{ block.shopify_attributes }}>
-                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
-                  <ul class="contact-info">
+                <div class="footer-column renovated-footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading renovated-footer-heading">{{ block.settings.title }}</h4>
+                  <ul class="contact-info renovated-contact-info">
                     {% if block.settings.email != blank %}
-                      <li class="contact-item">
-                        <i class="fas fa-envelope contact-icon"></i>
-                        <a href="mailto:{{ block.settings.email }}" class="contact-text">{{ block.settings.email }}</a>
+                      <li class="contact-item renovated-contact-item">
+                        <i class="fas fa-envelope contact-icon renovated-contact-icon"></i>
+                        <a href="mailto:{{ block.settings.email }}" class="contact-text renovated-contact-text">{{ block.settings.email }}</a>
                       </li>
                     {% endif %}
                     {% if block.settings.phone != blank %}
-                      <li class="contact-item">
-                        <i class="fas fa-phone-alt contact-icon"></i>
-                        <a href="tel:{{ block.settings.phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}" class="contact-text">{{ block.settings.phone }}</a>
+                      <li class="contact-item renovated-contact-item">
+                        <i class="fas fa-phone-alt contact-icon renovated-contact-icon"></i>
+                        <a href="tel:{{ block.settings.phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}" class="contact-text renovated-contact-text">{{ block.settings.phone }}</a>
                       </li>
                     {% endif %}
                     {% if block.settings.address != blank %}
-                      <li class="contact-item">
-                        <i class="fas fa-map-marker-alt contact-icon"></i>
-                        <span class="contact-text">{{ block.settings.address }}</span>
+                      <li class="contact-item renovated-contact-item">
+                        <i class="fas fa-map-marker-alt contact-icon renovated-contact-icon"></i>
+                        <span class="contact-text renovated-contact-text">{{ block.settings.address }}</span>
                       </li>
                     {% endif %}
                   </ul>
                 </div>
               {% when 'image' %}
-                <div class="footer-column" {{ block.shopify_attributes }}>
-                  <h4 class="footer-heading">{{ block.settings.title }}</h4>
+                <div class="footer-column renovated-footer-column" {{ block.shopify_attributes }}>
+                  <h4 class="footer-heading renovated-footer-heading">{{ block.settings.title }}</h4>
                   {% if block.settings.image != blank %}
-                    <div class="footer-image">
+                    <div class="footer-image renovated-footer-image">
                       <img 
                         src="{{ block.settings.image | img_url: '300x' }}" 
                         alt="{{ block.settings.image.alt | escape }}"
@@ -78,61 +78,61 @@
                     </div>
                   {% endif %}
                   {% if block.settings.image_link != blank %}
-                    <a href="{{ block.settings.image_link }}" class="footer-link">{{ block.settings.image_link_text }}</a>
+                    <a href="{{ block.settings.image_link }}" class="footer-link renovated-footer-link">{{ block.settings.image_link_text }}</a>
                   {% endif %}
                 </div>
             {% endcase %}
           {% endfor %}
-        </div>
+        </nav>
 
         <!-- Connect Section -->
-        <div class="footer-connect">
+        <div class="footer-connect renovated-footer-connect">
           {% if section.settings.show_newsletter %}
-            <div class="newsletter-signup">
-              <h4 class="footer-heading">{{ section.settings.newsletter_title }}</h4>
-              <p class="newsletter-text">{{ section.settings.newsletter_text }}</p>
+            <div class="newsletter-signup renovated-newsletter-signup">
+              <h4 class="footer-heading renovated-footer-heading">{{ section.settings.newsletter_title }}</h4>
+              <p class="newsletter-text renovated-newsletter-text">{{ section.settings.newsletter_text }}</p>
               {% form 'customer', id: 'footer-newsletter-form' %}
                 <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-form">
+                <div class="newsletter-form renovated-newsletter-form">
                   <input 
                     type="email" 
                     name="contact[email]" 
-                    class="newsletter-input" 
+                    class="newsletter-input renovated-newsletter-input" 
                     placeholder="{{ section.settings.newsletter_placeholder }}" 
                     required
                     aria-label="{{ section.settings.newsletter_placeholder }}"
                   >
-                  <button type="submit" class="newsletter-submit">
+                  <button type="submit" class="newsletter-submit renovated-newsletter-submit" aria-label="Subscribe">
                     <i class="fas fa-paper-plane"></i>
                   </button>
                 </div>
                 {% if form.posted_successfully? %}
-                  <p class="newsletter-success">{{ section.settings.newsletter_success_text }}</p>
+                  <p class="newsletter-success renovated-newsletter-success">{{ section.settings.newsletter_success_text }}</p>
                 {% endif %}
                 {% if form.errors %}
-                  <p class="newsletter-error">{{ form.errors.messages['email'] }}</p>
+                  <p class="newsletter-error renovated-newsletter-error">{{ form.errors.messages['email'] }}</p>
                 {% endif %}
               {% endform %}
             </div>
           {% endif %}
 
-          <div class="social-links-container">
-            <h4 class="footer-heading">{{ section.settings.social_heading }}</h4>
-            <div class="social-links">
-              <a href="{{ section.settings.instagram_link | default: '#' }}" target="_blank" aria-label="Instagram" class="social-link instagram">
-                <i class="fab fa-instagram"></i>
+          <div class="social-links-container renovated-social-links-container">
+            <h4 class="footer-heading renovated-footer-heading">{{ section.settings.social_heading }}</h4>
+            <div class="social-links renovated-social-links">
+              <a href="{{ section.settings.instagram_link | default: '#' }}" target="_blank" aria-label="Instagram" class="social-link instagram renovated-social-link">
+                <span class="social-icon-wrapper renovated-social-icon-wrapper"><i class="fab fa-instagram"></i></span>
               </a>
-              <a href="{{ section.settings.pinterest_link | default: '#' }}" target="_blank" aria-label="Pinterest" class="social-link pinterest">
-                <i class="fab fa-pinterest-p"></i>
+              <a href="{{ section.settings.pinterest_link | default: '#' }}" target="_blank" aria-label="Pinterest" class="social-link pinterest renovated-social-link">
+                <span class="social-icon-wrapper renovated-social-icon-wrapper"><i class="fab fa-pinterest-p"></i></span>
               </a>
-              <a href="{{ section.settings.facebook_link | default: '#' }}" target="_blank" aria-label="Facebook" class="social-link facebook">
-                <i class="fab fa-facebook-f"></i>
+              <a href="{{ section.settings.facebook_link | default: '#' }}" target="_blank" aria-label="Facebook" class="social-link facebook renovated-social-link">
+                <span class="social-icon-wrapper renovated-social-icon-wrapper"><i class="fab fa-facebook-f"></i></span>
               </a>
-              <a href="{{ section.settings.twitter_link | default: '#' }}" target="_blank" aria-label="Twitter" class="social-link twitter">
-                <i class="fab fa-twitter"></i>
+              <a href="{{ section.settings.twitter_link | default: '#' }}" target="_blank" aria-label="Twitter" class="social-link twitter renovated-social-link">
+                <span class="social-icon-wrapper renovated-social-icon-wrapper"><i class="fab fa-twitter"></i></span>
               </a>
-              <a href="{{ section.settings.tiktok_link | default: '#' }}" target="_blank" aria-label="TikTok" class="social-link tiktok">
-                <i class="fab fa-tiktok"></i>
+              <a href="{{ section.settings.tiktok_link | default: '#' }}" target="_blank" aria-label="TikTok" class="social-link tiktok renovated-social-link">
+                <span class="social-icon-wrapper renovated-social-icon-wrapper"><i class="fab fa-tiktok"></i></span>
               </a>
             </div>
           </div>
@@ -141,32 +141,38 @@
     </div>
   </div>
 
-  <div class="footer-bottom">
+  <div class="footer-bottom renovated-footer-bottom">
     <div class="container">
-      <div class="footer-bottom-content">
-        <p class="copyright">{{ section.settings.copyright_text }}</p>
+      <div class="footer-bottom-content renovated-footer-bottom-content">
+        <p class="copyright renovated-copyright">{{ section.settings.copyright_text }}</p>
         {% if section.settings.footer_bottom_menu.links.size > 0 %}
-          <div class="footer-bottom-links">
+          <div class="footer-bottom-links renovated-footer-bottom-links">
             {% for link in section.settings.footer_bottom_menu.links %}
-              <a href="{{ link.url }}" class="footer-bottom-link">{{ link.title }}</a>
+              <a href="{{ link.url }}" class="footer-bottom-link renovated-footer-bottom-link">{{ link.title }}</a>
             {% endfor %}
-            <a href="/pages/game" class="footer-bottom-link footer-game-link">Game Tournament</a>
+            <a href="/pages/game" class="footer-bottom-link footer-game-link renovated-footer-bottom-link">Game Tournament</a>
           </div>
         {% else %}
-          <div class="footer-bottom-links">
-            <a href="/pages/game" class="footer-bottom-link footer-game-link">Game Tournament</a>
+          <div class="footer-bottom-links renovated-footer-bottom-links">
+            <a href="/pages/game" class="footer-bottom-link footer-game-link renovated-footer-bottom-link">Game Tournament</a>
           </div>
         {% endif %}
         
         {% if section.settings.show_payment_icons %}
-          <div class="payment-icons">
+          <div class="payment-icons renovated-payment-icons">
             {% for type in shop.enabled_payment_types %}
-              {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+              {{ type | payment_type_svg_tag: class: 'payment-icon renovated-payment-icon' }}
             {% endfor %}
           </div>
         {% endif %}
       </div>
     </div>
+  </div>
+
+  <!-- Decorative SVG hearts for extra whimsy -->
+  <div class="footer-decorative-bottom">
+    <span class="heart-decoration heart-1"></span>
+    <span class="heart-decoration heart-2"></span>
   </div>
 </footer>
 

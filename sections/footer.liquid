@@ -1,203 +1,192 @@
 <footer class="footer-fresh">
-  <div class="footer-fresh-inner">
-    <!-- Brand Section -->
-    <div class="footer-fresh-brand">
-      <a href="/" class="footer-fresh-logo">
-        <img src="{{ section.settings.footer_logo | default: 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }} logo">
-      </a>
-      <div class="footer-fresh-tagline">{{ section.settings.footer_text | default: 'Whimsical comfort for every day.' }}</div>
-    </div>
-    <!-- Quick Links -->
-    <div class="footer-fresh-links">
-      <div class="footer-fresh-link-heading">Quick Links</div>
-      <ul class="footer-fresh-link-list">
-        <li><a href="/collections/all" class="footer-fresh-link">Shop All</a></li>
-        <li><a href="/pages/about" class="footer-fresh-link">About Us</a></li>
-        <li><a href="/pages/contact" class="footer-fresh-link">Contact</a></li>
-        <li><a href="/pages/game" class="footer-fresh-link">Game Tournament</a></li>
-      </ul>
-    </div>
-    <!-- Newsletter -->
-    <div class="footer-fresh-newsletter">
-      <div class="footer-fresh-newsletter-title">Stay Cozy! Subscribe:</div>
-      {% form 'customer', id: 'footer-fresh-newsletter-form' %}
-        <input type="hidden" name="contact[tags]" value="newsletter">
-        <div class="footer-fresh-newsletter-form">
-          <input type="email" name="contact[email]" class="footer-fresh-newsletter-input" placeholder="Your email address" required aria-label="Email address">
-          <button type="submit" class="footer-fresh-newsletter-submit" aria-label="Subscribe">
-            <svg width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 11l18-7-7 18-2.5-6.5L2 11z" fill="#fff"/></svg>
-          </button>
-        </div>
-        {% if form.posted_successfully? %}
-          <p class="footer-fresh-news-success">Thanks for subscribing!</p>
-        {% endif %}
-        {% if form.errors %}
-          <p class="footer-fresh-news-error">{{ form.errors.messages['email'] }}</p>
-        {% endif %}
-      {% endform %}
-    </div>
-    <!-- Social & Contact -->
-    <div class="footer-fresh-social-contact">
-      <div class="footer-fresh-link-heading">Connect</div>
-      <div class="footer-fresh-socials">
-        <a href="{{ section.settings.instagram_link | default: '#' }}" class="footer-fresh-social" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="{{ section.settings.facebook_link | default: '#' }}" class="footer-fresh-social" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-        <a href="{{ section.settings.pinterest_link | default: '#' }}" class="footer-fresh-social" aria-label="Pinterest" target="_blank"><i class="fab fa-pinterest-p"></i></a>
-        <a href="{{ section.settings.tiktok_link | default: '#' }}" class="footer-fresh-social" aria-label="TikTok" target="_blank"><i class="fab fa-tiktok"></i></a>
+  <div class="footer-fresh-container">
+    <div class="footer-fresh-inner">
+      <!-- Brand Section -->
+      <div class="footer-fresh-brand">
+        <a href="/" class="footer-fresh-logo">
+          <img src="{{ section.settings.footer_logo | default: 'cozzywhimsylogo-removebg.png' | asset_url }}" alt="{{ shop.name }} logo">
+        </a>
+        <div class="footer-fresh-tagline">{{ section.settings.footer_text | default: 'Whimsical comfort for every day.' }}</div>
       </div>
-      <div class="footer-fresh-contact">
-        <div><i class="fas fa-envelope"></i> <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email | default: 'hello@cozywhimsy.com' }}</a></div>
-        <div><i class="fas fa-phone-alt"></i> <a href="tel:{{ section.settings.contact_phone }}">{{ section.settings.contact_phone | default: '+1-555-123-4567' }}</a></div>
+      
+      <!-- Quick Links -->
+      <div class="footer-fresh-links">
+        <div class="footer-fresh-link-heading">Quick Links</div>
+        <ul class="footer-fresh-link-list">
+          <li><a href="/collections/all" class="footer-fresh-link">Shop All</a></li>
+          <li><a href="/pages/about" class="footer-fresh-link">About Us</a></li>
+          <li><a href="/pages/contact" class="footer-fresh-link">Contact</a></li>
+          <li><a href="/pages/game" class="footer-fresh-link">Game Tournament</a></li>
+          {% if section.settings.footer_bottom_menu != blank %}
+            {% for link in linklists[section.settings.footer_bottom_menu].links %}
+              <li><a href="{{ link.url }}" class="footer-fresh-link">{{ link.title }}</a></li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+      
+      <!-- Newsletter -->
+      {% if section.settings.show_newsletter %}
+      <div class="footer-fresh-newsletter">
+        <div class="footer-fresh-newsletter-title">{{ section.settings.newsletter_title | default: 'Stay Cozy! Subscribe:' }}</div>
+        <p class="footer-fresh-newsletter-text">{{ section.settings.newsletter_text | default: 'Join our cozy community for exclusive updates and offers!' }}</p>
+        {% form 'customer', id: 'footer-fresh-newsletter-form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="footer-fresh-newsletter-form">
+            <input type="email" name="contact[email]" class="footer-fresh-newsletter-input" placeholder="{{ section.settings.newsletter_placeholder | default: 'Your email address' }}" required aria-label="Email address">
+            <button type="submit" class="footer-fresh-newsletter-submit" aria-label="Subscribe">
+              <svg width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 11l18-7-7 18-2.5-6.5L2 11z" fill="#fff"/></svg>
+            </button>
+          </div>
+          {% if form.posted_successfully? %}
+            <p class="footer-fresh-news-success">{{ section.settings.newsletter_success_text | default: 'Thanks for subscribing!' }}</p>
+          {% endif %}
+          {% if form.errors %}
+            <p class="footer-fresh-news-error">{{ form.errors.messages['email'] }}</p>
+          {% endif %}
+        {% endform %}
+      </div>
+      {% endif %}
+      
+      <!-- Social & Contact -->
+      <div class="footer-fresh-social-contact">
+        {% if section.settings.show_social_icons %}
+        <div class="footer-fresh-link-heading">{{ section.settings.social_heading | default: 'Connect' }}</div>
+        <div class="footer-fresh-socials">
+          {% if section.settings.instagram_link != blank %}
+            <a href="{{ section.settings.instagram_link }}" class="footer-fresh-social" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+          {% endif %}
+          {% if section.settings.facebook_link != blank %}
+            <a href="{{ section.settings.facebook_link }}" class="footer-fresh-social" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+          {% endif %}
+          {% if section.settings.pinterest_link != blank %}
+            <a href="{{ section.settings.pinterest_link }}" class="footer-fresh-social" aria-label="Pinterest" target="_blank"><i class="fab fa-pinterest-p"></i></a>
+          {% endif %}
+          {% if section.settings.tiktok_link != blank %}
+            <a href="{{ section.settings.tiktok_link }}" class="footer-fresh-social" aria-label="TikTok" target="_blank"><i class="fab fa-tiktok"></i></a>
+          {% endif %}
+          {% if section.settings.twitter_link != blank %}
+            <a href="{{ section.settings.twitter_link }}" class="footer-fresh-social" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+          {% endif %}
+        </div>
+        {% endif %}
+        <div class="footer-fresh-contact">
+          {% if section.blocks contains 'contact' or section.settings.contact_email != blank %}
+            <div><i class="fas fa-envelope"></i> <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email | default: 'hello@cozywhimsy.com' }}</a></div>
+          {% endif %}
+          {% if section.blocks contains 'contact' or section.settings.contact_phone != blank %}
+            <div><i class="fas fa-phone-alt"></i> <a href="tel:{{ section.settings.contact_phone }}">{{ section.settings.contact_phone | default: '+1-555-123-4567' }}</a></div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
+  
   <!-- Decorative SVGs -->
   <svg class="footer-fresh-svg" width="100%" height="80" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:0;left:0;z-index:1;"><path d="M0,40 Q360,80 720,40 T1440,40 V80 H0 Z" fill="#ffe6f2"/><circle cx="80" cy="60" r="18" fill="#ffb6c1" fill-opacity="0.23"/><circle cx="1360" cy="70" r="12" fill="#b19cd9" fill-opacity="0.19"/></svg>
+  
   <div class="footer-fresh-bottom">
     <div class="footer-fresh-bottom-inner">
-      <span class="footer-fresh-copyright">&copy; {{ 'now' | date: '%Y' }} CozyWhimsy. All rights reserved.</span>
+      <span class="footer-fresh-copyright">&copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_text | default: 'CozyWhimsy. All rights reserved.' }}</span>
+      {% if section.settings.show_payment_icons %}
       <div class="footer-fresh-payments">
         {% for type in shop.enabled_payment_types %}
           {{ type | payment_type_svg_tag: class: 'footer-fresh-payment-icon' }}
         {% endfor %}
       </div>
+      {% endif %}
     </div>
   </div>
 </footer>
 
 
 <style>
-  .site-footer {
+  /* Custom footer styles to match theme aesthetics */
+  .footer-fresh-container {
+    max-width: 1200px;
+    margin: 0 auto;
     position: relative;
-    margin-top: 30px;
+    z-index: 2;
+  }
+  
+  .footer-fresh {
+    position: relative;
+    margin-top: 80px;
     font-family: 'Poppins', sans-serif;
   }
   
-  .footer-wave {
-    position: absolute;
-    top: -60px;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    overflow: hidden;
+  .footer-fresh-newsletter-text {
+    font-size: 0.9rem;
+    color: var(--primary-purple);
+    opacity: 0.9;
+    margin-bottom: 0.8rem;
+    margin-top: 0.3rem;
   }
   
-  .footer-wave svg {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .footer-main {
-    background-color: var(--light-pink);
-    padding: 30px 0 20px;
-    position: relative;
-  }
-  
-  .container {
+  /* Ensure the footer stays within theme width */
+  .footer-fresh-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
   }
   
-  .footer-content {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 20px;
+  /* Add some subtle animations */
+  .footer-fresh-link {
     position: relative;
+    transition: all 0.3s ease;
   }
   
-  .footer-brand {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .footer-logo {
-    display: block;
-    max-width: 120px;
-    margin-bottom: 10px;
-    position: relative;
-  }
-  
-  .footer-logo img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  .footer-tagline {
-    margin-bottom: 10px;
-    line-height: 1.4;
-    font-size: 0.85rem;
-    color: var(--dark-text);
-  }
-  
-  .footer-nav {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-  }
-  
-  .footer-heading {
-    font-size: 0.95rem;
-    margin-bottom: 10px;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 600;
-    color: var(--primary-pink);
-    position: relative;
-    display: inline-block;
-  }
-  
-  .footer-heading::after {
+  .footer-fresh-link:before {
     content: '';
     position: absolute;
-    width: 20px;
-    height: 2px;
-    background: var(--primary-pink);
-    bottom: -3px;
-    left: 0;
-    opacity: 0.7;
+    bottom: 0;
+    left: 8px;
+    width: 0;
+    height: 1px;
+    background: #fff;
+    transition: width 0.3s ease;
   }
   
-  .footer-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .footer-fresh-link:hover:before {
+    width: calc(100% - 16px);
   }
   
-  .footer-menu li {
-    margin-bottom: 6px;
+  /* Enhanced newsletter form */
+  .footer-fresh-newsletter {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
-  .footer-link {
-    color: var(--dark-text);
-    text-decoration: none;
+  .footer-fresh-newsletter:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(147, 112, 219, 0.15);
+  }
+  
+  /* Enhanced social icons */
+  .footer-fresh-social {
     transition: all 0.3s ease;
-    display: inline-block;
-    font-size: 0.8rem;
-    position: relative;
   }
   
-  .footer-link:hover {
-    color: var(--primary-pink);
-    transform: translateX(3px);
+  .footer-fresh-social:hover {
+    transform: translateY(-3px) rotate(-6deg);
+    box-shadow: 0 4px 12px rgba(255, 107, 154, 0.2);
   }
   
-  .footer-text {
-    font-size: 0.8rem;
-    line-height: 1.4;
-    color: var(--dark-text);
+  /* Responsive improvements */
+  @media (max-width: 1100px) {
+    .footer-fresh-container {
+      padding: 0 20px;
+    }
   }
   
-  .contact-info {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .contact-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 6px;
+  @media (max-width: 600px) {
+    .footer-fresh {
+      margin-top: 60px;
+      border-top-left-radius: 1.8rem;
+      border-top-right-radius: 1.8rem;
+    }
+    
+    .footer-fresh-newsletter {
+      padding: 0.9rem 0.9rem 0.7rem 0.9rem;
+    }
   }
   
   .contact-icon {

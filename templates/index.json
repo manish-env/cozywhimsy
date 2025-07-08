@@ -473,6 +473,7 @@
         "review_BQphda": {
           "type": "review",
           "settings": {
+            "doctor_image": "shopify://shop_images/6480086429.jpg",
             "doctor_name": "Dr. Sarah Wilson",
             "doctor_title": "Cosmetic Dermatologist",
             "rating": 5,

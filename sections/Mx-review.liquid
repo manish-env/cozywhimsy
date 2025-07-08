@@ -1,174 +1,583 @@
-<!-- sections/dermatologist-reviews.liquid -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-<section class="dermatologist-reviews">
-  <div class="container">
-    <div class="badge">#1 CLEAN DERMATOLOGIST-TESTED</div>
-    <h2 class="section-heading">Backed by Dermatologists</h2>
+{% comment %}
+  Dermatologist Reviews Section
+  A customizable carousel section for displaying professional testimonials
+{% endcomment %}
 
-    <div class="swiper-container">
-      <div class="swiper-wrapper">
-        {% for block in section.blocks %}
-          <div class="swiper-slide review-card">
-            <div class="left-column">
-              <img class="doctor-image" src="{{ block.settings.image | img_url: 'medium' }}" alt="{{ block.settings.name }}">
-            </div>
-            <div class="right-column">
-              <div class="avatars">
-                {% for i in (1..5) %}
-                  <div class="avatar{% if forloop.first %} active{% endif %}">
-                    <img src="{{ block.settings.image | img_url: 'small' }}" alt="Avatar {{ i }}">
+<div class="dermatologist-reviews-section" data-section-id="{{ section.id }}">
+  {% if section.blocks.size > 0 %}
+    <div class="reviews-container">
+      <!-- Badge -->
+      {% if section.settings.show_badge %}
+        <div class="reviews-badge">
+          {{ section.settings.badge_text }}
+        </div>
+      {% endif %}
+
+      <!-- Title -->
+      {% if section.settings.title != blank %}
+        <h2 class="reviews-title">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      <!-- Reviews Carousel -->
+      <div class="reviews-carousel-wrapper">
+        <div class="reviews-carousel" id="reviews-carousel-{{ section.id }}">
+          {% for block in section.blocks %}
+            <div class="review-slide{% if forloop.first %} active{% endif %}" data-slide="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              <div class="review-content">
+                <!-- Doctor Image -->
+                <div class="review-image">
+                  {% if block.settings.doctor_image != blank %}
+                    <img src="{{ block.settings.doctor_image | img_url: '400x500' }}" 
+                         alt="{{ block.settings.doctor_name }}"
+                         loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">
+                      <svg width="120" height="150" viewBox="0 0 120 150" fill="none">
+                        <rect width="120" height="150" fill="#E5E7EB"/>
+                        <circle cx="60" cy="45" r="20" fill="#9CA3AF"/>
+                        <path d="M30 120 Q60 100 90 120 V150 H30 V120" fill="#9CA3AF"/>
+                      </svg>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- Review Details -->
+                <div class="review-details">
+                  <!-- Avatar Navigation -->
+                  <div class="avatar-navigation">
+                    {% for avatar_block in section.blocks %}
+                      <button class="avatar-btn{% if forloop.index0 == forloop.parentloop.index0 %} active{% endif %}" 
+                              data-slide="{{ forloop.index0 }}"
+                              aria-label="View review {{ forloop.index }}">
+                        {% if avatar_block.settings.avatar_image != blank %}
+                          <img src="{{ avatar_block.settings.avatar_image | img_url: '60x60' }}" 
+                               alt="{{ avatar_block.settings.doctor_name }}">
+                        {% else %}
+                          <div class="avatar-placeholder">
+                            {{ avatar_block.settings.doctor_name | slice: 0, 1 | upcase }}
+                          </div>
+                        {% endif %}
+                      </button>
+                    {% endfor %}
                   </div>
-                {% endfor %}
-              </div>
-              <div class="stars">★★★★★</div>
-              <p class="review-text">{{ block.settings.text }}</p>
-              <p class="reviewer-name"><strong>{{ block.settings.name }}</strong></p>
-              <p class="reviewer-title">{{ block.settings.title }}</p>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
 
-      <!-- Navigation -->
-      <div class="swiper-nav">
-        <div class="swiper-button-prev">←</div>
-        <div class="swiper-button-next">→</div>
+                  <!-- Star Rating -->
+                  <div class="star-rating">
+                    {% for i in (1..5) %}
+                      <svg class="star{% if i <= block.settings.rating %} filled{% endif %}" 
+                           width="20" height="20" viewBox="0 0 20 20">
+                        <path d="M10 1L12.09 7.26L19 7.27L13.18 11.97L15.27 18.23L10 13.53L4.73 18.23L6.82 11.97L1 7.27L7.91 7.26L10 1Z"/>
+                      </svg>
+                    {% endfor %}
+                  </div>
+
+                  <!-- Review Text -->
+                  {% if block.settings.review_text != blank %}
+                    <p class="review-text">{{ block.settings.review_text }}</p>
+                  {% endif %}
+
+                  <!-- Doctor Info -->
+                  <div class="doctor-info">
+                    {% if block.settings.doctor_name != blank %}
+                      <h3 class="doctor-name">{{ block.settings.doctor_name }}</h3>
+                    {% endif %}
+                    {% if block.settings.doctor_title != blank %}
+                      <p class="doctor-title">{{ block.settings.doctor_title }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Navigation Arrows -->
+        <div class="carousel-navigation">
+          <button class="nav-btn prev-btn" aria-label="Previous review">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="nav-btn next-btn" aria-label="Next review">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  {% endif %}
+</div>
 
 <style>
-.dermatologist-reviews {
-  padding: 40px 20px;
-  background: #fff;
+.dermatologist-reviews-section {
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  background-color: {{ section.settings.background_color }};
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
-.container {
+
+.reviews-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px;
 }
-.badge {
-  background: #e1f0d3;
-  padding: 5px 10px;
-  font-size: 12px;
-  color: #4c7c0e;
+
+.reviews-badge {
   display: inline-block;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  background-color: {{ section.settings.badge_color }};
+  color: {{ section.settings.badge_text_color }};
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 24px;
 }
-.section-heading {
-  font-size: 28px;
-  margin-bottom: 30px;
+
+.reviews-title {
+  font-size: {{ section.settings.title_size }}px;
+  color: {{ section.settings.title_color }};
+  font-weight: 700;
+  margin: 0 0 48px 0;
+  line-height: 1.2;
 }
-.review-card {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-.left-column {
-  flex: 1;
-}
-.right-column {
-  flex: 2;
-}
-.doctor-image {
-  border-radius: 10px;
-  width: 100%;
-  max-width: 300px;
-}
-.avatars {
-  display: flex;
-  gap: 10px;
-  margin: 15px 0;
-}
-.avatar {
-  width: 40px;
-  height: 40px;
-  opacity: 0.5;
-  border-radius: 50%;
+
+.reviews-carousel-wrapper {
+  position: relative;
   overflow: hidden;
 }
-.avatar.active {
-  opacity: 1;
-  border: 2px solid #000;
+
+.reviews-carousel {
+  position: relative;
+  width: 100%;
 }
-.avatar img {
+
+.review-slide {
+  display: none;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.review-slide.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.review-content {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.review-image {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #A855F7 0%, #7C3AED 100%);
+  aspect-ratio: 4/5;
+}
+
+.review-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.stars {
-  color: #f39c12;
-  font-size: 18px;
-}
-.review-text {
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 15px 0;
-}
-.reviewer-name {
-  font-weight: bold;
-}
-.swiper-nav {
-  margin-top: 20px;
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #A855F7 0%, #7C3AED 100%);
 }
-.swiper-button-prev,
-.swiper-button-next {
-  background: #fff;
-  border: 1px solid #ccc;
+
+.review-details {
+  padding-top: 20px;
+}
+
+.avatar-navigation {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.avatar-btn {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 16px;
-  line-height: 30px;
-  text-align: center;
+  border: 3px solid transparent;
+  background: none;
   cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.avatar-btn.active {
+  border-color: {{ section.settings.accent_color }};
+  transform: scale(1.1);
+}
+
+.avatar-btn:hover {
+  transform: scale(1.05);
+}
+
+.avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.star-rating {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.star {
+  fill: #E5E7EB;
+  transition: fill 0.2s ease;
+}
+
+.star.filled {
+  fill: {{ section.settings.star_color }};
+}
+
+.review-text {
+  font-size: 18px;
+  line-height: 1.6;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 32px 0;
+  max-width: 600px;
+}
+
+.doctor-info {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 24px;
+}
+
+.doctor-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: {{ section.settings.title_color }};
+  margin: 0 0 4px 0;
+}
+
+.doctor-title {
+  font-size: 16px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.carousel-navigation {
+  position: absolute;
+  top: 50%;
+  right: -60px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid {{ section.settings.accent_color }};
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: {{ section.settings.accent_color }};
+}
+
+.nav-btn:hover {
+  background: {{ section.settings.accent_color }};
+  color: white;
+  transform: scale(1.1);
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .carousel-navigation {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
+    transform: none;
+  }
+  
+  .review-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .review-image {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .avatar-navigation {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 768px) {
-  .review-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  .reviews-container {
+    padding: 0 15px;
   }
-  .left-column,
-  .right-column {
-    flex: unset;
-    width: 100%;
+  
+  .review-content {
+    gap: 30px;
   }
-  .avatars {
-    justify-content: center;
+  
+  .review-image {
+    max-width: 250px;
+  }
+  
+  .reviews-title {
+    font-size: 28px;
+    margin-bottom: 32px;
+  }
+  
+  .review-text {
+    font-size: 16px;
+  }
+  
+  .avatar-btn {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .avatar-navigation {
+    gap: 8px;
   }
 }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    new Swiper(".swiper-container", {
-      loop: true,
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev"
-      },
-      slidesPerView: 1,
-      spaceBetween: 30
-    });
+(function() {
+  const sectionId = '{{ section.id }}';
+  const carousel = document.getElementById(`reviews-carousel-${sectionId}`);
+  const slides = carousel.querySelectorAll('.review-slide');
+  const avatarBtns = carousel.parentElement.querySelectorAll('.avatar-btn');
+  const prevBtn = carousel.parentElement.querySelector('.prev-btn');
+  const nextBtn = carousel.parentElement.querySelector('.next-btn');
+  
+  let currentSlide = 0;
+  const totalSlides = slides.length;
+  
+  function showSlide(index) {
+    // Hide all slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    avatarBtns.forEach(btn => btn.classList.remove('active'));
+    
+    // Show current slide
+    if (slides[index]) {
+      slides[index].classList.add('active');
+      avatarBtns[index].classList.add('active');
+    }
+    
+    // Update navigation buttons
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === totalSlides - 1;
+    
+    currentSlide = index;
+  }
+  
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      showSlide(currentSlide + 1);
+    }
+  }
+  
+  function prevSlide() {
+    if (currentSlide > 0) {
+      showSlide(currentSlide - 1);
+    }
+  }
+  
+  // Event listeners
+  nextBtn.addEventListener('click', nextSlide);
+  prevBtn.addEventListener('click', prevSlide);
+  
+  // Avatar navigation
+  avatarBtns.forEach((btn, index) => {
+    btn.addEventListener('click', () => showSlide(index));
   });
+  
+  // Keyboard navigation
+  carousel.parentElement.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+  });
+  
+  // Auto-play (optional)
+  {% if section.settings.auto_play %}
+  let autoPlayInterval = setInterval(() => {
+    if (currentSlide < totalSlides - 1) {
+      nextSlide();
+    } else {
+      showSlide(0);
+    }
+  }, {{ section.settings.auto_play_speed | default: 5000 }});
+  
+  // Pause on hover
+  carousel.parentElement.addEventListener('mouseenter', () => {
+    clearInterval(autoPlayInterval);
+  });
+  
+  carousel.parentElement.addEventListener('mouseleave', () => {
+    autoPlayInterval = setInterval(() => {
+      if (currentSlide < totalSlides - 1) {
+        nextSlide();
+      } else {
+        showSlide(0);
+      }
+    }, {{ section.settings.auto_play_speed | default: 5000 }});
+  });
+  {% endif %}
+  
+  // Initialize
+  showSlide(0);
+})();
 </script>
 
 {% schema %}
 {
   "name": "Dermatologist Reviews",
   "tag": "section",
-  "class": "shopify-section dermatologist-reviews",
-  "settings": [],
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Backed by Dermatologists"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title Size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "default": 42
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "#1 CLEAN DERMATOLOGIST-TESTED"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#7C3AED"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge Background",
+      "default": "#D4F7DC"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#065F46"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#FF6B35"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play",
+      "label": "Auto Play Carousel",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "auto_play_speed",
+      "label": "Auto Play Speed (ms)",
+      "min": 1000,
+      "max": 5000,
+      "step": 500,
+      "default": 3000
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 80
+    }
+  ],
   "blocks": [
     {
       "type": "review",
@@ -176,35 +585,75 @@
       "settings": [
         {
           "type": "image_picker",
-          "id": "image",
+          "id": "doctor_image",
           "label": "Doctor Image"
         },
         {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Avatar Image"
+        },
+        {
           "type": "text",
-          "id": "name",
+          "id": "doctor_name",
           "label": "Doctor Name",
           "default": "Dr. John Doe"
         },
         {
           "type": "text",
-          "id": "title",
-          "label": "Designation",
+          "id": "doctor_title",
+          "label": "Doctor Title",
           "default": "Dermatologist"
         },
         {
+          "type": "range",
+          "id": "rating",
+          "label": "Star Rating",
+          "min": 1,
+          "max": 5,
+          "default": 5
+        },
+        {
           "type": "textarea",
-          "id": "text",
+          "id": "review_text",
           "label": "Review Text",
-          "default": "Lorem ipsum dolor sit amet consectetur. Vivamus tincidunt semper..."
+          "default": "Lorem ipsum dolor sit amet consectetur. Viverra ut ullamcorper nunc quam placerat. Mollis penatibus hendrerit lectus netus eget a vel consequat. Ornare eu sem ultrices at vitae venenatis viverra est posuere. Massa scelerisque tellus non tempor lorem."
         }
       ]
     }
   ],
-  "max_blocks": 10,
   "presets": [
     {
       "name": "Dermatologist Reviews",
-      "category": "Testimonials"
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "doctor_name": "Dr. Prasana Singh",
+            "doctor_title": "Gastroenterologist",
+            "rating": 5,
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Viverra ut ullamcorper nunc quam placerat. Mollis penatibus hendrerit lectus netus eget a vel consequat. Ornare eu sem ultrices at vitae venenatis viverra est posuere. Massa scelerisque tellus non tempor lorem."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "doctor_name": "Dr. John Doe",
+            "doctor_title": "Dermatologist",
+            "rating": 5,
+            "review_text": "Exceptional product quality and results. I've been recommending this to my patients with great success. The formulation is clean and effective."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "doctor_name": "Dr. Sarah Wilson",
+            "doctor_title": "Cosmetic Dermatologist",
+            "rating": 5,
+            "review_text": "As a dermatologist, I'm impressed by the research and development behind this product. It delivers consistent results for my patients."
+          }
+        }
+      ]
     }
   ]
 }

@@ -446,6 +446,63 @@
     "17450811457cffbcda": {
       "type": "apps",
       "settings": {}
+    },
+    "mx_review_EYJKrq": {
+      "type": "Mx-review",
+      "blocks": {
+        "review_aWNwqq": {
+          "type": "review",
+          "settings": {
+            "doctor_image": "shopify://shop_images/8283301056.jpg",
+            "doctor_name": "Dr. Prasana Singh",
+            "doctor_title": "Gastroenterologist",
+            "rating": 5,
+            "review_text": "Lorem ipsum dolor sit amet consectetur. Viverra ut ullamcorper nunc quam placerat. Mollis penatibus hendrerit lectus netus eget a vel consequat. Ornare eu sem ultrices at vitae venenatis viverra est posuere. Massa scelerisque tellus non tempor lorem."
+          }
+        },
+        "review_rrUGtw": {
+          "type": "review",
+          "settings": {
+            "doctor_image": "shopify://shop_images/6398800391.jpg",
+            "doctor_name": "Dr. John Doe",
+            "doctor_title": "Dermatologist",
+            "rating": 5,
+            "review_text": "Exceptional product quality and results. I've been recommending this to my patients with great success. The formulation is clean and effective."
+          }
+        },
+        "review_BQphda": {
+          "type": "review",
+          "settings": {
+            "doctor_name": "Dr. Sarah Wilson",
+            "doctor_title": "Cosmetic Dermatologist",
+            "rating": 5,
+            "review_text": "As a dermatologist, I'm impressed by the research and development behind this product. It delivers consistent results for my patients."
+          }
+        }
+      },
+      "block_order": [
+        "review_aWNwqq",
+        "review_rrUGtw",
+        "review_BQphda"
+      ],
+      "name": "Dermatologist Reviews",
+      "settings": {
+        "title": "Backed by Dermatologists",
+        "title_size": 42,
+        "show_badge": true,
+        "badge_text": "#1 CLEAN DERMATOLOGIST-TESTED",
+        "background_color": "#ffffff",
+        "title_color": "#000000",
+        "text_color": "#666666",
+        "accent_color": "#7C3AED",
+        "badge_color": "#D4F7DC",
+        "badge_text_color": "#065F46",
+        "star_color": "#FF6B35",
+        "auto_play": false,
+        "auto_play_speed": 3000,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
@@ -456,6 +513,7 @@
     "featured_product_spotlight_9Jd4aF",
     "featured_products",
     "1745081144c08a42c4",
-    "17450811457cffbcda"
+    "17450811457cffbcda",
+    "mx_review_EYJKrq"
   ]
 }

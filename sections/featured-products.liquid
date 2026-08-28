@@ -11,14 +11,7 @@
       
       {% if collection != blank and collection.products.size > 0 %}
         {% for product in collection.products limit: product_limit %}
-          {% render 'product-card', 
-            product: product, 
-            show_rating: section.settings.show_rating,
-            show_price: section.settings.show_price,
-            show_vendor: section.settings.show_vendor,
-            show_badge: section.settings.show_badges,
-            image_ratio: section.settings.image_ratio | default: 1
-          %}
+          {% render 'product-card', product: product, show_rating: section.settings.show_rating, show_price: section.settings.show_price, show_vendor: section.settings.show_vendor, show_badge: section.settings.show_badges, image_ratio: section.settings.image_ratio, default: 1 %}
         {% endfor %}
       {% else %}
         {% comment %} Display placeholder products if no collection is selected or collection is empty {% endcomment %}
@@ -684,3 +677,20 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'product-card', \n            product: product, \n            show_rating:
+    section.settings.show_rating,\n            show_price: section.settings.show_price,\n
+    \           show_vendor: section.settings.show_vendor,\n            show_badge:
+    section.settings.show_badges,\n            image_ratio: section.settings.image_ratio
+    | default: 1\n          %}"
+  to: "{% render 'product-card', product: product, show_rating: section.settings.show_rating,
+    show_price: section.settings.show_price, show_vendor: section.settings.show_vendor,
+    show_badge: section.settings.show_badges, image_ratio: section.settings.image_ratio,
+    default: 1 %}"
+  position: 753..1022
+{% endcomment %}
